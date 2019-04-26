@@ -89,4 +89,13 @@ class ResourceKindTest extends \PHPUnit_Framework_TestCase {
         $resourceKind = new ResourceKind('', [], [$metadata1, $metadata2, $metadata3]);
         $this->assertEquals([10, 20, 30], $resourceKind->getMetadataIds());
     }
+
+    public function testHasMetadata() {
+        $metadata1 = $this->createMetadataMock(10);
+        $metadata2 = $this->createMetadataMock(20);
+        $resourceKind = new ResourceKind('', [], [$metadata1, $metadata2]);
+        $this->assertTrue($resourceKind->hasMetadata(10));
+        $this->assertTrue($resourceKind->hasMetadata(20));
+        $this->assertFalse($resourceKind->hasMetadata(30));
+    }
 }

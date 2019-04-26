@@ -2,25 +2,27 @@
 namespace Repeka\Plugins\Redo\Controller;
 
 use Repeka\Application\Cqrs\CommandBusAware;
-use Repeka\Domain\Entity\Metadata;
-use Repeka\Domain\Entity\ResourceContents;
+use Repeka\Application\Repository\Transactional;
 use Repeka\Domain\Entity\ResourceEntity;
-use Repeka\Domain\Exception\EntityNotFoundException;
+use Repeka\Domain\Repository\ResourceRepository;
 use Repeka\Domain\UseCase\EndpointUsageLog\EndpointUsageLogCreateCommand;
-use Repeka\Domain\UseCase\Resource\ResourceGodUpdateCommand;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
 class RedoFilesController extends Controller {
+    private const DOWNLOAD_COUNT_METADATA_NAME = 'resource_downloads';
+
     use CommandBusAware;
+    use Transactional;
 
-    private $downloadConfig;
+    /** @var ResourceRepository */
+    private $resourceRepository;
 
-    public function __construct(array $downloadConfig) {
-        $this->downloadConfig = $downloadConfig;
+    public function __construct(ResourceRepository $resourceRepository) {
+        $this->resourceRepository = $resourceRepository;
     }
 
     /**
@@ -36,26 +38,22 @@ class RedoFilesController extends Controller {
         );
         if ($response->getStatusCode() == 200) {
             $this->handleCommand(new EndpointUsageLogCreateCommand($request, 'resourceDownload', $resource));
-            try {
-                if (isset($this->downloadConfig['resource_download_metadata'])) {
-                    $downloadCountMetadata = $resource->getKind()->getMetadataByIdOrName(
-                        $this->downloadConfig['resource_download_metadata']
-                    );
-                    $updatedResourceContents = $this->updateResourceDownloadCount($resource->getContents(), $downloadCountMetadata);
-                    $resourceUpdateCommand = ResourceGodUpdateCommand::builder()
-                        ->setResource($resource)
-                        ->setNewContents($updatedResourceContents);
-                    $this->commandBus->handle($resourceUpdateCommand->build());
-                }
-            } catch (EntityNotFoundException $e) {
-            };
+            if ($resource->getKind()->hasMetadata(self::DOWNLOAD_COUNT_METADATA_NAME)) {
+                $this->transactional(
+                    function () use ($resource) {
+                        $this->incrementResourceDownloadCount($resource);
+                    }
+                );
+            }
         }
         return $response;
     }
 
-    private function updateResourceDownloadCount(ResourceContents $resourceContents, Metadata $metadata): ResourceContents {
-        $metadataValues = $resourceContents->getValues($metadata);
-        $metadataValue = $metadataValues ? $metadataValues[0]->getValue() : 0;
-        return $resourceContents->withReplacedValues($metadata, [['value' => $metadataValue + 1]]);
+    private function incrementResourceDownloadCount(ResourceEntity $resource) {
+        $downloadCountMetadata = $resource->getKind()->getMetadataByName(self::DOWNLOAD_COUNT_METADATA_NAME);
+        $currentCount = $resource->getValuesWithoutSubmetadata($downloadCountMetadata)[0] ?? 0;
+        $updatedResourceContents = $resource->getContents()->withReplacedValues($downloadCountMetadata, $currentCount + 1);
+        $resource->updateContents($updatedResourceContents);
+        $this->resourceRepository->save($resource);
     }
 }

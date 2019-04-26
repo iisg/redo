@@ -30,9 +30,6 @@ class Configuration implements ConfigurationInterface {
                     ->arrayNode('searchable_resource_classes')->prototype('scalar')->defaultValue([])->end()->end()
                     ->arrayNode('facets')->prototype('scalar')->defaultValue([])->end()->end()
                 ->end()->end()
-                ->arrayNode('download')->addDefaultsIfNotSet()->children()
-                    ->scalarNode('resource_download_metadata')->defaultValue(null)->end()
-                ->end()->end()
             ->end();
         // @formatter:on
         // @codingStandardsIgnoreEnd

@@ -31,9 +31,6 @@ services:
   Repeka\Plugins\Redo\Controller\RedoFtsSearchController:
     $ftsConfig: '%redo.fts_config%'
 
-  Repeka\Plugins\Redo\Controller\RedoFilesController:
-    $downloadConfig: '%redo.download_config%'
-
   Repeka\Plugins\Redo\Service\:
     resource: '../../Service'
 

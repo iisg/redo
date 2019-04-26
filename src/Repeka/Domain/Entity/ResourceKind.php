@@ -2,7 +2,6 @@
 namespace Repeka\Domain\Entity;
 
 use Assert\Assertion;
-use phpDocumentor\Reflection\Types\This;
 use Repeka\Domain\Utils\ArrayUtils;
 use Repeka\Domain\Utils\EntityUtils;
 use Repeka\Domain\Utils\StringUtils;
@@ -95,8 +94,13 @@ class ResourceKind implements Identifiable, HasResourceClass {
         return is_numeric($idOrName) ? $this->getMetadataById($idOrName) : $this->getMetadataByName($idOrName);
     }
 
-    public function hasMetadata(int $id): bool {
-        return in_array($id, $this->getMetadataIds());
+    public function hasMetadata($idOrName): bool {
+        try {
+            $this->getMetadataByIdOrName($idOrName);
+            return true;
+        } catch (\InvalidArgumentException $e) {
+            return false;
+        }
     }
 
     public function getMetadataByName(string $name): Metadata {
