@@ -2,6 +2,24 @@ $icons-size: 1.5;
 $filters-panel-toggle-icon-height: 2em;
 $filters-panel-width: 340px;
 
+.search-results-search-bar {
+  .search-bar {
+    background-color: $primary-background-color;
+    border-bottom: 1px solid $light-grey;
+    .input-with-button {
+      input {
+        border-top-color: $main-theme-color;
+        border-bottom-color: $main-theme-color;
+        border-left-color: $main-theme-color;
+        &:focus {
+          border-top-color: $secondary-accents-color;
+          border-bottom-color: $secondary-accents-color;
+          border-left-color: $secondary-accents-color;
+        }
+      }
+    }
+  }
+}
 .search-results-container {
   display: flex;
   flex-grow: 1;

@@ -16,6 +16,21 @@
     .advanced-options {
       margin-top: 2 * $default-gap-size;
     }
+    .search-bar {
+      .input-with-button {
+        input {
+          border-right: none;
+          border-top-color: transparent;
+          border-bottom-color: transparent;
+          border-left-color: transparent;
+          &:focus {
+            border-top-color: $main-theme-color;
+            border-bottom-color: $main-theme-color;
+            border-left-color: $main-theme-color;
+          }
+        }
+      }
+    }
   }
   .statistics {
     margin-top: auto;

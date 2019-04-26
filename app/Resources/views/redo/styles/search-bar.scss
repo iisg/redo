@@ -18,10 +18,6 @@ $advanced-options-column-border-width: 1px;
       input {
         flex-grow: 1;
         padding: $default-gap-size / 4 - 2 * $default-input-border-width $default-gap-size - $default-input-border-width;
-        border-right: none;
-        border-top-color: transparent;
-        border-bottom-color: transparent;
-        border-left-color: transparent;
         border-top-right-radius: 0;
         border-bottom-right-radius: 0;
         font-size: $title-font-size;
@@ -29,11 +25,6 @@ $advanced-options-column-border-width: 1px;
         &::placeholder {
           font-size: $default-font-size;
           font-style: italic;
-        }
-        &:focus {
-          border-top-color: $main-theme-color;
-          border-bottom-color: $main-theme-color;
-          border-left-color: $main-theme-color;
         }
       }
       button {
