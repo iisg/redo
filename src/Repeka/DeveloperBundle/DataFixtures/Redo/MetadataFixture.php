@@ -42,6 +42,7 @@ class MetadataFixture extends RepekaFixture {
     const REFERENCE_METADATA_SUPERVISOR = 'metadata-supervisor';
     const REFERENCE_METADATA_SUPERVISOR_USERNAME = 'metadata-supervisor-username';
     const REFERENCE_METADATA_TOP_PARENT_PATH = 'metadata-top-parent-path';
+    const REFERENCE_METADATA_PARENT_PATH_LENGTH = 'metadata-parent-path-length';
     const REFERENCE_METADATA_RELATED_BOOK = 'metadata-related-book';
     const REFERENCE_METADATA_PUBLISHING_HOUSE = 'metadata-publishing-house';
     const REFERENCE_METADATA_URL = 'metadata-url';
@@ -569,6 +570,30 @@ TEMPLATE
                 ]
             ),
             self::REFERENCE_METADATA_TOP_PARENT_PATH
+        );
+        $addedMetadata[] = $this->handleCommand(
+            MetadataCreateCommand::fromArray(
+                [
+                    'name' => 'parentPathLength',
+                    'label' => [
+                        'PL' => 'Długość ścieżki do top parenta',
+                        'EN' => 'Top parent path length',
+                    ],
+                    'control' => MetadataControl::INTEGER(),
+                    'shownInBrief' => false,
+                    'resourceClass' => 'books',
+                    'displayStrategy' => <<<TEMPLATE
+{% set ancestor = resource | metadata('parent') | first %}
+{% set depth = 0 %}
+{% for i in 0..9 if ancestor %}
+    {% set depth = depth + 1 %}
+    {% set ancestor = ancestor | metadata('parent') | first %}
+{% endfor %}
+{{ depth }}
+TEMPLATE
+                ]
+            ),
+            self::REFERENCE_METADATA_PARENT_PATH_LENGTH
         );
         $addedMetadata[] = $this->handleCommand(
             MetadataCreateCommand::fromArray(

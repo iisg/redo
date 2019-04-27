@@ -73,6 +73,7 @@ class ResourceKindsFixture extends RepekaFixture {
                     $this->metadata(MetadataFixture::REFERENCE_METADATA_REAL_SCANNER),
                     $this->metadata(MetadataFixture::REFERENCE_METADATA_SCANNER_USERNAME),
                     $this->metadata(MetadataFixture::REFERENCE_METADATA_TOP_PARENT_PATH),
+                    $this->metadata(MetadataFixture::REFERENCE_METADATA_PARENT_PATH_LENGTH),
                     $this->metadata(MetadataFixture::REFERENCE_METADATA_RESOURCE_DOWNLOADS),
                     $this->metadata(MetadataFixture::REFERENCE_METADATA_URL),
                     $this->metadata(MetadataFixture::REFERENCE_METADATA_URL_LINK),
@@ -96,6 +97,7 @@ class ResourceKindsFixture extends RepekaFixture {
                     $parentMetadata->withOverrides([0 => $bookRK->getId()]),
                     $this->metadata(MetadataFixture::REFERENCE_METADATA_TITLE),
                     $this->metadata(MetadataFixture::REFERENCE_METADATA_ISSUING_DEPARTMENT),
+                    $this->metadata(MetadataFixture::REFERENCE_METADATA_PARENT_PATH_LENGTH),
                 ]
             ),
             self::REFERENCE_RESOURCE_KIND_FORBIDDEN_BOOK
@@ -118,6 +120,7 @@ class ResourceKindsFixture extends RepekaFixture {
                         ]
                     ),
                     $this->metadata(MetadataFixture::REFERENCE_METADATA_CATEGORY_NAME),
+                    $this->metadata(MetadataFixture::REFERENCE_METADATA_PARENT_PATH_LENGTH),
                 ],
                 true
             ),

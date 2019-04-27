@@ -97,6 +97,15 @@ class RedoFtsSearchController extends Controller {
         $searchableMetadata = $this->ftsConfig['searchable_metadata_ids'] ?? [];
         Assertion::notEmpty($searchableMetadata, 'Query must include some metadata');
         $facets = $this->ftsConfig['facets'] ?? [];
+        $onlyTopLevel = false;
+        if (!$metadataFilters && !$phrase) {
+            try {
+                $parentPathLengthMetadata = $this->metadataRepository->findByName('parent_path_length');
+                $metadataFilters = [$parentPathLengthMetadata->getId() => [1]];
+            } catch (EntityNotFoundException $e) {
+                $onlyTopLevel = true;
+            }
+        }
         $metadataFilters = $this->adjustDateMetadataFilters($metadataFilters);
         $query = ResourceListFtsQuery::builder()
             ->setPhrase($phrase ?: '')
@@ -106,7 +115,7 @@ class RedoFtsSearchController extends Controller {
             ->setMetadataFacets(array_diff($facets, [FtsConstants::KIND_ID]))
             ->setFacetsFilters($facetsFilters)
             ->setMetadataFilters($metadataFilters)
-            ->setOnlyTopLevel(!$metadataFilters && !$phrase)
+            ->setOnlyTopLevel($onlyTopLevel)
             ->setPage($page)
             ->setResultsPerPage($this->resultsPerPage)
             ->build();
