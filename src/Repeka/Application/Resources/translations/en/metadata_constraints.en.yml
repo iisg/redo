@@ -4,6 +4,7 @@ pesel_failed: Invalid PESEL number
 nip_failed: Invalid NIP number
 regon_failed: Invalid REGON number
 otherInfo_failed: Value is required
+email_failed: Invalid e-mail address
 
 labels:
   maxCount: Max value count
@@ -19,5 +20,6 @@ labels:
   pesel: PESEL
   nip: NIP
   regon: REGON
+  email: E-mail
   noConfigurationConstraints: Other requirements
   otherInfo: Value required, if chosen "others" in corresponding relation
