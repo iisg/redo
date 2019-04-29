@@ -40,3 +40,4 @@ customMessages:
     kod_pocztowy_szkoly_regex: Podaj kod pocztowy w formacie XX-XXX
     nr_telefonu_dyrektora_regex: Numer telefonu powinien składać się z 9 cyfr
     opis_koncepcji_regex: Opis musi zawierać co najmniej 1000 i co najwyżej 3000 znaków
+    imie_i_nazwisko_dyrektora_regex: Podaj imię i nazwisko
