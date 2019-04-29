@@ -61,6 +61,7 @@ class TwigI18nExtension extends \Twig_Extension {
 
     /**
      * @SuppressWarnings("PHPMD.CyclomaticComplexity")
+     * @SuppressWarnings("PHPMD.BooleanArgumentFlag")
      */
     public function onlyMetadataValuesInCurrentLanguage(iterable $metadataValues, Metadata $metadata, bool $returnFirstIfEmpty = false) {
         $locale = strtoupper($this->request->getLocale());

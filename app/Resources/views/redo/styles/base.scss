@@ -252,7 +252,7 @@ textarea {
   &:checked + ::before {
     background: $accents-color;
     background: radial-gradient($accents-color 40%, transparent 40%);
-    .high-contrast & {
+    @at-root .high-contrast#{&} {
       background: radial-gradient($high-contrast-accents-color 40%, transparent 40%);
     }
   }

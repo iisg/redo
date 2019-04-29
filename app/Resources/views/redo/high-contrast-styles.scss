@@ -4,7 +4,8 @@
 
     background-color: $primary-background-color;
 
-    @import "styles/base";
-
-    @import "styles/components";
+    &.redo-website {
+        @import "styles/base";
+        @import "styles/components";
+    }
 }

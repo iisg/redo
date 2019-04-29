@@ -46,9 +46,9 @@
     {% block head %}{% endblock %}
 
 </head>
-<body class.bind="highContrast ? 'high-contrast' : ''">
-<div aurelia-app="main"
-    class="redo-website">
+<body class="redo-website"
+    class.bind="highContrast ? 'high-contrast' : ''">
+<div aurelia-app="main">
     {% block layout %}{% endblock %}
 </div>
 {% include 'spa-components.twig' %}
