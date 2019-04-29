@@ -16,6 +16,11 @@
 button.BRicon.full {
   display:none
 }
+
+.BRicon {
+  background-image: url("../jspm_packages/github/internetarchive/bookreader@4.2.0/BookReader/images/BRicons.svg");
+}
+
 .BRpageimage {
   background-color: #ebdfb6 !important;
 }
