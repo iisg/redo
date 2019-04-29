@@ -1,0 +1,9 @@
+{% extends "redo/layout.twig" %}
+{% set page_title = resource | mTytulStrony %}
+{% block content %}
+    {% include "redo/title-bar.twig" %}
+    {% include "redo/menu.twig" %}
+    <h1>{{ resource | mTytulStrony }}</h1>
+    {{ resource | mTrescStrony | onlyMetadataInCurrentLanguage(metadata('trescStrony'), true) | raw }}
+    {% include "redo/footer.twig" %}
+{% endblock %}

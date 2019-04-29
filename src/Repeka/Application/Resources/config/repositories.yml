@@ -21,6 +21,7 @@ services:
   Repeka\Application\Repository\MetadataDoctrineRepository:
     factory: ["@doctrine.orm.entity_manager", getRepository]
     arguments: [Repeka\Domain\Entity\Metadata]
+    public: true
 
   Repeka\Application\Repository\ResourceDoctrineRepository:
     factory: ["@doctrine.orm.entity_manager", getRepository]

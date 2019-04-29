@@ -44,7 +44,7 @@
                 type="button"
                 click.delegate="{{ variableName }} = !{{ variableName }}"
                 aria-expanded.bind="{{ variableName }}">
-                <h4 class="property-name">{{ parentPathMetadata ? 'Collections' | trans : filterableMetadata.label | inCurrentLanguage }}</h4>
+                <span class="property-name">{{ parentPathMetadata ? 'Collections' | trans : filterableMetadata.label | inCurrentLanguage }}</span>
                 <span>{{ icon('forward') }}</span>
             </button>
         {% endblock %}
@@ -52,14 +52,15 @@
             collapsible="collapsed.bind: !{{ variableName }}">
             {% if parentPathMetadata %}
                 {% set parentFilters = app.request.query.all.metadataFilters[filterableMetadata.id] ?? null %}
-                {% for resource in resources({resourceClasses: searchableResourceClasses, parentId: null}) %}
+                {% set topLevelCollection = resources({resourceClasses: searchableResourceClasses, parentId: null})|first %}
+                {% for resource in resources({parentId: topLevelCollection.id}) %}
                     {% set childResources = resources({parentId: resource.id}) %}
                     {% if childResources is not empty %}
                         {% set childResourcesData = [] %}
                         {% for childResource in childResources %}
                             {% set childResourceData = {
                                 id: childResource.id | json_encode,
-                                label: childResource | metadata('label') | replace({"'": "&#39;"})
+                                label: childResource | metadata('label') | raw
                             } %}
                             {% set childResourcesData = childResourcesData | merge([childResourceData]) %}
                         {% endfor %}

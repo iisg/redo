@@ -62,7 +62,7 @@ class TwigI18nExtension extends \Twig_Extension {
     /**
      * @SuppressWarnings("PHPMD.CyclomaticComplexity")
      */
-    public function onlyMetadataValuesInCurrentLanguage(iterable $metadataValues, Metadata $metadata) {
+    public function onlyMetadataValuesInCurrentLanguage(iterable $metadataValues, Metadata $metadata, bool $returnFirstIfEmpty = false) {
         $locale = strtoupper($this->request->getLocale());
         $submetadataIdsToCheck = $this->getSystemLanguageSubmetadataIds($metadata);
         if (empty($submetadataIdsToCheck)) {
@@ -84,6 +84,9 @@ class TwigI18nExtension extends \Twig_Extension {
         $result = [];
         foreach ($indexesToLeave as $index) {
             $result[] = $metadataValues[$index];
+        }
+        if (!$result && $returnFirstIfEmpty) {
+            $result[] = current(iterator_to_array($metadataValues));
         }
         return new PrintableArray($result);
     }

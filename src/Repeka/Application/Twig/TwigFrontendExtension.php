@@ -247,7 +247,10 @@ ICON;
         return htmlspecialchars($value, ENT_XML1, 'UTF-8');
     }
 
-    public function urlMatches(string ...$urls): bool {
+    public function urlMatches(...$urls): bool {
+        if (is_array($urls[0] ?? null)) {
+            $urls = $urls[0];
+        }
         foreach ($urls as $url) {
             $urlLength = strlen($url);
             if (substr($url, $urlLength - 1) == '#') {
