@@ -158,9 +158,11 @@ class ResourceDoctrineRepository extends EntityRepository implements ResourceRep
     }
 
     public function findAssignedTo(User $user): array {
-        // FIXME REPEKA-1012
-        ini_set('memory_limit', '512M');
-        ini_set('max_execution_time', 60);
+        if (defined('REPEKA_ENV') && REPEKA_ENV === 'prod') {
+            // FIXME REPEKA-1012
+            ini_set('memory_limit', '512M');
+            ini_set('max_execution_time', 60);
+        }
         $em = $this->getEntityManager();
         $resultSetMapping = ResultSetMappings::resourceEntity($em);
         $query = $em->createNativeQuery(
