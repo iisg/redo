@@ -1,6 +1,6 @@
-{% set metadataToDisplay = cmsConfig('display_metadata_' ~ resource.kind.name ~ '_bibtex', cmsConfig('display_metadata_DEFAULT')) %}
+{% set metadataToDisplay = cmsConfig('display_metadata_' ~ resource.kind.name ~ '_bibtex', cmsConfig('display_metadata_DEFAULT_bibtex', cmsConfig('display_metadata_DEFAULT'))) %}
 {% set bibtexType = (resource | mBibtexType) is not empty ? (resource | mBibtexType) : '@misc' %}
-{% set bibtexKey = (resource | mBibtexKey | first) is not empty ? (resource | mBibtexKey) : '' %}
+{% set bibtexKey = (resource | mBibtexKey | first) is not empty ? (resource | mBibtexKey) : (r|mLabel|first.value|slugify) %}
 {{ bibtexType }}{{ '{' }}{{ bibtexKey }},
 {% for metadataName in metadataToDisplay %}  {% set metadata = metadata(metadataName) %}
 {% if metadata
