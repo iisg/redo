@@ -4,6 +4,7 @@ namespace Repeka\Domain\UseCase\ResourceKind;
 use Repeka\Domain\Cqrs\Command;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\UseCase\Metadata\MetadataUpdateCommand;
+use Repeka\Domain\UseCase\Metadata\MetadataUpdateCommandAdjuster;
 use Repeka\Domain\UseCase\Metadata\MetadataUpdateCommandValidator;
 use Repeka\Domain\Utils\EntityUtils;
 use Repeka\Domain\Validation\CommandAttributesValidator;
@@ -22,10 +23,13 @@ class ResourceKindUpdateCommandValidator extends CommandAttributesValidator {
     private $metadataUpdateCommandValidator;
     /** @var ChildResourceKindsAreOfSameResourceClassRule */
     private $childResourceKindsAreOfSameResourceClassRule;
+    /** @var MetadataUpdateCommandAdjuster */
+    private $metadataUpdateCommandAdjuster;
 
     public function __construct(
         NotBlankInAllLanguagesRule $notBlankInAllLanguagesRule,
         ContainsParentMetadataRule $containsParentMetadataRule,
+        MetadataUpdateCommandAdjuster $metadataUpdateCommandAdjuster,
         MetadataUpdateCommandValidator $metadataUpdateCommandValidator,
         ChildResourceKindsAreOfSameResourceClassRule $childResourceKindsAreOfSameResourceClassRule
     ) {
@@ -33,6 +37,7 @@ class ResourceKindUpdateCommandValidator extends CommandAttributesValidator {
         $this->containsParentMetadataRule = $containsParentMetadataRule;
         $this->childResourceKindsAreOfSameResourceClassRule = $childResourceKindsAreOfSameResourceClassRule;
         $this->metadataUpdateCommandValidator = $metadataUpdateCommandValidator;
+        $this->metadataUpdateCommandAdjuster = $metadataUpdateCommandAdjuster;
     }
 
     /**
@@ -93,6 +98,7 @@ class ResourceKindUpdateCommandValidator extends CommandAttributesValidator {
             $metadata->isShownInBrief(),
             $metadata->isCopiedToChildResource()
         );
+        $metadataUpdateCommand = $this->metadataUpdateCommandAdjuster->adjustCommand($metadataUpdateCommand);
         $this->metadataUpdateCommandValidator->getValidator($metadataUpdateCommand)->assert($metadataUpdateCommand);
         return true;
     }

@@ -4,6 +4,7 @@ namespace Repeka\Tests\Domain\UseCase\ResourceKind;
 use Repeka\Domain\Constants\SystemMetadata;
 use Repeka\Domain\Exception\InvalidCommandException;
 use Repeka\Domain\Repository\ResourceKindRepository;
+use Repeka\Domain\UseCase\Metadata\MetadataUpdateCommandAdjuster;
 use Repeka\Domain\UseCase\Metadata\MetadataUpdateCommandValidator;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindCreateCommand;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindCreateCommandValidator;
@@ -31,8 +32,12 @@ class ResourceKindCreateCommandValidatorTest extends \PHPUnit_Framework_TestCase
     private $childResourceKindsAreOfSameResourceClassRule;
     /** @var ResourceKindRepository|\PHPUnit_Framework_MockObject_MockObject */
     private $resourceKindRepository;
+    /** @var MetadataUpdateCommandAdjuster|\PHPUnit_Framework_MockObject_MockObject */
+    private $metadataUpdateCommandAdjuster;
 
     protected function setUp() {
+        $this->metadataUpdateCommandAdjuster = $this->createMock(MetadataUpdateCommandAdjuster::class);
+        $this->metadataUpdateCommandAdjuster->method('adjustCommand')->willReturnArgument(0);
         $this->metadataUpdateCommandValidator = $this->createMock(MetadataUpdateCommandValidator::class);
         $this->resourceKindRepository = $this->createMock(ResourceKindRepository::class);
         $this->resourceKindRepository->method('countByQuery')->willReturn(0);
@@ -45,6 +50,7 @@ class ResourceKindCreateCommandValidatorTest extends \PHPUnit_Framework_TestCase
         $this->validator = new ResourceKindCreateCommandValidator(
             $this->notBlankInAllLanguagesRule,
             $this->containsParentMetadataRule,
+            $this->metadataUpdateCommandAdjuster,
             $this->metadataUpdateCommandValidator,
             $this->childResourceKindsAreOfSameResourceClassRule,
             $this->resourceKindRepository
@@ -87,6 +93,7 @@ class ResourceKindCreateCommandValidatorTest extends \PHPUnit_Framework_TestCase
         $validator = new ResourceKindCreateCommandValidator(
             $this->notBlankInAllLanguagesRule,
             $this->containsParentMetadataRule,
+            $this->metadataUpdateCommandAdjuster,
             $this->metadataUpdateCommandValidator,
             $this->childResourceKindsAreOfSameResourceClassRule,
             $resourceKindRepository

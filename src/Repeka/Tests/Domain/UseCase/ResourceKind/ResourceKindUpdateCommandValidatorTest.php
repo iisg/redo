@@ -10,7 +10,7 @@ use Repeka\Domain\Exception\InvalidCommandException;
 use Repeka\Domain\Exception\RespectValidationFailedException;
 use Repeka\Domain\Repository\LanguageRepository;
 use Repeka\Domain\Repository\ResourceKindRepository;
-use Repeka\Domain\UseCase\Metadata\MetadataCreateCommandValidator;
+use Repeka\Domain\UseCase\Metadata\MetadataUpdateCommandAdjuster;
 use Repeka\Domain\UseCase\Metadata\MetadataUpdateCommandValidator;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindCreateCommandValidator;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindUpdateCommand;
@@ -50,8 +50,8 @@ class ResourceKindUpdateCommandValidatorTest extends \PHPUnit_Framework_TestCase
         $this->languageRepository->expects($this->atLeastOnce())->method('getAvailableLanguageCodes')->willReturn(['PL']);
         $this->resourceKindRepository = $this->createMock(ResourceKindRepository::class);
         $this->resourceKindRepository->method('countByQuery')->willReturn(0);
-        $metadataCreateCommandValidator = $this->createMock(MetadataCreateCommandValidator::class);
-        $metadataCreateCommandValidator->method('getValidator')->willReturn(Validator::alwaysValid());
+        $metadataUpdateCommandAdjuster = $this->createMock(MetadataUpdateCommandAdjuster::class);
+        $metadataUpdateCommandAdjuster->method('adjustCommand')->willReturnArgument(0);
         $this->notBlankInAllLanguagesRule = $this->createMock(NotBlankInAllLanguagesRule::class);
         $this->childResourceKindsAreOfSameResourceClassRule = new ChildResourceKindsAreOfSameResourceClassRule(
             $this->resourceKindRepository
@@ -72,6 +72,7 @@ class ResourceKindUpdateCommandValidatorTest extends \PHPUnit_Framework_TestCase
         $this->validator = new ResourceKindUpdateCommandValidator(
             new NotBlankInAllLanguagesRule($this->languageRepository),
             new ContainsParentMetadataRule(),
+            $metadataUpdateCommandAdjuster,
             $this->metadataUpdateCommandValidator,
             new ChildResourceKindsAreOfSameResourceClassRule($this->resourceKindRepository)
         );

@@ -3,6 +3,7 @@ namespace Repeka\Domain\UseCase\ResourceKind;
 
 use Repeka\Domain\Cqrs\Command;
 use Repeka\Domain\Repository\ResourceKindRepository;
+use Repeka\Domain\UseCase\Metadata\MetadataUpdateCommandAdjuster;
 use Repeka\Domain\UseCase\Metadata\MetadataUpdateCommandValidator;
 use Repeka\Domain\Validation\Rules\ChildResourceKindsAreOfSameResourceClassRule;
 use Repeka\Domain\Validation\Rules\ContainsParentMetadataRule;
@@ -17,6 +18,7 @@ class ResourceKindCreateCommandValidator extends ResourceKindUpdateCommandValida
     public function __construct(
         NotBlankInAllLanguagesRule $notBlankInAllLanguagesRule,
         ContainsParentMetadataRule $containsParentMetadataRule,
+        MetadataUpdateCommandAdjuster $metadataUpdateCommandAdjuster,
         MetadataUpdateCommandValidator $metadataUpdateCommandValidator,
         ChildResourceKindsAreOfSameResourceClassRule $childResourceKindsAreOfSameResourceClassRule,
         ResourceKindRepository $resourceKindRepository
@@ -24,6 +26,7 @@ class ResourceKindCreateCommandValidator extends ResourceKindUpdateCommandValida
         parent::__construct(
             $notBlankInAllLanguagesRule,
             $containsParentMetadataRule,
+            $metadataUpdateCommandAdjuster,
             $metadataUpdateCommandValidator,
             $childResourceKindsAreOfSameResourceClassRule
         );
