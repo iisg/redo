@@ -61,7 +61,9 @@ export class ResourceListPlaceFilter extends ResourceListFilter implements Compo
   workflowPlaces() {
     return this.resourceKinds
       .filter(rk => !!rk.workflow)
-      .map(rk => rk.workflow.places.map(place => Object.assign({}, place, {workflow: rk.workflow})))
+      .map(rk => rk.workflow)
+      .filter((workflow, index, self) => self.map(wf => wf.id).indexOf(workflow.id) === index)
+      .map(workflow => workflow.places.map(place => Object.assign({}, place, {workflow: workflow})))
       .reduce((allPlaces, singleWorkflowPlaces) => allPlaces.concat(singleWorkflowPlaces), []);
   }
 

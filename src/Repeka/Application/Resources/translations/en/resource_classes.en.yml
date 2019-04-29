@@ -31,6 +31,7 @@ books:
   Edit resource before transition: Edit resource before transition
   Added resource will be in following place: Added resource will be in following place
   To states: To states
+  Top level resources: Top level resources
 dictionaries:
   resources: Dictionaries
   resources/details: Dictionaries
@@ -63,6 +64,7 @@ dictionaries:
   Edit resource before transition: Edit dictionary before transition
   Added resource will be in following place: Added dictionary will be in following place
   To states: To states
+  Top level resources: Top level dictionaries
 users:
   users: Users
   resources: Users
@@ -98,6 +100,7 @@ users:
   Added resource will be in following place: Added user will be in following place
   To states: To states
   users/details: Users
+  Top level resources: Top level users
 cms:
   resources: CMS
   settings: CMS settings
@@ -130,3 +133,4 @@ cms:
   Edit resource before transition: Edit template before transition
   Added resource will be in following place: Added template will be in following place
   To states: To states
+  Top level resources: Top level cms
