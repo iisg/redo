@@ -60,7 +60,7 @@
                         {% for childResource in childResources %}
                             {% set childResourceData = {
                                 id: childResource.id | json_encode,
-                                label: childResource | metadata('label') | raw
+                                label: childResource | metadata('label') | replace({"'": "&#39;"})
                             } %}
                             {% set childResourcesData = childResourcesData | merge([childResourceData]) %}
                         {% endfor %}
