@@ -5,7 +5,6 @@ use Repeka\Application\Security\SecurityOracle;
 use Repeka\Application\Service\CurrentUserAware;
 use Repeka\Domain\Constants\SystemMetadata;
 use Repeka\Domain\Constants\SystemTransition;
-use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\User;
 use Repeka\Domain\Repository\ResourceRepository;
@@ -46,7 +45,7 @@ class ResourceNormalizer extends AbstractNormalizer implements NormalizerAwareIn
         $normalized = [
             'id' => $resource->getId(),
             'kindId' => $resource->getKind()->getId(),
-            'contents' => $this->getContentsArray($resource, $returnTeaser),
+            'contents' => $returnTeaser ? $resource->getTeaser()->toArray() : $resource->getContents()->toArray(),
             'resourceClass' => $resource->getResourceClass(),
             'displayStrategiesDirty' => $resource->isDisplayStrategiesDirty(),
             'hasChildren' => $this->resourceRepository->hasChildren($resource),
@@ -72,20 +71,6 @@ class ResourceNormalizer extends AbstractNormalizer implements NormalizerAwareIn
             }
         }
         return $normalized;
-    }
-
-    private function getContentsArray(ResourceEntity $resource, bool $teaser): array {
-        if ($teaser) {
-            return ResourceContents::fromArray(
-                [
-                    SystemMetadata::RESOURCE_LABEL => $resource->getValues(SystemMetadata::RESOURCE_LABEL),
-                    SystemMetadata::PARENT => $resource->getValues(SystemMetadata::PARENT),
-                ]
-            )
-                ->toArray();
-        } else {
-            return $resource->getContents()->toArray();
-        }
     }
 
     /** @return TransitionPossibilityCheckResult[] */

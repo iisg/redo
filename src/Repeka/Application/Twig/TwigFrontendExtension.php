@@ -75,6 +75,7 @@ class TwigFrontendExtension extends \Twig_Extension {
             new \Twig_Function('isFilteringByFacet', [$this, 'isFilteringByFacet']),
             new \Twig_Function('icon', [$this, 'icon']),
             new \Twig_Function('resources', [$this, 'fetchResources']),
+            new \Twig_Function('teasers', [$this, 'fetchTeasers']),
             new \Twig_Function('urlMatches', [$this, 'urlMatches']),
             new \Twig_Function('paginate', [$this->paginator, 'paginate']),
             new \Twig_Function('arrayWithoutItem', [$this, 'arrayWithoutItem']),
@@ -174,6 +175,7 @@ ICON;
     /**
      * @SuppressWarnings("PHPMD.CyclomaticComplexity")
      * @SuppressWarnings("PHPMD.NPathComplexity")
+     * @return ResourceEntity[]
      */
     public function fetchResources(array $filters, $permissionMetadataNameOrId = null): iterable {
         $builder = ResourceListQuery::builder();
@@ -211,6 +213,14 @@ ICON;
             $builder->setPermissionMetadataId($metadata->getId());
         }
         return $this->handleCommand($builder->build());
+    }
+
+    public function fetchTeasers(array $filters): iterable {
+        $resources = $this->fetchResources($filters, SystemMetadata::TEASER_VISIBILITY);
+        foreach ($resources as $resource) {
+            $resource->updateContents($resource->getTeaser());
+        }
+        return $resources;
     }
 
     public function getCmsConfig(

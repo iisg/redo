@@ -50,6 +50,15 @@ class ResourceEntity implements Identifiable, HasResourceClass {
         return new ResourceContents($this->contents);
     }
 
+    public function getTeaser(): ResourceContents {
+        return ResourceContents::fromArray(
+            [
+                SystemMetadata::RESOURCE_LABEL => $this->getValues(SystemMetadata::RESOURCE_LABEL),
+                SystemMetadata::PARENT => $this->getValues(SystemMetadata::PARENT),
+            ]
+        );
+    }
+
     /**
      * Shortcut for getContents()->getValues($metadata)
      * @param Metadata|int $metadata

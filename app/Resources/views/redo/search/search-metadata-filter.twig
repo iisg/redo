@@ -78,7 +78,7 @@
                 {% endfor %}
             {% elseif filterableMetadata.constraints.resourceKind is defined %}
                 {% set relationshipFilters = app.request.query.all.metadataFilters[filterableMetadata.id] ?? [] %}
-                {% for resource in resources({resourceKindIds: filterableMetadata.constraints.resourceKind}) %}
+                {% for resource in teasers({resourceKindIds: filterableMetadata.constraints.resourceKind}) %}
                     <label class="label-with-checkbox">
                         <input type="checkbox"
                             name="metadataFilters[{{ filterableMetadata.id }}][]"
