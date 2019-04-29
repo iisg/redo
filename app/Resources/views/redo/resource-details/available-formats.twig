@@ -1,5 +1,8 @@
 {% set browsingAvailable = browsingAvailable is defined and browsingAvailable %}
 {% set pdfFilePath = resource | metadata('plik_pdf_podstawowy') | first %}
+{% if not pdfFilePath %}
+    {% set pdfFilePath = resource | metadata('zasob_plik') | first %}
+{% endif %}
 {% set mobiFilePath = resource | metadata('plik_mobi') | first %}
 
 {% if browsingAvailable or pdfFilePath or mobiFilePath %}
