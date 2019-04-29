@@ -300,9 +300,12 @@ export class ResourcesList {
           : resourceKindOrId;
       });
     }
-    query = (this.allowedResourceKinds && this.allowedResourceKinds.length)
-      ? query.filterByIds(this.allowedResourceKinds as number[])
-      : query.filterByResourceClasses(this.resourceClass);
+    if (this.allowedResourceKinds && this.allowedResourceKinds.length) {
+      query.filterByIds(this.allowedResourceKinds as number[]);
+    }
+    if (this.resourceClass) {
+      query.filterByResourceClasses(this.resourceClass);
+    }
     query.get().then(resourceKinds => {
       // this.resourceKinds should stay the same instance. Reassigning causes no detection of list changes in resource-list-places-filter
       this.resourceKinds.splice(0, this.resourceKinds.length);
@@ -408,8 +411,7 @@ export class ResourcesList {
 
   getResourceClass(): string {
     return (this.parentResource && this.parentResource.resourceClass)
-      || (this.resource && this.resource.resourceClass)
-      || this.resourceClass;
+      || (this.metadata && this.metadata.resourceClass);
   }
 
   hasResource() {
@@ -422,6 +424,8 @@ export class ResourcesList {
   }
 
   metadataChanged(newValue: Metadata, oldValue: Metadata) {
+    this.resourceClass = this.metadata.resourceClass;
+    this.fetchBriefMetadata();
     this.updateContentsFilter(newValue, oldValue);
   }
 

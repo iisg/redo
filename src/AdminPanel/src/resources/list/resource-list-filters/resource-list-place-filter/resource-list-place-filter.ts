@@ -31,6 +31,8 @@ export class ResourceListPlaceFilter extends ResourceListFilter implements Compo
     }
     this.resourceKindsChangedListener = this.bindingEngine.collectionObserver(this.resourceKinds).subscribe(() => {
       this.placesList = this.workflowPlaces();
+      this.places = this.places.filter(place => this.placesList.map(wf => wf.id).indexOf(place.id) != -1);
+      this.publishValue();
     });
   }
 
