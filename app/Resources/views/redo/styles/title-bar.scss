@@ -69,9 +69,11 @@ $pk-logo-height: calc(#{$logo-height} - 2 * #{$default-gap-size / 8} - #{$option
     .pk-logo-container {
       display: flex;
       padding: $default-gap-size / 2;
-      img {
+      a {
         margin-left: auto;
-        height: $pk-logo-height;
+        img {
+          height: $pk-logo-height;
+        }
       }
     }
   }

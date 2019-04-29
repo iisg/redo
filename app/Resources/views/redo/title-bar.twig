@@ -39,10 +39,10 @@
                         <ul class="dropdown-menu dropdown-menu-right"
                             role="menu">
                             {% for language in [
-                                    {locale:'pl', name: 'Polski'},
-                                    {locale: 'en', name: 'English'},
-                                    {locale: 'de', name: 'Deutsch'}
-                                ] %}
+                                {locale:'pl', name: 'Polski'},
+                                {locale: 'en', name: 'English'},
+                                {locale: 'de', name: 'Deutsch'}
+                            ] %}
                                 {% if language.locale != currentLocale %}
                                     <li>
                                         <a class="menu-item"
@@ -61,9 +61,11 @@
             </div>
         </div>
         <div class="pk-logo-container">
-            <img src="/files/redo/pk-logo.svg"
-                alt="{{ 'Politechnika Krakowska' | trans }}"
-                aria-label="{{ 'Politechnika Krakowska' | trans }}">
+            <a href="https://www.pk.edu.pl">
+                <img src="/files/redo/pk-logo.svg"
+                    alt="{{ 'Politechnika Krakowska' | trans }}"
+                    aria-label="{{ 'Politechnika Krakowska' | trans }}">
+            </a>
         </div>
     </div>
 </div>
