@@ -41,3 +41,7 @@ customMessages:
     nr_telefonu_dyrektora_regex: Numer telefonu powinien składać się z 9 cyfr
     opis_koncepcji_regex: Opis musi zawierać co najmniej 1000 i co najwyżej 3000 znaków
     imie_i_nazwisko_dyrektora_regex: Podaj imię i nazwisko
+    nr_budynku_szkoly_regex: Wprowadź poprawny numer budynku
+    nr_budynku_kandydata_regex: Wprowadź poprawny numer budynku
+    nr_lokalu_szkoly_regex: Wprowadź poprawny numer lokalu
+    nr_lokalu_kandydata_regex: Wprowadź poprawny numer lokalu
