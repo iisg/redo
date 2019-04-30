@@ -70,7 +70,10 @@ class ResourceTransitionCommandValidator extends CommandAttributesValidator {
             ->attribute('contents', $this->resourceContentsCorrectStructureRule)
             ->attribute('contents', $this->teaserVisibilityWiderOrEqualToFullVisibilityRule)
             ->attribute('contents', $this->valueSetMatchesResourceKindRule->forResourceKind($command->getResource()->getKind()))
-            ->attribute('contents', $this->metadataValuesSatisfyConstraintsRule->forResource($command->getResource()))
+            ->attribute(
+                'contents',
+                $this->metadataValuesSatisfyConstraintsRule->forResourceAndTransition($command->getResource(), $command->getTransition())
+            )
             ->attribute(
                 'contents',
                 $this->lockedMetadataValuesAreUnchangedRule->forResourceAndTransition($command->getResource(), $command->getTransition())

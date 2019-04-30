@@ -4,7 +4,6 @@ namespace Repeka\Domain\Constants;
 use Assert\Assertion;
 use MyCLabs\Enum\Enum;
 use Repeka\Domain\Entity\ResourceEntity;
-use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Entity\ResourceWorkflow;
 use Repeka\Domain\Entity\Workflow\ResourceWorkflowTransition;
 use Repeka\Domain\Utils\EntityUtils;
@@ -19,8 +18,12 @@ class SystemTransition extends Enum {
     const UPDATE = 'update';
     const DELETE = 'delete';
 
-    public function toTransition(ResourceKind $resourceKind, ?ResourceEntity $resource = null): ResourceWorkflowTransition {
-        $workflow = $resourceKind->getWorkflow();
+    public function toTransition($resourceKindOrResource, ?ResourceEntity $resource = null): ResourceWorkflowTransition {
+        if ($resourceKindOrResource instanceof ResourceEntity) {
+            $resource = $resourceKindOrResource;
+            $resourceKindOrResource = $resourceKindOrResource = $resource->getKind();
+        }
+        $workflow = $resourceKindOrResource->getWorkflow();
         $resourceWorkflowTransition = null;
         $value = $this->getValue();
         if ($value == self::CREATE) {

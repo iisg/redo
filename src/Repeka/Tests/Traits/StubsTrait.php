@@ -289,14 +289,15 @@ trait StubsTrait {
         array $missingMetadataIds = [],
         array $assigneeMetadataIds = [],
         array $autoAssignMetadataIds = [],
-        array $label = []
+        array $label = [],
+        array $lockedMetadataIds = []
     ): ResourceWorkflowPlace {
         $mock = $this->createMock(ResourceWorkflowPlace::class);
         $mock->method('getId')->willReturn($id);
         $mock->method('getMissingRequiredMetadataIds')->willReturn($missingMetadataIds);
         $mock->method('restrictingMetadataIds')->willReturnCallback(
-            function () use ($autoAssignMetadataIds, $assigneeMetadataIds) {
-                return new FluentRestrictingMetadataSelector([], [], $assigneeMetadataIds, $autoAssignMetadataIds);
+            function () use ($lockedMetadataIds, $autoAssignMetadataIds, $assigneeMetadataIds) {
+                return new FluentRestrictingMetadataSelector([], $lockedMetadataIds, $assigneeMetadataIds, $autoAssignMetadataIds);
             }
         );
         $mock->method('getLabel')->willReturn($label);

@@ -1,9 +1,11 @@
 <?php
 namespace Repeka\Tests\Domain\Validation\Rules;
 
+use Repeka\Domain\Constants\SystemTransition;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Entity\ResourceContents;
+use Repeka\Domain\Entity\ResourceWorkflow;
 use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Domain\Validation\MetadataConstraints\AbstractMetadataConstraint;
 use Repeka\Domain\Validation\Rules\MetadataValuesSatisfyConstraintsRule;
@@ -56,8 +58,8 @@ class MetadataValuesSatisfyConstraintsRuleTest extends \PHPUnit_Framework_TestCa
                 $this->metadataWithBothConstraints,
             ]
         );
-        $resourceKind = $this->createResourceMock(1);
-        $this->rule = (new MetadataValuesSatisfyConstraintsRule($constraintManager, $metadataRepository))->forResource($resourceKind);
+        $resource = $this->createResourceMock(1);
+        $this->rule = (new MetadataValuesSatisfyConstraintsRule($constraintManager, $metadataRepository))->forResource($resource);
     }
 
     public function testAcceptsWhenThereAreNoConstraints() {
@@ -123,6 +125,27 @@ class MetadataValuesSatisfyConstraintsRuleTest extends \PHPUnit_Framework_TestCa
                         ],
                     ]
                 )
+            )
+        );
+    }
+
+    public function testOmitsLockedMetadata() {
+        $workflowPlace = $this->createWorkflowPlaceMock('abc', [], [], [], [], [$this->metadataWithBothConstraints->getId()]);
+        $workflow = $this->createMock(ResourceWorkflow::class);
+        $workflow->method('getPlace')->willReturn($workflowPlace);
+        $workflow->method('getPlaces')->willReturn([$workflowPlace]);
+        $resource = $this->createResourceMock(1, $this->createResourceKindMock(1, 'books', [], $workflow));
+        $this->rule = $this->rule->forResourceAndTransition($resource, SystemTransition::UPDATE()->toTransition($resource));
+        $this->constraint1->expects($this->once())->method('validateAll')
+            ->withConsecutive(
+                [$this->metadataWithConstraint1, ['b']]
+            );
+        $this->rule->validate(
+            ResourceContents::fromArray(
+                [
+                    $this->metadataWithBothConstraints->getId() => ['a'],
+                    $this->metadataWithConstraint1->getId() => ['b'],
+                ]
             )
         );
     }
