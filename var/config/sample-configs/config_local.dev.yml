@@ -29,6 +29,10 @@ repeka:
       icon: html
       admins:
         - Username: admin
+    - name: remarks
+      icon: mail
+      admins:
+        - Username: admin
   metadata_groups:
     - id: basic
       label:

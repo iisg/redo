@@ -70,6 +70,6 @@ JSON
             'PL' => 'Zgłaszanie uwag',
             'EN' => 'Report remark',
         ];
-        $this->handleCommand(new ResourceWorkflowCreateCommand($name, $places, [], 'cms', '', ''), self::REMARK_WORKFLOW);
+        $this->handleCommand(new ResourceWorkflowCreateCommand($name, $places, [], 'remarks', '', ''), self::REMARK_WORKFLOW);
     }
 }

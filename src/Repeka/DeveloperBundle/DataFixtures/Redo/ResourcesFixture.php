@@ -36,7 +36,7 @@ class ResourcesFixture extends RepekaFixture {
         $this->addDictionaries();
         $this->addBooks();
         $this->addCmsPages();
-        $this->addCmsReportRemark();
+        $this->addRemarksReportRemark();
     }
 
     private function addDictionaries() {
@@ -694,14 +694,14 @@ class ResourcesFixture extends RepekaFixture {
         );
     }
 
-    private function addCmsReportRemark() {
-        $cmsRemarkRk = $this->getReference(ResourceKindsFixture::REFERENCE_RESOURCE_KIND_CMS_REMARKS);
+    private function addRemarksReportRemark() {
+        $remarkRk = $this->getReference(ResourceKindsFixture::REFERENCE_RESOURCE_KIND_REMARKS_REMARKS);
         $this->handleCommand(
             new ResourceCreateCommand(
-                $cmsRemarkRk,
+                $remarkRk,
                 $this->contents(
                     [
-                        MetadataFixture::REFERENCE_METADATA_CMS_TITLE => ['Uwagi'],
+                        MetadataFixture::REFERENCE_METADATA_REMARK_NAME => ['Uwagi'],
                         SystemMetadata::VISIBILITY => [
                             $this->getReference(self::REFERENCE_USER_GROUP_ADMINS)->getId(),
                         ],

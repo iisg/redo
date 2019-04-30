@@ -141,9 +141,9 @@ JSON
         $places = json_decode(
             <<<JSON
 [
-	{"id": "2ln8ff5a6", "label": {"EN": "Reported remark", "PL": "Zgłoszona uwaga"},        {$this->createMetadataRequirements('cms', ['remark_title', 'email_address', 'remark_content'])}, "pluginsConfig": [{"name": "repekaMetadataValueSetter", "config": {"metadataName": "report_date", "metadataValue": "{{ 'now'|date('Y-m-d H:i:s') }}", "setOnlyWhenEmpty": true}}]}, 
-	{"id": "y0ay2nfa5", "label": {"EN": "Served", "PL": "Obsłużona"},                       {$this->createMetadataRequirements('cms', [], [], ['report_manager'])}, "pluginsConfig": []}, 
-	{"id": "sdskdr3xx", "label": {"EN": "Taken to serivce", "PL": "Przyjęta do obsługi"},   {$this->createMetadataRequirements('cms', [], [], ['report_manager'])}, "pluginsConfig": [{"name": "repekaMetadataValueSetter", "config": {"metadataName": "Report manager", "metadataValue": "1", "setOnlyWhenEmpty": true}}, {"name": "repekaMetadataValueRemover", "config": {"metadataName": "Reproductor", "metadataValuePattern": ".*"}}, {"name": "repekaMetadataValueSetter", "config": {"metadataName": "Visibility", "metadataValue": "1"}}]}
+	{"id": "2ln8ff5a6", "label": {"EN": "Reported remark", "PL": "Zgłoszona uwaga"},        {$this->createMetadataRequirements('remarks', ['remark_title', 'email_address', 'remark_content'])}, "pluginsConfig": [{"name": "repekaMetadataValueSetter", "config": {"metadataName": "report_date", "metadataValue": "{{ 'now'|date('Y-m-d H:i:s') }}", "setOnlyWhenEmpty": true}}]}, 
+	{"id": "y0ay2nfa5", "label": {"EN": "Served", "PL": "Obsłużona"},                       {$this->createMetadataRequirements('remarks', [], [], ['report_manager'])}, "pluginsConfig": []}, 
+	{"id": "sdskdr3xx", "label": {"EN": "Taken to serivce", "PL": "Przyjęta do obsługi"},   {$this->createMetadataRequirements('remarks', [], [], ['report_manager'])}, "pluginsConfig": [{"name": "repekaMetadataValueSetter", "config": {"metadataName": "Report manager", "metadataValue": "1", "setOnlyWhenEmpty": true}}, {"name": "repekaMetadataValueRemover", "config": {"metadataName": "Reproductor", "metadataValuePattern": ".*"}}, {"name": "repekaMetadataValueSetter", "config": {"metadataName": "Visibility", "metadataValue": "1"}}]}
 ]
 JSON
             ,

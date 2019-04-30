@@ -22,8 +22,8 @@ class ResourceKindsStage2Fixture extends RepekaFixture {
 
     private function updateRemarkResourceKind() {
         /** @var ResourceKind $remarkRk */
-        $remarksRk = $this->getReference(ResourceKindsFixture::REFERENCE_RESOURCE_KIND_CMS_REMARKS);
-        $reportedRemarksRk = $this->getReference(ResourceKindsFixture::REFERENCE_RESOURCE_KIND_CMS_REPORTED_REMARKS);
+        $remarksRk = $this->getReference(ResourceKindsFixture::REFERENCE_RESOURCE_KIND_REMARKS_REMARKS);
+        $reportedRemarksRk = $this->getReference(ResourceKindsFixture::REFERENCE_RESOURCE_KIND_REMARK_REPORTED_REMARKS);
         $this->handleCommand(
             new ResourceKindUpdateCommand(
                 $remarksRk,

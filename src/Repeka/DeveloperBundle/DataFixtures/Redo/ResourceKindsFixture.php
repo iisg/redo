@@ -22,8 +22,8 @@ class ResourceKindsFixture extends RepekaFixture {
     const REFERENCE_RESOURCE_KIND_USER_GROUP = 'resource-kind-user-group';
     const REFERENCE_RESOURCE_KIND_CMS_STATIC_PAGE = 'resource-kind-cms-static-page';
     const REFERENCE_RESOURCE_KIND_CMS_CONFIG = 'resource-kind-cms-config';
-    const REFERENCE_RESOURCE_KIND_CMS_REMARKS = 'resource-kind-cms-remarks';
-    const REFERENCE_RESOURCE_KIND_CMS_REPORTED_REMARKS = 'resource-kind-cms-reported-remarks';
+    const REFERENCE_RESOURCE_KIND_REMARKS_REMARKS = 'resource-kind-remarks-remarks';
+    const REFERENCE_RESOURCE_KIND_REMARK_REPORTED_REMARKS = 'resource-kind-remark-reported-remarks';
 
     /**
      * @inheritdoc
@@ -33,6 +33,7 @@ class ResourceKindsFixture extends RepekaFixture {
         $this->addDictionariesResourceKinds();
         $this->addUserGroupResourceKind();
         $this->addCmsResourceKinds();
+        $this->addRemarksResourceKinds();
     }
 
     private function addBooksResourceKinds() {
@@ -200,10 +201,6 @@ class ResourceKindsFixture extends RepekaFixture {
     private function addCmsResourceKinds() {
         $titleMetadataId = $this->metadata(MetadataFixture::REFERENCE_METADATA_CMS_TITLE)->getId();
         $configIdMetadataId = $this->metadata(MetadataFixture::REFERENCE_METADATA_CMS_CONFIG_ID)->getId();
-        $remarkTitleMetadataId = $this->metadata(MetadataFixture::REFERENCE_METADATA_CMS_REMARK_TITLE)->getId();
-        $remarkWorkflow = $this->handleCommand(
-            new ResourceWorkflowQuery($this->getReference(ResourceWorkflowsFixture::REMARK_WORKFLOW)->getId())
-        );
         $this->handleCommand(
             new ResourceKindCreateCommand(
                 'static_page',
@@ -236,6 +233,14 @@ class ResourceKindsFixture extends RepekaFixture {
             ),
             self::REFERENCE_RESOURCE_KIND_CMS_CONFIG
         );
+    }
+
+    public function addRemarksResourceKinds() {
+        $remarkNameMetadataId = $this->metadata(MetadataFixture::REFERENCE_METADATA_REMARK_NAME)->getId();
+        $remarkTitleMetadataId = $this->metadata(MetadataFixture::REFERENCE_METADATA_REMARK_TITLE)->getId();
+        $remarkWorkflow = $this->handleCommand(
+            new ResourceWorkflowQuery($this->getReference(ResourceWorkflowsFixture::REMARK_WORKFLOW)->getId())
+        );
         $this->handleCommand(
             new ResourceKindCreateCommand(
                 'uwagi',
@@ -244,11 +249,11 @@ class ResourceKindsFixture extends RepekaFixture {
                     'EN' => 'Remarks',
                 ],
                 [
-                    $this->resourceLabelMetadata('{{r|m' . $titleMetadataId . '}}'),
-                    $this->metadata(MetadataFixture::REFERENCE_METADATA_CMS_TITLE),
+                    $this->resourceLabelMetadata('{{r|m' . $remarkNameMetadataId . '}}'),
+                    $this->metadata(MetadataFixture::REFERENCE_METADATA_REMARK_NAME),
                 ]
             ),
-            self::REFERENCE_RESOURCE_KIND_CMS_REMARKS
+            self::REFERENCE_RESOURCE_KIND_REMARKS_REMARKS
         );
         $this->handleCommand(
             new ResourceKindCreateCommand(
@@ -259,16 +264,16 @@ class ResourceKindsFixture extends RepekaFixture {
                 ],
                 [
                     $this->resourceLabelMetadata('{{r|m' . $remarkTitleMetadataId . '}}'),
-                    $this->metadata(MetadataFixture::REFERENCE_METADATA_CMS_EMAIL_ADDRESS),
-                    $this->metadata(MetadataFixture::REFERENCE_METADATA_CMS_REMARK_TITLE),
-                    $this->metadata(MetadataFixture::REFERENCE_METADATA_CMS_REMARK_CONTENT),
-                    $this->metadata(MetadataFixture::REFERENCE_METADATA_CMS_REMARK_MANAGER),
-                    $this->metadata(MetadataFixture::REFERENCE_METADATA_CMS_REMARK_CREATION_DATE),
+                    $this->metadata(MetadataFixture::REFERENCE_METADATA_REMARK_EMAIL_ADDRESS),
+                    $this->metadata(MetadataFixture::REFERENCE_METADATA_REMARK_TITLE),
+                    $this->metadata(MetadataFixture::REFERENCE_METADATA_REMARK_CONTENT),
+                    $this->metadata(MetadataFixture::REFERENCE_METADATA_REMARK_MANAGER),
+                    $this->metadata(MetadataFixture::REFERENCE_METADATA_REMARK_CREATION_DATE),
                 ],
                 false,
                 $remarkWorkflow
             ),
-            self::REFERENCE_RESOURCE_KIND_CMS_REPORTED_REMARKS
+            self::REFERENCE_RESOURCE_KIND_REMARK_REPORTED_REMARKS
         );
     }
 }

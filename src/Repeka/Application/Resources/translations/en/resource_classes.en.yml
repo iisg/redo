@@ -134,3 +134,36 @@ cms:
   Added resource will be in following place: Added template will be in following place
   To states: To states
   Top level resources: Top level cms
+remarks:
+  resources: Remarks
+  settings: Remarks settings
+  resource-kinds: Remark kinds
+  resources/details: Remark
+  metadata: Metadata kinds
+  metadata/details: Metadata kinds
+  workflows: Workflows
+  workflows/new: Workflows
+  workflows/details: Workflows
+  Metadata Kinds: Metadata Kinds
+  Add new resource kind: Add new remark kind
+  Add new metadata kind: Add new metadata kind
+  Add new resource: Add new template
+  Add metadata kind: Add metadata kind
+  No metadata kinds.: No metadata kinds.
+  No resource kinds.: No remark kinds.
+  No resources.: No remarks.
+  Resource: Remark
+  Workflow: Workflow
+  No workflows.: No workflows.
+  Resource's state prevents modification of these values.: Remark's state prevents modification of these values.
+  Metadata value required: Metadata value required
+  This metadata can be used to specify assignees: This metadata can be used to specify assignees
+  New workflow: New workflow
+  Save the workflow and assign it to any resource kind to edit the table: Save the workflow and assign it to any resource kind to edit the table
+  Assign the workflow to any resource kind to display the table: Assign the workflow to any resource kind to display the table
+  Assign the workflow to any resource kind to edit the table: Assign the workflow to any resource kind to edit the table
+  This metadata determines who can perform these actions:: This metadata determines who can perform these actions:
+  Edit resource before transition: Edit remark before transition
+  Added resource will be in following place: Added remark will be in following place
+  To states: To states
+  Top level resources: Top level remarks

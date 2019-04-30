@@ -117,7 +117,7 @@ cms:
   Add new resource kind: Neue Art Schablonen hinzufügen
   Add new metadata kind: Neue Art Metadaten hinzufügen
   Add new resource: Neue Schablone hinzufügen
-  Add metadata kind: Neue Art einer der  Metadaten hinzufügen
+  Add metadata kind: Neue Art einer der Metadaten hinzufügen
   No metadata kinds.: Keine Arten Metdaten.
   No resource kinds.: Keine Arten Schablonen.
   No resources.: Keine Schablonen.
@@ -135,4 +135,38 @@ cms:
   Added resource will be in following place: Die hinzugefügte Schablone wird sich im Stand befinden
   To states: Zum Stand
   List of required metadata: Liste der Metadaten, die zum Übergang erforderlich sind
+  # [Missing] Top level resources
+remarks:
+  # [Missing] resources
+  # [Missing] resources/details
+  # [Missing] settings
+  # [Missing] resource-kinds
+  # [Missing] resource-kinds/details
+  metadata: Arten Metadaten
+  metadata/details: Arten Metadaten
+  workflows: Prozesse
+  workflows/new: Prozesse
+  workflows/details: Prozesse
+  Metadata Kinds: Arten Metadaten
+  # [Missing] Add new resource kind
+  # [Missing] Add new metadata kind
+  # [Missing] Add new resource
+  # [Missing] Add metadata kind
+  No metadata kinds.: Keine Arten Metdaten.
+  # [Missing] No resource kinds.
+  # [Missing] No resources.
+  Workflow: Prozess
+  No workflows.: Keine Prozesse.
+  # [Missing] Resource's state prevents modification of these values.
+  Metadata value required: Der Wert der Metadaten wird erfordert
+  This metadata can be used to specify assignees: Diese Metadaten können für Bezeichnung der verantwortlichen Person verwendet werden
+  New workflow: Neuer Prozess
+  # [Missing] Save the workflow and assign it to any resource kind to edit the table
+  # [Missing] Assign the workflow to any resource kind to display the table
+  # [Missing] Assign the workflow to any resource kind to edit the table
+  # [Missing] This metadata determines who can perform these actions
+  # [Missing] Edit resource before transition
+  # [Missing] Added resource will be in following place
+  # [Missing] To states
+  # [Missing] List of required metadata
   # [Missing] Top level resources

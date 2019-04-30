@@ -33,7 +33,7 @@ class ReproductorPermissionHelperIntegrationTest extends IntegrationTestCase {
         $this->helper = $this->container->get(ReproductorPermissionHelper::class);
         $this->testerUser = $this->getUserByName('tester');
         $this->ebooks = $this->findResourceByContents(['Nazwa kategorii' => 'E-booki']);
-        $this->remark = $this->findResourceByContents(['Tytuł strony' => 'Uwagi']);
+        $this->remark = $this->findResourceByContents(['Nazwa uwagi' => 'Uwagi']);
     }
 
     public function testNoCollectionIfReproductorNowhere() {

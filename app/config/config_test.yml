@@ -26,6 +26,7 @@ repeka:
       admins:
         - Username: admin
     - name: cms
+    - name: remarks
   templating:
     templates_resource_class: cms
   expose_endpoints:

@@ -169,3 +169,37 @@ grants:
   Added resource will be in following place: Dodany zasób znajdzie się w stanie
   To states: Do stanu
   Top level resources: Zasoby głównego poziomu
+remarks:
+  resources: Uwagi
+  resources/details: Uwagi
+  settings: Ustawienia uwag
+  resource-kinds: Rodzaje uwag
+  resource-kinds/details: Rodzaje uwag
+  metadata: Rodzaje metadanych
+  metadata/details: Rodzaje metadanych
+  workflows: Procesy
+  workflows/new: Procesy
+  workflows/details: Procesy
+  Metadata Kinds: Rodzaje metadanych
+  Add new resource kind: Dodaj nowy rodzaj uwag
+  Add new metadata kind: Dodaj nowy rodzaj metadanych
+  Add new resource: Dodaj nową uwagę
+  Add metadata kind: Dodaj rodzaj metadanej
+  No metadata kinds.: Brak rodzajów metadanych.
+  No resource kinds.: Brak rodzajów uwag.
+  No resources.: Brak uwag.
+  Resource: Uwaga
+  Workflow: Proces
+  No workflows.: Brak procesów
+  Resource's state prevents modification of these values.: Stan uwagi uniemożliwia modyfikację tych wartości.
+  Metadata value required: Wartość metadanej jest wymagana
+  This metadata can be used to specify assignees: Ta metadana może być używana do określania osoby odpowiedzialnej
+  New workflow: Nowy proces
+  Save the workflow and assign it to any resource kind to edit the table: Zapisz proces i przypisz go do dowolnego rodzaju zasobu aby edytować tabelę
+  Assign the workflow to any resource kind to display the table: Przypisz proces do jakiekogolwiek rodzaju zasobu aby wyświetlić tabelę
+  Assign the workflow to any resource kind to edit the table: Przypisz proces do jakiekogolwiek rodzaju zasobu aby edytować tabelę
+  This metadata determines who can perform these actions:: Ta metadana określa, kto może wykonać następujące czynności:
+  Edit resource before transition: Edycja uwagi przed przejściem
+  Added resource will be in following place: Dodana uwaga znajdzie się w stanie
+  To states: Do stanu
+  Top level resources: Uwagi głównego poziomu

@@ -59,11 +59,13 @@ class MetadataFixture extends RepekaFixture {
     const REFERENCE_METADATA_CMS_RENDERED_CONTENT = 'metadata-cms-rendered-content';
     const REFERENCE_METADATA_CMS_CONFIG_ID = 'metadata-cms-config-id';
     const REFERENCE_METADATA_CMS_CONFIG_VALUE = 'metadata-cms-config-value';
-    const REFERENCE_METADATA_CMS_REMARK_TITLE = 'metadata-cms-remark-title';
-    const REFERENCE_METADATA_CMS_REMARK_CONTENT = 'metadata-cms-remark-content';
-    const REFERENCE_METADATA_CMS_EMAIL_ADDRESS = 'metadata-cms-email-address';
-    const REFERENCE_METADATA_CMS_REMARK_MANAGER = 'metadata-cms-remark-manager';
-    const REFERENCE_METADATA_CMS_REMARK_CREATION_DATE = 'metadata-cms-remark-creation-date';
+
+    const REFERENCE_METADATA_REMARK_NAME = 'metadata-remark-name';
+    const REFERENCE_METADATA_REMARK_TITLE = 'metadata-remark-title';
+    const REFERENCE_METADATA_REMARK_CONTENT = 'metadata-remark-content';
+    const REFERENCE_METADATA_REMARK_EMAIL_ADDRESS = 'metadata-remark-email-address';
+    const REFERENCE_METADATA_REMARK_MANAGER = 'metadata-remark-manager';
+    const REFERENCE_METADATA_REMARK_CREATION_DATE = 'metadata-remark-creation-date';
 
     const REFERENCE_METADATA_DEPARTMENTS_NAME = 'metadata-departments-name';
     const REFERENCE_METADATA_DEPARTMENTS_ABBREV = 'metadata-departments-abbrev';
@@ -78,6 +80,7 @@ class MetadataFixture extends RepekaFixture {
         $this->addBooksMetadata();
         $this->addDepartmentsMetadata();
         $this->addCmsMetadata();
+        $this->addRemarksMetadata();
     }
 
     private function addBooksMetadata(): void {
@@ -869,6 +872,26 @@ TEMPLATE
             ),
             self::REFERENCE_METADATA_CMS_RENDERED_CONTENT
         );
+    }
+
+    public function addRemarksMetadata() {
+        $metadata = [];
+        $metadata[] = $this->handleCommand(
+            MetadataCreateCommand::fromArray(
+                [
+                    'name' => 'Nazwa uwagi',
+                    'label' => [
+                        'PL' => 'Nazwa uwagi',
+                        'EN' => 'Remark name',
+                    ],
+                    'control' => MetadataControl::TEXT,
+                    'shownInBrief' => true,
+                    'resourceClass' => 'remarks',
+                    'constraints' => $this->textConstraints(1),
+                ]
+            ),
+            self::REFERENCE_METADATA_REMARK_NAME
+        );
         $metadata[] = $this->handleCommand(
             MetadataCreateCommand::fromArray(
                 [
@@ -878,11 +901,11 @@ TEMPLATE
                         'EN' => 'Remark title',
                     ],
                     'control' => MetadataControl::TEXT,
-                    'resourceClass' => 'cms',
+                    'resourceClass' => 'remarks',
                     'constraints' => ['maxCount' => 1],
                 ]
             ),
-            self::REFERENCE_METADATA_CMS_REMARK_TITLE
+            self::REFERENCE_METADATA_REMARK_TITLE
         );
         $metadata[] = $this->handleCommand(
             MetadataCreateCommand::fromArray(
@@ -893,11 +916,11 @@ TEMPLATE
                         'EN' => 'Email address',
                     ],
                     'control' => MetadataControl::TEXT,
-                    'resourceClass' => 'cms',
+                    'resourceClass' => 'remarks',
                     'constraints' => ['maxCount' => 1],
                 ]
             ),
-            self::REFERENCE_METADATA_CMS_EMAIL_ADDRESS
+            self::REFERENCE_METADATA_REMARK_EMAIL_ADDRESS
         );
         $metadata[] = $this->handleCommand(
             MetadataCreateCommand::fromArray(
@@ -908,11 +931,11 @@ TEMPLATE
                         'EN' => 'Remark content',
                     ],
                     'control' => MetadataControl::TEXTAREA,
-                    'resourceClass' => 'cms',
+                    'resourceClass' => 'remarks',
                     'constraints' => ['maxCount' => 1],
                 ]
             ),
-            self::REFERENCE_METADATA_CMS_REMARK_CONTENT
+            self::REFERENCE_METADATA_REMARK_CONTENT
         );
         $metadata[] = $this->handleCommand(
             MetadataCreateCommand::fromArray(
@@ -923,11 +946,11 @@ TEMPLATE
                         'EN' => 'Report manager',
                     ],
                     'control' => MetadataControl::RELATIONSHIP,
-                    'resourceClass' => 'cms',
+                    'resourceClass' => 'remarks',
                     'constraints' => $this->relationshipConstraints(1, [SystemResourceKind::USER]),
                 ]
             ),
-            self::REFERENCE_METADATA_CMS_REMARK_MANAGER
+            self::REFERENCE_METADATA_REMARK_MANAGER
         );
         $metadata[] = $this->handleCommand(
             MetadataCreateCommand::fromArray(
@@ -938,11 +961,11 @@ TEMPLATE
                         'EN' => 'Report date',
                     ],
                     'control' => MetadataControl::TIMESTAMP,
-                    'resourceClass' => 'cms',
+                    'resourceClass' => 'remarks',
                     'constraints' => $this->relationshipConstraints(1),
                 ]
             ),
-            self::REFERENCE_METADATA_CMS_REMARK_CREATION_DATE
+            self::REFERENCE_METADATA_REMARK_CREATION_DATE
         );
     }
 }

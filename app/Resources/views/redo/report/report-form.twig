@@ -7,7 +7,7 @@
 
     <h1 class="report-page-header">{{ 'Report remark' | trans }}</h1>
 
-    {% set parentResourceForReport = resources({contentsFilter: {tytul_strony: 'Uwagi'}, resultsPerPage: 1}, -7)[0] %}
+    {% set parentResourceForReport = resources({contentsFilter: {nazwa_uwagi: 'Uwagi'}, resultsPerPage: 1}, -7)[0] %}
 
     <div class="report-form-container">
         <form action=""
