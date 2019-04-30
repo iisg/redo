@@ -40,6 +40,8 @@ class ResourceIntegrationTest extends IntegrationTestCase {
     private $metadata4;
     /** @var Metadata */
     private $metadata5;
+    /** @var Metadata */
+    private $metadata6;
     /** @var ResourceKind */
     private $resourceKind;
     /** @var ResourceKind */
@@ -95,10 +97,19 @@ class ResourceIntegrationTest extends IntegrationTestCase {
             'books',
             ['resourceKind' => [-1]]
         );
+        $this->metadata5 = $this->createMetadata('M5', ['PL' => 'metadata', 'EN' => 'metadata'], [], [], 'flexible-date');
+        $this->metadata6 = $this->createMetadata(
+            'M6',
+            ['PL' => 'metadata', 'EN' => 'metadata'],
+            [],
+            [],
+            'text',
+            'books',
+            ['uniqueInResourceClass' => true]
+        );
         $this->addSupportForResourceKindToMetadata(SystemMetadata::REPRODUCTOR, SystemResourceKind::USER);
         $this->addSupportForResourceKindToMetadata(SystemMetadata::VISIBILITY, SystemResourceKind::USER);
         $this->addSupportForResourceKindToMetadata(SystemMetadata::TEASER_VISIBILITY, SystemResourceKind::USER);
-        $this->metadata5 = $this->createMetadata('M5', ['PL' => 'metadata', 'EN' => 'metadata'], [], [], 'flexible-date');
         $this->workflowPlace1 = new ResourceWorkflowPlace(['PL' => 'key1', 'EN' => 'key1'], 'p1', [], [], [], [$this->metadata3->getId()]);
         $this->workflowPlace2 = new ResourceWorkflowPlace(['PL' => 'key2', 'EN' => 'key2'], 'p2', [], [], [], [$this->metadata4->getId()]);
         $this->transition = new ResourceWorkflowTransition(['PL' => 'key3', 'EN' => 'key3'], ['p1'], ['p2'], 't1');
@@ -113,7 +124,7 @@ class ResourceIntegrationTest extends IntegrationTestCase {
         $this->resourceKind = $this->createResourceKind(
             'Default RK',
             ['PL' => 'Resource kind', 'EN' => 'Resource kind'],
-            [$this->metadata1, $this->metadata2, $this->metadata5]
+            [$this->metadata1, $this->metadata2, $this->metadata5, $this->metadata6]
         );
         $this->resourceKindWithWorkflow = $this->createResourceKind(
             'Default RK with workflow',
@@ -126,6 +137,7 @@ class ResourceIntegrationTest extends IntegrationTestCase {
             $this->resourceKind,
             [
                 $this->metadata1->getId() => ['Test value'],
+                $this->metadata6->getId() => ['unique value'],
                 SystemMetadata::VISIBILITY => [1],
                 SystemMetadata::TEASER_VISIBILITY => [1],
             ]
@@ -286,6 +298,7 @@ class ResourceIntegrationTest extends IntegrationTestCase {
                 'contents' => ResourceContents::fromArray(
                     [
                         $this->metadata1->getId() => ['Test value'],
+                        $this->metadata6->getId() => ['unique value'],
                         SystemMetadata::RESOURCE_LABEL => '#' . $this->resource->getId(),
                         SystemMetadata::VISIBILITY => $this->resource->getValues(SystemMetadata::VISIBILITY),
                         SystemMetadata::TEASER_VISIBILITY => $this->resource->getValues(SystemMetadata::TEASER_VISIBILITY),
@@ -403,6 +416,22 @@ class ResourceIntegrationTest extends IntegrationTestCase {
         $this->assertEquals(['created'], $created->getValues($this->metadata1));
         $this->assertEquals([1], $created->getContents()->getValuesWithoutSubmetadata($this->metadata3));
         $this->assertEquals(['p1' => true], $created->getMarking());
+    }
+
+    public function testCloningResourceWithUniqueMetadata() {
+        $client = self::createAdminClient();
+        $client->apiRequest(
+            'POST',
+            self::ENDPOINT,
+            [
+                'id' => $this->resource->getId(),
+                'kindId' => $this->resource->getKind()->getId(),
+                'contents' => $this->resource->getContents()->toArray(),
+                'resourceClass' => 'books',
+                'cloneTimes' => 23,
+            ]
+        );
+        $this->assertStatusCode(201, $client->getResponse());
     }
 
     public function testCloningResourceWithoutWorkflow() {
