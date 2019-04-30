@@ -99,6 +99,7 @@ class TwigFrontendExtension extends \Twig_Extension {
             new \Twig_Filter('mapToValues', [$this, 'mapToValues']),
             new \Twig_Filter('slugify', [$this, 'slugify']),
             new \Twig_Filter('ucfirst', 'ucfirst'),
+            new \Twig_Filter('multilingualLabel', [$this, 'multilingualLabel']),
         ];
     }
 
@@ -447,5 +448,23 @@ ICON;
 
     public function slugify(string $value): string {
         return (new Slugify(['separator' => '+']))->slugify($value);
+    }
+
+    public function multilingualLabel(PrintableArray $values) {
+        $label = [];
+        foreach ($values as $value) {
+            /** @var MetadataValue $value */
+            $value = $value->toArray();
+            $submetadata = $value['submetadata'] ?? [];
+            unset($value['submetadata']);
+            if ($submetadata) {
+                $language = current($submetadata);
+                if ($language) {
+                    $value['submetadata'] = [SystemMetadata::RESOURCE_LABEL_LANGUAGE => $language[0]];
+                }
+            }
+            $label[] = $value;
+        }
+        return json_encode($label);
     }
 }

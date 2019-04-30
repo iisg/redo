@@ -4,12 +4,12 @@
     <a href="/api/resources/{{ resource.id }}/file/{{ metadataValue }}">{{ metadataValue | basename }}</a>
 {% elseif metadata.control == 'relationship' %}
     {% set relatedResource = resource(metadataValue) %}
-    {% set label = relatedResource | mLabel | onlyMetadataInCurrentLanguage(labelMetadata) %}
     {% if relatedResource is not empty %}
+        {% set label = relatedResource | mLabel | onlyMetadataInCurrentLanguage(labelMetadata, true) %}
         {% if relatedResource.resourceClass == 'books' and canView(relatedResource) %}
             <a href="/resources/{{ relatedResource.id }}">{{ label }}</a>
         {% elseif relatedResource|m('five_star_data_keyword')|length %}
-            {{ insertLinks(relatedResource | m('label') | first, relatedResource | m('five_star_data_keyword')) | raw }}
+            {{ insertLinks(label | first, relatedResource | m('five_star_data_keyword')) | raw }}
         {% elseif canViewTeaser(relatedResource) %}
             {{ label }}
         {% else %}
