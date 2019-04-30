@@ -48,7 +48,7 @@ class ResourceKindsFixture extends RepekaFixture {
   {% for title_language in title | sub{$titleLanguageMetadataId} %}
     {%  set submetadata = submetadata|merge(['{\"value\" : \"' ~ title_language ~ '\"}'])%}
   {% endfor %}
-  {\"value\": \"{{title}}\", \"submetadata\": {\"-8\": [{{submetadata|join(',')}}]}},
+    {\"value\": \"{{title | replace({'\"' : '\\\\\"'})}}\", \"submetadata\": {\"-8\": [{{submetadata|join(',')}}]}},
 {% endfor %}
 ]";
         $bookRK = $this->handleCommand(
