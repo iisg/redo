@@ -127,8 +127,8 @@ class RedoFtsSearchController extends Controller {
     private function adjustDateMetadataFilters(array $metadataFilters): array {
         foreach ($metadataFilters as &$metadataFilter) {
             if (array_key_exists('from', $metadataFilter) && array_key_exists('to', $metadataFilter)) {
-                $metadataFilter['from'] = $metadataFilter['from'] ? $metadataFilter['from'] . '-01-01' : '';
-                $metadataFilter['to'] = $metadataFilter['to'] ? $metadataFilter['to'] . '-12-31' : '';
+                $metadataFilter['from'] = is_numeric($metadataFilter['from']) ? abs($metadataFilter['from']) . '-01-01' : '';
+                $metadataFilter['to'] = is_numeric($metadataFilter['to']) ? abs($metadataFilter['to']) . '-12-31' : '';
             }
         }
         return $metadataFilters;
