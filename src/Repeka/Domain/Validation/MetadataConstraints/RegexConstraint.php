@@ -52,7 +52,7 @@ class RegexConstraint extends RespectValidationMetadataConstraint implements Con
         if ($metadataValue) {
             $pattern = $metadata->getConstraints()[$this->getConstraintName()] ?? null;
             if ($pattern) {
-                $phpRegex = $this->regexNormalizer->normalize($pattern) . 's'; // s - multiline modifier
+                $phpRegex = $this->regexNormalizer->normalize($pattern) . 'us'; // u - unicode modifier, s - multiline modifier
                 return Validator::regex($phpRegex);
             }
         }
