@@ -17,6 +17,8 @@
     {% endif %}
 {% elseif metadata.dynamic %}
     {{ metadataValue | raw }}
+{% elseif metadata.control == 'textarea' %}
+    <span class="pre-line">{ metadataValue | striptags }}</span>
 {% else %}
-    {{ metadataValue }}
+    {{ metadataValue | striptags }}
 {% endif %}

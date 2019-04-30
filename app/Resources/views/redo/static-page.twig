@@ -3,7 +3,7 @@
 {% block content %}
     {% include "redo/title-bar.twig" %}
     {% include "redo/menu.twig" %}
-    <h1>{{ resource | mTytulStrony }}</h1>
+    <h1>{{ resource | mTytulStrony | onlyMetadataInCurrentLanguage(metadata('tytulStrony'), true) }}</h1>
     {{ resource | mTrescStrony | onlyMetadataInCurrentLanguage(metadata('trescStrony'), true) | raw }}
     {% include "redo/footer.twig" %}
 {% endblock %}

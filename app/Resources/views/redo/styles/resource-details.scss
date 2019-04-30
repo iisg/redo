@@ -109,6 +109,7 @@ $download-options-flex-grow: 1;
         padding-right: $gap-size / 2;
         .metadata-value {
           margin-bottom: $gap-size / 4;
+          word-break: break-word;
         }
       }
     }
