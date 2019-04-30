@@ -29,7 +29,9 @@ function setCustomPrototypeMethods() {
       '.BRdn': '{{ 'Show/hide nav bar' | trans({}, 'bookreader') }}', // Would have to keep updating on state change to have just "Hide nav bar"
       '.BRup': '{{ 'Show/hide nav bar' | trans({}, 'bookreader') }}',
       '.book_top': '{{ 'First page' | trans({}, 'bookreader') }}',
-      '.book_bottom': '{{ 'Last page' | trans({}, 'bookreader') }}'
+      '.book_bottom': '{{ 'Last page' | trans({}, 'bookreader') }}',
+      '.download-left': '{{ 'Download left' | trans({}, 'bookreader') }}',
+      '.download-right': '{{ 'Download right' | trans({}, 'bookreader') }}'
     };
     if ('rl' === this.pageProgression) {
       titles['.book_leftmost'] = '{{ 'Last page' | trans({}, 'bookreader') }}';
@@ -90,6 +92,27 @@ function preventFullScreenExit() {
   };
 }
 
+function download(uri) {
+  var link = document.createElement("a");
+  link.download = uri.split('/').pop();
+  link.href = uri;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  delete link;
+}
+
+function buildPath(uri) {
+  var basePath = uri.split('/');
+  var filename = basePath.pop();
+  return basePath.slice(0, -2).join('/') + '/TIFFy_mastery/' + filename.replace('.jpg', '.tif');
+}
+
+function hideDownloadButtons() {
+  $('.download-left').hide();
+  $('.download-right').hide();
+}
+
 // adapted from https://github.com/internetarchive/bookreader/blob/87a0cbd219412da3d31e0e4fd51f8bd8397f1663/BookReaderDemo/BookReaderJSAdvanced.js
 function instantiateBookReader(selector, extraOptions) {
   selector = selector || '#BookReader';
@@ -137,8 +160,41 @@ function instantiateBookReader(selector, extraOptions) {
     ui: 'full',
     el: selector
   };
+
+  function toggleDownloadButtons() {
+    var downloadLeftBtn = $('.download-left');
+    var downloadRightBtn = $('.download-right');
+    if (br.mode == 2) {
+      if (br.getPageNum(br.currentIndex()) == 1) {
+        downloadLeftBtn.hide();
+        downloadRightBtn.show();
+      } else {
+        downloadLeftBtn.show();
+        if (br.currentIndex() == br.getNumLeafs() - 1 && br.getNumLeafs() % 2 == 0) {
+          downloadRightBtn.hide();
+        } else {
+          downloadRightBtn.show();
+        }
+      }
+    }
+  }
+
   Object.assign(options, extraOptions);
   var br = new BookReader(options);
   br.init();
+  var downloadIcon = '<span class="icon" size="1" role="presentation"><svg viewBox="0 0 1 1"><use xlink:href="/files/icons.svg#download"></use></svg></span>';
+  $('.BRcurrentpage').after(
+    "<button class=\"BRicon {{ (r|m('katalog_plikow_master')|length) ? 'download-left' : 'hidden' }} desktop-only js-tooltip\">L " + downloadIcon + "</button>"
+    + "<button class=\"BRicon {{ (r|m('katalog_plikow_master')|length) ? 'download-right' : 'hidden' }} desktop-only js-tooltip\">" + downloadIcon + " {{ 'R' | trans }}</button>"
+  ).ready(toggleDownloadButtons).on('DOMSubtreeModified', toggleDownloadButtons);
+  $('.download-left').click(function () {
+    download(buildPath(br._getPageURI(br.firstIndex)));
+  });
+  $('.download-right').click(function () {
+    download(buildPath(br._getPageURI(br.firstIndex + 1)));
+  });
+  $('.onepg').click(hideDownloadButtons);
+  $('.thumb').click(hideDownloadButtons);
+  $('.twopg').click(toggleDownloadButtons);
   return br;
 }

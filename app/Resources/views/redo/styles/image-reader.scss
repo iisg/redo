@@ -21,6 +21,13 @@ button.BRicon.full {
   background-image: url("../jspm_packages/github/internetarchive/bookreader@4.2.0/BookReader/images/BRicons.svg");
 }
 
+.download-left, .download-right {
+  color: #303030;
+  font-size: medium;
+  background: none;
+  padding: 2px;
+}
+
 .BRpageimage {
   background-color: #ebdfb6 !important;
 }

@@ -21,6 +21,9 @@ Show/hide nav bar: Pokaż/ukryj nawigację
 First page: Pierwsza strona
 Last page: Ostatnia strona
 Go back: Powrót
+Download left: Pobierz lewą stronę
+Download right: Pobierz prawą stronę
+R: P
 
 page_progress_indicator: Strona %current_page% z %total_pages%
 page_name: Strona %current_page%
