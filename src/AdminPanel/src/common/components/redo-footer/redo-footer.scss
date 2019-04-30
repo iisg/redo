@@ -122,7 +122,7 @@ redo-footer, .redo-footer {
   }
 }
 
-.high-contrast {
+@at-root .high-contrast {
   .redo-footer {
     .for-regular-colors-mode {
       display: none;
