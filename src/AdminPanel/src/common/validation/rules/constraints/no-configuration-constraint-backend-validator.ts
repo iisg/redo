@@ -28,7 +28,7 @@ export class NoConfigurationConstraintBackendValidator extends SingleValueConstr
   }
 
   validate(value: string, metadata: Metadata, resource: Resource): Promise<boolean> {
-    return this.backendValidation.getResult(this.validatedConstraintName(), value, metadata, resource);
+    return this.backendValidation.validate(this.validatedConstraintName(), value, metadata, resource);
   }
 
   getErrorMessage(metadata: Metadata, resource: Resource): string {
