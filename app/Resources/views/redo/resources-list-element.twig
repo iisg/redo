@@ -1,6 +1,8 @@
 {% set metadataToDisplayAlways = ['data_wydania'] %}
 {% set metadataToTisplayWhenNoSearchResults = ['opis', 'abstrakt'] %}
 {% set childrenAllowed = resource | childrenAllowed %}
+{% set filesAllowed = canUserSeeFiles(resource) %}
+{% set labelMetadata = metadata('label') %}
 
 <div class="resources-list-element">
     <a href="/resources/{{ resource.id }}">
@@ -26,7 +28,7 @@
     {% endif %}
 
     <div class="details-with-download-options">
-        {% if not childrenAllowed %}
+        {% if not childrenAllowed and filesAllowed %}
             {% include 'redo/resource-details/available-formats.twig' with {
                 'browsingAvailable': resource | metadata('pliki_strona_po_stronie') is not empty,
                 'hideGroupName': true

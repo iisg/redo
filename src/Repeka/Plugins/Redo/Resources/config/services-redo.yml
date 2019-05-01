@@ -39,3 +39,5 @@ services:
 
   Repeka\Plugins\Redo\Twig\:
     resource: '../../Twig'
+
+  Repeka\Plugins\Redo\Security\Voters\ResourceFileByAddressIpVoter: ~

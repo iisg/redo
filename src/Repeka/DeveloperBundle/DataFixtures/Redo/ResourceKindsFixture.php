@@ -19,6 +19,7 @@ class ResourceKindsFixture extends RepekaFixture {
     const REFERENCE_RESOURCE_KIND_DICTIONARY_DEPARTMENT = 'resource-kind-department';
     const REFERENCE_RESOURCE_KIND_DICTIONARY_UNIVERSITY = 'resource-kind-university';
     const REFERENCE_RESOURCE_KIND_DICTIONARY_PUBLISHING_HOUSE = 'resource-kind-publishing-house';
+    const REFERENCE_RESOURCE_KIND_DICTIONARY_ALLOWED_ADDR_IP = 'resource-kind-allowed-addr-ip';
     const REFERENCE_RESOURCE_KIND_USER_GROUP = 'resource-kind-user-group';
     const REFERENCE_RESOURCE_KIND_CMS_STATIC_PAGE = 'resource-kind-cms-static-page';
     const REFERENCE_RESOURCE_KIND_CMS_CONFIG = 'resource-kind-cms-config';
@@ -89,6 +90,7 @@ class ResourceKindsFixture extends RepekaFixture {
                     $this->metadata(MetadataFixture::REFERENCE_METADATA_RESOURCE_BIBTEX_KEY),
                     $this->metadata(MetadataFixture::REFERENCE_METADATA_RESOURCE_ORDER),
                     $this->metadata(MetadataFixture::REFERENCE_METADATA_MASTER_FILES),
+                    $this->metadata(MetadataFixture::REFERENCE_METADATA_ACCESS_RIGHTS),
                 ],
                 false,
                 $bookWorkflow
@@ -176,6 +178,18 @@ class ResourceKindsFixture extends RepekaFixture {
                 ]
             ),
             self::REFERENCE_RESOURCE_KIND_DICTIONARY_PUBLISHING_HOUSE
+        );
+        $this->handleCommand(
+            new ResourceKindCreateCommand(
+                'dostep_dla_adresow_ip',
+                ['PL' => 'Dostęp dla adresów IP', 'EN' => 'Allowed for IP addresses'],
+                [
+                    $this->resourceLabelMetadata("{{r|m{$nameMetadata->getId()}}}"),
+                    $nameMetadata->withOverrides(['label' => ['PL' => 'Adresy IP']]),
+                    $this->getReference(MetadataFixture::REFERENCE_METADATA_ALLOWED_ADDR_IP),
+                ]
+            ),
+            self::REFERENCE_RESOURCE_KIND_DICTIONARY_ALLOWED_ADDR_IP
         );
     }
 

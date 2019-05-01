@@ -53,6 +53,7 @@ class MetadataFixture extends RepekaFixture {
     const REFERENCE_METADATA_RESOURCE_BIBTEX_KEY = 'metadata-resource-bibtex-key';
     const REFERENCE_METADATA_RESOURCE_ORDER = 'metadata-resource-order';
     const REFERENCE_METADATA_MASTER_FILES = 'metadata-master-files';
+    const REFERENCE_METADATA_ACCESS_RIGHTS = 'metadata-access-rights';
 
     const REFERENCE_METADATA_CMS_TITLE = 'metadata-cms-name';
     const REFERENCE_METADATA_CMS_CONTENT = 'metadata-cms-template';
@@ -71,6 +72,7 @@ class MetadataFixture extends RepekaFixture {
     const REFERENCE_METADATA_DEPARTMENTS_ABBREV = 'metadata-departments-abbrev';
     const REFERENCE_METADATA_DEPARTMENTS_UNIVERSITY = 'metadata-departments-university';
     const REFERENCE_METADATA_ISSUING_DEPARTMENT = 'metadata-issuing-department';
+    const REFERENCE_METADATA_ALLOWED_ADDR_IP = 'metadata-allowed-addr-ip';
 
     /**
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
@@ -79,6 +81,7 @@ class MetadataFixture extends RepekaFixture {
     public function load(ObjectManager $manager) {
         $this->addBooksMetadata();
         $this->addDepartmentsMetadata();
+        $this->addDictionariesMetadata();
         $this->addCmsMetadata();
         $this->addRemarksMetadata();
     }
@@ -599,6 +602,7 @@ TEMPLATE
 {% endfor %}
 {{ depth }}
 TEMPLATE
+                    ,
                 ]
             ),
             self::REFERENCE_METADATA_PARENT_PATH_LENGTH
@@ -702,10 +706,25 @@ TEMPLATE
                     'control' => MetadataControl::INTEGER(),
                     'shownInBrief' => false,
                     'resourceClass' => 'books',
-                    'constraints' => $this->constraints(1)
+                    'constraints' => $this->constraints(1),
                 ]
             ),
             self::REFERENCE_METADATA_RESOURCE_ORDER
+        );
+        $addedMetadata[] = $this->handleCommand(
+            MetadataCreateCommand::fromArray(
+                [
+                    'name' => 'prawa_dostepu',
+                    'label' => [
+                        'PL' => 'Prawa dostępu',
+                        'EN' => 'Access rights',
+                    ],
+                    'control' => MetadataControl::RELATIONSHIP(),
+                    'shownInBrief' => false,
+                    'resourceClass' => 'books',
+                ]
+            ),
+            self::REFERENCE_METADATA_ACCESS_RIGHTS
         );
         $this->handleCommand(
             new MetadataUpdateOrderCommand(
@@ -765,6 +784,25 @@ TEMPLATE
                 ]
             ),
             self::REFERENCE_METADATA_DEPARTMENTS_UNIVERSITY
+        );
+    }
+
+    private function addDictionariesMetadata() {
+        $metadata = [];
+        $metadata[] = $this->handleCommand(
+            MetadataCreateCommand::fromArray(
+                [
+                    'name' => 'dozwolony_adres_ip',
+                    'label' => [
+                        'PL' => 'Dozwolony adres IP',
+                        'EN' => 'Allowed address IP',
+                    ],
+                    'control' => MetadataControl::TEXT,
+                    'shownInBrief' => false,
+                    'resourceClass' => 'dictionaries',
+                ]
+            ),
+            self::REFERENCE_METADATA_ALLOWED_ADDR_IP
         );
     }
 

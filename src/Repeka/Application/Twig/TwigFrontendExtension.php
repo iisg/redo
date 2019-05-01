@@ -209,6 +209,9 @@ ICON;
         if (isset($filters['sortBy']) && is_array($filters['sortBy'])) {
             $builder->sortBy([$filters['sortBy']]);
         }
+        if (isset($filters['ids']) && is_array($filters['ids'])) {
+            $builder->filterByIds([$filters['ids']]);
+        }
         if ($permissionMetadataNameOrId) {
             $metadata = $this->metadataRepository->findByNameOrId($permissionMetadataNameOrId);
             $builder->setPermissionMetadataId($metadata->getId());

@@ -6,6 +6,7 @@
 {% set childrenAllowed = resource | childrenAllowed %}
 {% set hasBrowsableContents = (resource | metadata('pliki_strona_po_stronie')) is not empty %}
 {% set labelMetadata = metadata('label') %}
+{% set filesAllowed = canUserSeeFiles(resource) %}
 
 {% block content %}
     {% include "redo/title-bar.twig" %}
@@ -136,6 +137,25 @@
                         </div>
                     </fieldset>
                 </div>
+                {% if hasBrowsableContents %}
+                    <div class="download-options">
+                        <span class="download-options-icon">{{ icon('book', 1.5) }}</span>
+                        <fieldset>
+                            <div class="formats in-one-line">
+                                {% if filesAllowed %}
+                                    <a href="/resources/{{ resource.id }}/browse"
+                                        title="{{ 'Browse resource' | trans }}">
+                                        {{ 'Browse' | trans }}
+                                    </a>
+                                {% else %}
+                                    <span class="text-center small">
+                                        {{ resource | m('prawa_dostepu') | mLabel }}
+                                    </span>
+                                {% endif %}
+                            </div>
+                        </fieldset>
+                    </div>
+                {% endif %}
             </div>
         </div>
         <div class="details-container">
@@ -190,8 +210,7 @@
                         {% endif %}
                     {% endfor %}
                 </div>
-                {% include "redo/search/pagination.twig" with {'pagination': pagination, 'route_params': {'resourceId':
-                    resource.id}} %}
+                {% include "redo/search/pagination.twig" with {'pagination': pagination, 'route_params': {'resourceId': resource.id}} %}
             </div>
         {% endif %}
     </div>

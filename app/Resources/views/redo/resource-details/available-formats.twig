@@ -30,21 +30,29 @@
             {% endif %}
             <div class="formats {{ browsingAvailable ? 'in-column' }} ">
                 {% if browsingAvailable %}
-                    <a href="/resources/{{ resource.id }}/browse"
-                        title="{{ 'Browse resource' | trans }}">
-                        {{ 'Browse' | trans }}
-                    </a>
-                {% endif %}
-                {% for format in downloadFormats %}
-                    {% if format.fileAvailable %}
-                        <a href="{{ format.url }}"
-                            download
-                            title="{{ format.title }}"
-                            aria-label="{{ format.title }}">
-                            {{ format.name }}
+                    {% if filesAllowed %}
+                        <a href="/resources/{{ resource.id }}/browse"
+                            title="{{ 'Browse resource' | trans }}">
+                            {{ 'Browse' | trans }}
                         </a>
                     {% endif %}
-                {% endfor %}
+                {% endif %}
+                {% if filesAllowed %}
+                    {% for format in downloadFormats %}
+                        {% if format.fileAvailable %}
+                            <a href="{{ format.url }}"
+                                download
+                                title="{{ format.title }}"
+                                aria-label="{{ format.title }}">
+                                {{ format.name }}
+                            </a>
+                        {% endif %}
+                    {% endfor %}
+                {% else %}
+                    <span class="text-center small">
+                        {{ resource | m('prawa_dostepu') | mLabel }}
+                    </span>
+                {% endif %}
             </div>
         </fieldset>
     </div>

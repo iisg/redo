@@ -123,18 +123,18 @@ class ResourcesFilesController extends ApiController {
      * @Method("GET")
      * @Security("is_granted('METADATA_VISIBILITY', resource)")
      */
-    public function thumbnailAction(ResourceEntity $resource, string $filepath) {
+    public function thumbnailAction(Request $request, ResourceEntity $resource, string $filepath) {
         // example thumbnail path: lresourceFiles_SU1HXzIwMTgxMDE0XzE1NDI0OC5KUEc1544087790.png
         preg_match('#l(.+)_(.+)#', $filepath, $matches);
         if ($matches) {
-            return $this->fileAction($resource, $matches[1] . '/.tmb/' . $filepath);
+            return $this->fileAction($request, $resource, $matches[1] . '/.tmb/' . $filepath);
         } elseif (strpos($filepath, 'temp_') === 0) {
             // temp files can be in any directory... look for them.
             $uploadDirs = $this->resourceFileStorage->uploadDirsForResource($resource);
             foreach ($uploadDirs as $uploadDir) {
                 $possibleThumbPath = $uploadDir['path'] . '/.tmb/' . $filepath;
                 if (file_exists($possibleThumbPath)) {
-                    return $this->fileAction($resource, $possibleThumbPath);
+                    return $this->fileAction($request, $resource, $possibleThumbPath);
                 }
             }
         }

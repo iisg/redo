@@ -36,7 +36,6 @@ class RedoFilesController extends Controller {
      * @Security("is_granted('METADATA_VISIBILITY', resource)")
      */
     public function fileAction(Request $request, ResourceEntity $resource, string $filepath) {
-        $this->denyAccessUnlessGranted('FILE_DOWNLOAD', ['resource' => $resource, 'filepath' => $filepath]);
         $response = $this->forward(
             'Repeka\Application\Controller\Api\ResourcesFilesController::fileAction',
             ['resource' => $resource, 'filepath' => $filepath]

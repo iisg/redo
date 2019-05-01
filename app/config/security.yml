@@ -28,3 +28,6 @@ security:
         secret: '%secret%'
         lifetime: 604800 # 1 week in seconds
         path: /
+  access_decision_manager:
+    strategy: unanimous
+    allow_if_all_abstain: false

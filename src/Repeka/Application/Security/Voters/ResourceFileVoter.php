@@ -12,6 +12,7 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
 class ResourceFileVoter extends Voter {
+    const FILE_DOWNLOAD_PERMISSION = 'FILE_DOWNLOAD';
     /** @var MetadataRepository */
     private $metadataRepository;
 
@@ -20,7 +21,7 @@ class ResourceFileVoter extends Voter {
     }
 
     protected function supports($attribute, $subject) {
-        return $attribute === 'FILE_DOWNLOAD'
+        return $attribute === self::FILE_DOWNLOAD_PERMISSION
             && is_array($subject)
             && array_key_exists('resource', $subject)
             && $subject['resource'] instanceof ResourceEntity
@@ -33,7 +34,6 @@ class ResourceFileVoter extends Voter {
         /** @var ResourceEntity $resource */
         $resource = $subject['resource'];
         $path = $subject['filepath'];
-
         return $this->isUserOperatorOrAdmin($resource, $token)
             || $this->pathInMetadataValues(MetadataControl::DIRECTORY(), $resource->getContents(), $this->getAllPossibleSubpaths($path))
             || $this->pathInMetadataValues(MetadataControl::FILE(), $resource->getContents(), [$path]);
