@@ -22,8 +22,8 @@ class UserAuthenticateCommand extends AbstractCommand implements NonValidatedCom
     /** @SuppressWarnings("PHPMD.BooleanArgumentFlag") */
     public function __construct(string $username, ContainerInterface $container, bool $successful = true) {
         $this->username = $username;
-        $request = $container->get('request_stack')->getCurrentRequest();
-        $this->addressIp = $request ? $request->getClientIp() : '';
+        $masterRequest = $container->get('request_stack')->getCurrentRequest();
+        $this->addressIp = $masterRequest ? $masterRequest->getClientIp() : '';
         $this->successful = $successful;
     }
 

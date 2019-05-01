@@ -31,7 +31,7 @@ repeka:
   expose_endpoints:
     /about:
       metadata: wyrenderowana_tresc_strony
-      resourceId: 21
+      resourceId: 19
     /resources-title/{resourceId}:
       metadata: tytul
   elasticsearch:

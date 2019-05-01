@@ -2,7 +2,6 @@
 namespace Repeka\DeveloperBundle\DataFixtures\Redo;
 
 use Doctrine\Common\Persistence\ObjectManager;
-use phpDocumentor\Reflection\Types\This;
 use Repeka\Application\Entity\UserEntity;
 use Repeka\DeveloperBundle\DataFixtures\RepekaFixture;
 use Repeka\Domain\Constants\SystemMetadata;
@@ -25,8 +24,6 @@ class ResourcesFixture extends RepekaFixture {
     const REFERENCE_USER_GROUP_SIGNED = 'resource-user-group-signed';
     const REFERENCE_RESOURCE_CATEGORY_EBOOKS = 'resource-category-ebooks';
     const REFERENCE_BOOK_1 = 'resource-book-1';
-    const REFERENCE_ALLOWED_FOR_ALL = 'resource-allowed-for-all';
-    const REFERENCE_NOT_ALLOWED = 'resource-not-allowed';
 
     /**
      * @inheritdoc
@@ -46,7 +43,6 @@ class ResourcesFixture extends RepekaFixture {
         $departmentResourceKind = $this->getReference(ResourceKindsFixture::REFERENCE_RESOURCE_KIND_DICTIONARY_DEPARTMENT);
         $universityResourceKind = $this->getReference(ResourceKindsFixture::REFERENCE_RESOURCE_KIND_DICTIONARY_UNIVERSITY);
         $publishingHouseResouceKind = $this->getReference(ResourceKindsFixture::REFERENCE_RESOURCE_KIND_DICTIONARY_PUBLISHING_HOUSE);
-        $allowedAddrIpResouceKind = $this->getReference(ResourceKindsFixture::REFERENCE_RESOURCE_KIND_DICTIONARY_ALLOWED_ADDR_IP);
         $userAdmin = $this->getReference(AdminAccountFixture::REFERENCE_USER_ADMIN);
         $agh = $this->handleCommand(
             new ResourceCreateCommand(
@@ -159,52 +155,6 @@ class ResourcesFixture extends RepekaFixture {
                 $userAdmin
             )
         );
-        $this->handleCommand(
-            new ResourceCreateCommand(
-                $allowedAddrIpResouceKind,
-                $this->contents(
-                    [
-                        MetadataFixture::REFERENCE_METADATA_DEPARTMENTS_NAME => 'Dostępny dla wszystkich',
-                        MetadataFixture::REFERENCE_METADATA_ALLOWED_ADDR_IP => '0.0.0.0/0',
-                        SystemMetadata::VISIBILITY => [
-                            $this->getReference(self::REFERENCE_USER_GROUP_ADMINS)->getId(),
-                            $this->getReference(self::REFERENCE_USER_GROUP_SCANNERS)->getId(),
-                        ],
-                        SystemMetadata::TEASER_VISIBILITY => [
-                            $this->getReference(self::REFERENCE_USER_GROUP_ADMINS)->getId(),
-                            $this->getReference(self::REFERENCE_USER_GROUP_SCANNERS)->getId(),
-                            $this->getReference(self::REFERENCE_USER_GROUP_SIGNED)->getId(),
-                            SystemResource::UNAUTHENTICATED_USER
-                        ],
-                    ]
-                ),
-                $userAdmin
-            ),
-            self::REFERENCE_ALLOWED_FOR_ALL
-        );
-        $this->handleCommand(
-            new ResourceCreateCommand(
-                $allowedAddrIpResouceKind,
-                $this->contents(
-                    [
-                        MetadataFixture::REFERENCE_METADATA_DEPARTMENTS_NAME => 'Niedostępny',
-                        MetadataFixture::REFERENCE_METADATA_ALLOWED_ADDR_IP => '0.0.0.0/32',
-                        SystemMetadata::VISIBILITY => [
-                            $this->getReference(self::REFERENCE_USER_GROUP_ADMINS)->getId(),
-                            $this->getReference(self::REFERENCE_USER_GROUP_SCANNERS)->getId(),
-                        ],
-                        SystemMetadata::TEASER_VISIBILITY => [
-                            $this->getReference(self::REFERENCE_USER_GROUP_ADMINS)->getId(),
-                            $this->getReference(self::REFERENCE_USER_GROUP_SCANNERS)->getId(),
-                            $this->getReference(self::REFERENCE_USER_GROUP_SIGNED)->getId(),
-                            SystemResource::UNAUTHENTICATED_USER
-                        ],
-                    ]
-                ),
-                $userAdmin
-            ),
-            self::REFERENCE_NOT_ALLOWED
-        );
     }
 
     private function addBooks() {
@@ -244,9 +194,6 @@ class ResourcesFixture extends RepekaFixture {
                         MetadataFixture::REFERENCE_METADATA_NO_OF_PAGES => [404],
                         MetadataFixture::REFERENCE_METADATA_ASSIGNED_SCANNER => [$userScanner->getUserData()],
                         MetadataFixture::REFERENCE_METADATA_SUPERVISOR => [$userBudynek->getUserData()],
-                        MetadataFixture::REFERENCE_METADATA_ACCESS_RIGHTS => [
-                            $this->getReference(self::REFERENCE_ALLOWED_FOR_ALL)->getId(),
-                        ],
                         SystemMetadata::VISIBILITY => [
                             $this->getReference(self::REFERENCE_USER_GROUP_ADMINS)->getId(),
                             $this->getReference(self::REFERENCE_USER_GROUP_SCANNERS)->getId(),
@@ -297,9 +244,6 @@ class ResourcesFixture extends RepekaFixture {
                                     $urlLabelMetadataId => 'Tam znajdziesz więcej ale inni nie dowiedzą się, że interesujesz się PHP',
                                 ],
                             ],
-                        ],
-                        MetadataFixture::REFERENCE_METADATA_ACCESS_RIGHTS => [
-                            $this->getReference(self::REFERENCE_NOT_ALLOWED)->getId(),
                         ],
                         SystemMetadata::VISIBILITY => [
                             $this->getReference(self::REFERENCE_USER_GROUP_ADMINS)->getId(),

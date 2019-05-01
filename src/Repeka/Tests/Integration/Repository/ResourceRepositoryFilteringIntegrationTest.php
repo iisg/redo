@@ -163,7 +163,7 @@ class ResourceRepositoryFilteringIntegrationTest extends IntegrationTestCase {
     public function testFindAllByDictionaryResourceClass() {
         $query = ResourceListQuery::builder()->filterByResourceClass('dictionaries')->setPage(1)->setResultsPerPage(6)->build();
         $paginatedResources = $this->resourceRepository->findByQuery($query);
-        $this->assertCount(6, $paginatedResources->getResults());
+        $this->assertCount(5, $paginatedResources->getResults());
     }
 
     public function testFindAllByResourceKind() {

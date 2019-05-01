@@ -9,6 +9,7 @@ use Repeka\Tests\Integration\Traits\FixtureHelpers;
 use Repeka\Tests\IntegrationTestCase;
 use Symfony\Bundle\FrameworkBundle\Client;
 
+/** @small */
 class AuthenticationIntegrationTest extends IntegrationTestCase {
     use FixtureHelpers;
 
@@ -36,7 +37,6 @@ class AuthenticationIntegrationTest extends IntegrationTestCase {
         $this->assertTrue($entry->isSuccessful());
     }
 
-    /** @small */
     public function testAuthSuccessWithUppercaseUsername() {
         $client = $this->authenticate(strtoupper(AdminAccountFixture::USERNAME), AdminAccountFixture::PASSWORD);
         /** @var UserEntity $user */
@@ -45,7 +45,6 @@ class AuthenticationIntegrationTest extends IntegrationTestCase {
         $this->assertEquals(AdminAccountFixture::USERNAME, $user->getUsername());
     }
 
-    /** @small */
     public function testUpdateRolesOnAuthSuccess() {
         $admin = $this->getAdminUser();
         $admin->updateRoles([]);
