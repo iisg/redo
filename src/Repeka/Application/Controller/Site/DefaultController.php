@@ -20,7 +20,7 @@ class DefaultController extends Controller {
         if ($suffix && preg_match('#\..{2,4}$#', $suffix)) {
             throw new NotFoundHttpException("$suffix file could not be found");
         } elseif (!$this->getUser()) {
-            $this->redirectToRoute('login');
+            return $this->redirectToRoute('login');
         } elseif (!$this->getUser()->hasRole(SystemRole::OPERATOR()->roleName())) {
             throw $this->createAccessDeniedException();
         }

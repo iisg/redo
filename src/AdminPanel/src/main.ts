@@ -26,7 +26,7 @@ import {Workflow} from "./workflows/workflow";
 LogManager.addAppender(new ConsoleAppender());
 LogManager.setLevel(LogManager.logLevel.info);
 
-const adminPanel = window.location.pathname.startsWith('/admin');
+const adminPanel = !!document.getElementById('repeka-admin-panel');
 
 export function configure(aurelia: Aurelia) {
   if (adminPanel) {
