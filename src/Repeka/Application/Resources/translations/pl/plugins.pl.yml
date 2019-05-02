@@ -3,6 +3,10 @@ repekaPdfGenerator:
   audit:
     generatingPDFToNonFileMetadataControl: "PDF nie został wygenerowany ponieważ plik nie może zostać zapisany w metadanej typu innego niż plikowy"
   options:
+    targetResourceDirectoryId:
+      label: Nazwa docelowego katalogu w zasobie
+      description: Użyj identyfikatora z pliku konfiguracyjnego lub zostaw puste by użyć domyślnego katalogu
+      placeholder: resourceFiles
     targetMetadataName:
       label: Nazwa docelowej metadanej
       description: Nazwa docelowej metadanej

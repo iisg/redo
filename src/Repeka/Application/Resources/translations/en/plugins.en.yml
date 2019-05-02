@@ -3,6 +3,10 @@ repekaPdfGenerator:
   audit:
     generatingPDFToNonFileMetadataControl: "PDF has been not generated because it can not be stored in non-file metadata"
   options:
+    targetResourceDirectoryId:
+      label: The name of the target resource directory
+      description: Use upload directory identifier from config or leave blank to use the default
+      placeholder: resourceFiles
     targetMetadataName:
       label: The name of target metadata
       description: The name of target metadata

@@ -18,7 +18,7 @@ class RepekaPdfGeneratorResourceWorkflowPlugin extends ResourceWorkflowPlugin {
 
     private $displayStrategyEvaluator;
     private $wkHtmlToPdfPath;
-    private $targetResourceDirectoryId;
+    private $defaultTargetResourceDirectoryId;
     private $fileSystemDriver;
     private $resourceRepository;
     private $resourceFileStorage;
@@ -26,14 +26,14 @@ class RepekaPdfGeneratorResourceWorkflowPlugin extends ResourceWorkflowPlugin {
     public function __construct(
         string $wkHtmlToPdfPath,
         ResourceDisplayStrategyEvaluator $displayStrategyEvaluator,
-        string $targetResourceDirectoryId,
+        string $defaultTargetResourceDirectoryId,
         FileSystemDriver $fileSystemDriver,
         ResourceRepository $resourceRepository,
         ResourceFileStorage $resourceFileStorage
     ) {
         $this->wkHtmlToPdfPath = $wkHtmlToPdfPath;
         $this->displayStrategyEvaluator = $displayStrategyEvaluator;
-        $this->targetResourceDirectoryId = $targetResourceDirectoryId;
+        $this->defaultTargetResourceDirectoryId = $defaultTargetResourceDirectoryId;
         $this->fileSystemDriver = $fileSystemDriver;
         $this->resourceRepository = $resourceRepository;
         $this->resourceFileStorage = $resourceFileStorage;
@@ -49,12 +49,13 @@ class RepekaPdfGeneratorResourceWorkflowPlugin extends ResourceWorkflowPlugin {
             $pdfOutputFileName = $config->getConfigValue('pdfOutputFileName');
             $pdfOutputFileName = $this->displayStrategyEvaluator->render($resource, $pdfOutputFileName);
             $pdfPresentationStrategy = $config->getConfigValue('pdfPresentationStrategy');
-            $resourcePath = $this->targetResourceDirectoryId . '/' . $pdfOutputFileName;
+            $targetDirectoryId = $config->getConfigValue('targetResourceDirectoryId') ?: $this->defaultTargetResourceDirectoryId;
+            $resourcePath = $targetDirectoryId . '/' . $pdfOutputFileName;
             $fileSystemTargetPath = $this->resourceFileStorage->getFileSystemPath($resource, $resourcePath);
             $inputPathParts = pathinfo($pdfOutputFileName);
             $targetPathParts = pathinfo($fileSystemTargetPath);
             $actualFileName = $this->getNonConflictingFileName($fileSystemTargetPath);
-            $resourcePath = StringUtils::joinPaths($this->targetResourceDirectoryId, $inputPathParts['dirname'], $actualFileName);
+            $resourcePath = StringUtils::joinPaths($targetDirectoryId, $inputPathParts['dirname'], $actualFileName);
             $fileSystemTargetPath = $targetPathParts["dirname"] . "/" . $actualFileName;
             $renderResult = $this->displayStrategyEvaluator->render($resource, $pdfPresentationStrategy);
             $pageMargins = explode(' ', $config->getConfigValue('pageMargins'));
@@ -82,6 +83,7 @@ class RepekaPdfGeneratorResourceWorkflowPlugin extends ResourceWorkflowPlugin {
 
     public function getConfigurationOptions(): array {
         return [
+            new ResourceWorkflowPluginConfigurationOption('targetResourceDirectoryId', MetadataControl::TEXT()),
             new ResourceWorkflowPluginConfigurationOption('targetMetadataName', MetadataControl::TEXT()),
             new ResourceWorkflowPluginConfigurationOption('pdfOutputFileName', MetadataControl::TEXT()),
             new ResourceWorkflowPluginConfigurationOption('pdfPresentationStrategy', MetadataControl::TEXTAREA()),
