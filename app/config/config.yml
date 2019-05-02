@@ -99,11 +99,12 @@ framework:
     enable_annotations: true
 
 monolog:
+  channels: ['exception_listener', 'user_error']
   handlers:
     console:
       type: console
     main:
-      channels: ['!exception_listener']
+      channels: ['!exception_listener', '!user_error']
       action_level: error
       handler: main_nested
       type: fingers_crossed
@@ -119,6 +120,13 @@ monolog:
       type: rotating_file
       formatter: Monolog\Formatter\LineFormatter
       max_files: 30
+    user_error:
+      channels: ['user_error']
+      level: warning
+      path: "%kernel.logs_dir%/%kernel.environment%-user-exception.log"
+      type: rotating_file
+      formatter: Monolog\Formatter\LineFormatter
+      max_files: 14
 
 parameters:
   applicationName: Repeka

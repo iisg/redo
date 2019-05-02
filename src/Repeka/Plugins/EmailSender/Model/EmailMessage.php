@@ -1,6 +1,7 @@
 <?php
 namespace Repeka\Plugins\EmailSender\Model;
 
+use Psr\Log\LoggerInterface;
 use Repeka\Domain\Service\ResourceDisplayStrategyEvaluator;
 
 class EmailMessage {
@@ -10,11 +11,18 @@ class EmailMessage {
     private $emailSender;
     /** @var ResourceDisplayStrategyEvaluator */
     private $strategyEvaluator;
+    /** @var LoggerInterface */
+    private $logger;
 
-    public function __construct(EmailSender $emailSender, ResourceDisplayStrategyEvaluator $strategyEvaluator) {
+    public function __construct(
+        EmailSender $emailSender,
+        ResourceDisplayStrategyEvaluator $strategyEvaluator,
+        ?LoggerInterface $logger = null
+    ) {
         $this->emailSender = $emailSender;
         $this->strategyEvaluator = $strategyEvaluator;
         $this->message = new \Swift_Message();
+        $this->logger = $logger;
     }
 
     public function setFrom(array $froms): self {
@@ -69,6 +77,12 @@ class EmailMessage {
         try {
             return $this->emailSender->send($this->message);
         } catch (\Exception $e) {
+            if ($this->logger) {
+                $this->logger->error(
+                    'Could not send e-mail message: ' . $e->getMessage(),
+                    ['stackTrace' => $e->getTraceAsString()]
+                );
+            }
             return 0;
         }
     }

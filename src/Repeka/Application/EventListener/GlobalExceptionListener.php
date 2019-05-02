@@ -34,42 +34,41 @@ class GlobalExceptionListener {
     private $tokenStorage;
     /** @var SessionInterface */
     private $session;
-    /** @var LoggerInterface */
-    private $logger;
     /** @var Environment */
     private $twig;
     /** @var string */
     private $errorPageTwigTemplate;
+    /** @var LoggerInterface */
+    private $exceptionLogger;
+    /** @var LoggerInterface */
+    private $userErrorLogger;
 
     public function __construct(
         $isDebug,
         string $theme,
         TokenStorageInterface $tokenStorage,
         SessionInterface $session,
-        LoggerInterface $logger,
+        LoggerInterface $exceptionLogger,
+        LoggerInterface $userErrorLogger,
         Environment $twig
     ) {
         $this->isDebug = $isDebug;
         $this->tokenStorage = $tokenStorage;
         $this->session = $session;
-        $this->logger = $logger;
         $this->twig = $twig;
         $this->errorPageTwigTemplate = StringUtils::joinPaths($theme, 'error-page.twig');
+        $this->exceptionLogger = $exceptionLogger;
+        $this->userErrorLogger = $userErrorLogger;
     }
 
     public function onException(GetResponseForExceptionEvent $event) {
         $exception = $event->getException();
-        $this->logger->error($this->getFormattedExceptionString($exception));
         $request = $event->getRequest();
         if (in_array('application/json', $request->getAcceptableContentTypes())) {
             $errorResponse = $this->createErrorResponse($exception, $request);
             $event->setResponse($errorResponse);
         } else {
-            $responseStatus = $exception instanceof DomainException ? $exception->getCode() : Response::HTTP_INTERNAL_SERVER_ERROR;
-            $responseStatus = $exception instanceof HttpException ? $exception->getStatusCode() : $responseStatus;
-            $responseStatus = $exception instanceof AccessDeniedException ? Response::HTTP_FORBIDDEN : $responseStatus;
-            $responseStatus = $exception instanceof NotFoundException ? Response::HTTP_NOT_FOUND : $responseStatus;
-            $responseStatus = $exception instanceof NotFoundHttpException ? Response::HTTP_NOT_FOUND : $responseStatus;
+            $responseStatus = $this->detectResponseStatus($exception);
             try {
                 $responseContent = $this->twig->render(
                     $this->errorPageTwigTemplate,
@@ -84,6 +83,18 @@ class GlobalExceptionListener {
             $response = new Response($responseContent, $responseStatus);
             $event->setResponse($response);
         }
+        $response = $event->getResponse() ?: new Response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
+        $logger = $response->isClientError() ? $this->userErrorLogger : $this->exceptionLogger;
+        $logger->error($this->getFormattedExceptionString($request, $response, $exception));
+    }
+
+    private function detectResponseStatus(\Exception $exception): int {
+        $responseStatus = $exception instanceof DomainException ? $exception->getCode() : Response::HTTP_INTERNAL_SERVER_ERROR;
+        $responseStatus = $exception instanceof HttpException ? $exception->getStatusCode() : $responseStatus;
+        $responseStatus = $exception instanceof AccessDeniedException ? Response::HTTP_FORBIDDEN : $responseStatus;
+        $responseStatus = $exception instanceof NotFoundException ? Response::HTTP_NOT_FOUND : $responseStatus;
+        $responseStatus = $exception instanceof NotFoundHttpException ? Response::HTTP_NOT_FOUND : $responseStatus;
+        return $responseStatus;
     }
 
     public function createErrorResponse(\Exception $e, Request $request) {
@@ -141,15 +152,15 @@ class GlobalExceptionListener {
         }
     }
 
-    private function getFormattedExceptionString(\Exception $exception): string {
+    private function getFormattedExceptionString(Request $request, Response $response, \Exception $exception): string {
         $exceptionLines = preg_split("/[\n\r]+/", (string)$exception);
-        $outputLines = [];
+        $outputLines = ['', 'Response status: ' . $response->getStatusCode(), 'URL: ' . $request->getMethod() . ' ' . $request->getUri()];
         while (count($exceptionLines) > 0 && strlen($exceptionLines[0]) > 0 && $exceptionLines[0][0] != '#') {
             $outputLines[] = array_shift($exceptionLines); // copy lines until stack trace
         }
         foreach ($exceptionLines as $line) {
             $outputLines[] = preg_replace('/\): +/', "):\n    ", $line, 2);
         }
-        return implode("\n", $outputLines);
+        return implode("\n", $outputLines) . PHP_EOL;
     }
 }

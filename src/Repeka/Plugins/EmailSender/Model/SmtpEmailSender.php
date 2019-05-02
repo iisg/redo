@@ -1,6 +1,7 @@
 <?php
 namespace Repeka\Plugins\EmailSender\Model;
 
+use Psr\Log\LoggerInterface;
 use Repeka\Domain\Service\ResourceDisplayStrategyEvaluator;
 
 class SmtpEmailSender implements EmailSender {
@@ -19,6 +20,8 @@ class SmtpEmailSender implements EmailSender {
     private $smtpPassword;
     /** @var string|null */
     private $smtpEncryption;
+    /** @var LoggerInterface */
+    private $logger;
 
     public function __construct(
         string $smtpHost,
@@ -28,7 +31,8 @@ class SmtpEmailSender implements EmailSender {
         ?string $smtpEncryption,
         string $fromEmail,
         string $fromName,
-        ResourceDisplayStrategyEvaluator $resourceDisplayStrategyEvaluator
+        ResourceDisplayStrategyEvaluator $resourceDisplayStrategyEvaluator,
+        LoggerInterface $logger
     ) {
         $this->fromEmail = $fromEmail;
         $this->fromName = $fromName;
@@ -38,10 +42,11 @@ class SmtpEmailSender implements EmailSender {
         $this->smtpPassword = $smtpPassword;
         $this->smtpEncryption = $smtpEncryption;
         $this->resourceDisplayStrategyEvaluator = $resourceDisplayStrategyEvaluator;
+        $this->logger = $logger;
     }
 
     public function newMessage(): EmailMessage {
-        return (new EmailMessage($this, $this->resourceDisplayStrategyEvaluator))
+        return (new EmailMessage($this, $this->resourceDisplayStrategyEvaluator, $this->logger))
             ->setFrom([$this->fromEmail => $this->fromName]);
     }
 

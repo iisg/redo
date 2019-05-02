@@ -87,9 +87,10 @@ services:
     arguments:
       $isDebug: '%kernel.debug%'
       $theme: '%repeka.theme%'
+      $exceptionLogger: '@monolog.logger.exception_listener'
+      $userErrorLogger: '@monolog.logger.user_error'
     tags:
       - { name: kernel.event_listener, event: kernel.exception, method: onException, priority: 1000 }
-      - { name: monolog.logger, channel: exception_listener }
   Repeka\Application\EventListener\UserLocaleListener:
     arguments:
       $fallbackLocales: '%repeka.fallback_ui_languages%'
