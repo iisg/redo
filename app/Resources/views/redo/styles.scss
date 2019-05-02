@@ -1,5 +1,4 @@
 // Please remember to keep `high-contrast-styles.scss` up to date after making changes in this file.
-
 @import "styles/colors";
 @import "styles/variables";
 
@@ -11,5 +10,19 @@
 .repeka-admin-panel {
   .theme-only.theme-redo-only {
     display: initial;
+  }
+
+  .admin-footer-image-left {
+    $height: 32px + 2 * $default-gap-size;
+    $imageRatio: 2.218;
+    height: $height;
+    width: $height * $imageRatio;
+    background-image: url('/files/redo/powered-by-redo.svg');
+  }
+
+  .admin-footer-image-right {
+    height: 41px + 2 * $default-gap-size;
+    width: 385px + 2 * $default-gap-size;
+    background-image: url('/files/redo/fe-and-edt-and-ue-logos-without-required-margins.svg');
   }
 }

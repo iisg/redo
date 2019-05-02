@@ -67,6 +67,12 @@ redo-footer, .redo-footer {
   .vertical {
     display: none;
   }
+  .admin-footer-image {
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: contain;
+    margin: $default-gap-size;
+  }
 }
 
 @mixin vertical-align() {
@@ -131,4 +137,8 @@ redo-footer, .redo-footer {
       display: block;
     }
   }
+}
+
+.admin-footer-image {
+  display: block;
 }
