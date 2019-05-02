@@ -43,6 +43,7 @@ class MetadataIntegrationTest extends IntegrationTestCase {
                     'copyToChildResource' => false,
                     'resourceClass' => $metadata1->getResourceClass(),
                     'canDetermineAssignees' => false,
+                    'hasChildren' => false,
                 ],
                 [
                     'id' => $metadata2->getId(),
@@ -60,6 +61,7 @@ class MetadataIntegrationTest extends IntegrationTestCase {
                     'copyToChildResource' => false,
                     'resourceClass' => $metadata2->getResourceClass(),
                     'canDetermineAssignees' => false,
+                    'hasChildren' => false,
                 ],
             ],
             $responseContent

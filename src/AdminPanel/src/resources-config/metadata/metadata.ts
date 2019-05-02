@@ -109,6 +109,7 @@ export class Metadata extends Entity {
   @map copyToChildResource: boolean;
   @map resourceClass: string;
   @map canDetermineAssignees: boolean;
+  @map hasChildren: boolean;
 
   get isDynamic(): boolean {
     return this.displayStrategy !== undefined;

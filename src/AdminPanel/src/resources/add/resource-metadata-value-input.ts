@@ -33,6 +33,8 @@ export class ResourceMetadataValueInput {
     this.submetadataResource = this.entitySerializer.clone(this.resource, Resource.NAME);
     this.submetadataResource.contents = this.value.submetadata;
     this.submetadataResource.kind.metadataList = [];
-    this.submetadataResource.kind.metadataList = await this.metadataRepository.getListQuery().filterByParentId(this.metadata.id).get();
+    if (this.metadata.hasChildren) {
+      this.submetadataResource.kind.metadataList = await this.metadataRepository.getListQuery().filterByParentId(this.metadata.id).get();
+    }
   }
 }
