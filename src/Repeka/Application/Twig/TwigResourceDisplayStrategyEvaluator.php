@@ -1,6 +1,7 @@
 <?php
 namespace Repeka\Application\Twig;
 
+use Psr\Container\ContainerInterface;
 use Repeka\Domain\Entity\MetadataValue;
 use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Exception\InvalidResourceDisplayStrategyException;
@@ -10,11 +11,14 @@ use Twig\Environment;
 use Twig\Template;
 
 class TwigResourceDisplayStrategyEvaluator implements ResourceDisplayStrategyEvaluator {
+
+    /** @var ContainerInterface */
+    private $container;
     /** @var Environment */
     private $twig;
 
-    public function __construct(Environment $twig) {
-        $this->twig = $twig;
+    public function __construct(ContainerInterface $container) {
+        $this->container = $container;
     }
 
     public function validateTemplate(string $template): void {
@@ -26,7 +30,7 @@ class TwigResourceDisplayStrategyEvaluator implements ResourceDisplayStrategyEva
     }
 
     private function compile(string $template): Template {
-        return $this->twig->createTemplate($template);
+        return $this->getTwig()->createTemplate($template);
     }
 
     public function render(
@@ -91,5 +95,16 @@ class TwigResourceDisplayStrategyEvaluator implements ResourceDisplayStrategyEva
             $values = [new MetadataValue($values)];
         }
         return ResourceContents::fromArray([1 => $values])->filterOutEmptyMetadata()->getValues(1);
+    }
+
+    /**
+     * Lazy initialization of Twig avoids strage problems during integration tests, like:
+     *   > The "kernel" service is synthetic, it needs to be set at boot time before it can be used.
+     */
+    private function getTwig(): Environment {
+        if (!$this->twig) {
+            $this->twig = $this->container->get('twig');
+        }
+        return $this->twig;
     }
 }

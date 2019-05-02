@@ -1,6 +1,7 @@
 <?php
 namespace Repeka\Tests\Application\Upload;
 
+use Psr\Container\ContainerInterface;
 use Repeka\Application\Twig\TwigResourceDisplayStrategyEvaluator;
 use Repeka\Tests\Traits\StubsTrait;
 use Twig\Environment;
@@ -19,7 +20,9 @@ class TwigResourceDisplayStrategyEvaluatorTest extends \PHPUnit_Framework_TestCa
         $env = $this->createMock(Environment::class);
         $this->template = $this->createMock(Template::class);
         $env->method('createTemplate')->willReturn($this->template);
-        $this->displayStrategyEvaluator = new TwigResourceDisplayStrategyEvaluator($env);
+        $container = $this->createMock(ContainerInterface::class);
+        $container->method('get')->willReturn($env);
+        $this->displayStrategyEvaluator = new TwigResourceDisplayStrategyEvaluator($container);
     }
 
     public function testSimpleValueAsMetadataValue() {
