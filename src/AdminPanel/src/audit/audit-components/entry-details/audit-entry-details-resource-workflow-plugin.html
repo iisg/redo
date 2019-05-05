@@ -1,4 +1,5 @@
 <template>
-    <resource-link id.bind="entry.data.resourceId"></resource-link>
+    <resource-link if.bind="entry.data.resourceId"
+        id.bind="entry.data.resourceId"></resource-link>
     ${ 'plugins::' + entry.data.workflowPluginName + '//audit//' + entry.data.pluginEventType | t:entry.data }
 </template>

@@ -2,8 +2,12 @@
 namespace Repeka\Plugins\EmailSender\Model;
 
 use Psr\Log\LoggerInterface;
+use Repeka\Domain\Factory\Audit;
 use Repeka\Domain\Service\ResourceDisplayStrategyEvaluator;
+use Repeka\Domain\Utils\StringUtils;
+use Repeka\Domain\Workflow\ResourceWorkflowPlugin;
 
+/** @SuppressWarnings(PHPMD.ExcessiveParameterList) */
 class SmtpEmailSender implements EmailSender {
     private $fromEmail;
     private $fromName;
@@ -22,6 +26,8 @@ class SmtpEmailSender implements EmailSender {
     private $smtpEncryption;
     /** @var LoggerInterface */
     private $logger;
+    /** @var Audit */
+    private $audit;
 
     public function __construct(
         string $smtpHost,
@@ -32,7 +38,8 @@ class SmtpEmailSender implements EmailSender {
         string $fromEmail,
         string $fromName,
         ResourceDisplayStrategyEvaluator $resourceDisplayStrategyEvaluator,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        Audit $audit
     ) {
         $this->fromEmail = $fromEmail;
         $this->fromName = $fromName;
@@ -43,15 +50,23 @@ class SmtpEmailSender implements EmailSender {
         $this->smtpEncryption = $smtpEncryption;
         $this->resourceDisplayStrategyEvaluator = $resourceDisplayStrategyEvaluator;
         $this->logger = $logger;
+        $this->audit = $audit;
     }
 
     public function newMessage(): EmailMessage {
-        return (new EmailMessage($this, $this->resourceDisplayStrategyEvaluator, $this->logger))
+        return (new EmailMessage($this, $this->resourceDisplayStrategyEvaluator))
             ->setFrom([$this->fromEmail => $this->fromName]);
     }
 
     public function send(\Swift_Message $message): int {
-        return $this->getMailer()->send($message);
+        try {
+            $sent = $this->getMailer()->send($message);
+            $this->auditEmailSentSuccess($message, $sent);
+            return $sent;
+        } catch (\Exception $e) {
+            $this->auditEmailSentFailure($message, $e);
+            throw $e;
+        }
     }
 
     private function getMailer(): \Swift_Mailer {
@@ -65,5 +80,30 @@ class SmtpEmailSender implements EmailSender {
             $this->mailer = new \Swift_Mailer($transport);
         }
         return $this->mailer;
+    }
+
+    private function auditEmailSentSuccess(\Swift_Message $message, int $sentCount) {
+        $this->auditEmailSent($message, 'success', ['sentCount' => $sentCount], $sentCount > 0);
+    }
+
+    private function auditEmailSentFailure(\Swift_Message $message, \Exception $e) {
+        $this->logger->error(
+            'Could not send e-mail message: ' . $e->getMessage(),
+            ['stackTrace' => $e->getTraceAsString()]
+        );
+        $this->auditEmailSent($message, 'failure', ['exceptionMessage' => StringUtils::fixUtf8($e->getMessage())], false);
+    }
+
+    /** @SuppressWarnings("PHPMD.BooleanArgumentFlag") */
+    private function auditEmailSent(\Swift_Message $message, $eventName, $data = [], $successful = true) {
+        $pluginName = ResourceWorkflowPlugin::getNameFromClassName(RepekaEmailSenderResourceWorkflowPlugin::class);
+        $data = array_merge(
+            [
+                'recipients' => implode(', ', array_keys($message->getTo())),
+                'subject' => StringUtils::fixUtf8($message->getSubject()),
+            ],
+            $data
+        );
+        ResourceWorkflowPlugin::newPluginAuditEntry($this->audit, $pluginName, null, $eventName, $data, $successful);
     }
 }

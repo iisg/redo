@@ -23,18 +23,11 @@ class RepekaEmailSenderResourceWorkflowPlugin extends ResourceWorkflowPlugin {
         $email = $this->displayStrategyEvaluator->render($resource, $config->getConfigValue('email'));
         $subject = $this->displayStrategyEvaluator->render($resource, $config->getConfigValue('subject'));
         $message = $this->displayStrategyEvaluator->render($resource, $config->getConfigValue('message'));
-        try {
-            $sent = $this->mailer->newMessage()
-                ->setTo($email)
-                ->setSubject($subject)
-                ->setBody($message)
-                ->send();
-            if (!$sent) {
-                $this->newAuditEntry($event, "not_sent");
-            }
-        } catch (\Exception $e) {
-            $this->newAuditEntry($e, 'failure', ['message' => $e->getMessage()]);
-        }
+        $this->mailer->newMessage()
+            ->setTo($email)
+            ->setSubject($subject)
+            ->setBody($message)
+            ->send();
     }
 
     /**

@@ -106,6 +106,9 @@ workflowPlaceTagger:
       description: ~
 repekaEmailSender:
   label: 'Send e-mail'
+  audit:
+    success: 'Sent {{sentCount}} messages: "{{subject}}" to {{recipients}}'
+    failure: 'Error sending: "{{subject}}" to {{recipients}} - {{exceptionMessage}}'
   options:
     email:
       label: 'Recipients'
@@ -119,7 +122,4 @@ repekaEmailSender:
       label: 'Message content'
       placeholder: ''
       description: ''
-    audit:
-      failure: 'A message from "send mail" plugin: {{message}}'
-      bad_email: 'Incorrect email address'
-      not_sent: 'Sending an email failed'
+

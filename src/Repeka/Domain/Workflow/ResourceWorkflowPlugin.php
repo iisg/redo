@@ -53,12 +53,24 @@ abstract class ResourceWorkflowPlugin {
 
     /** @SuppressWarnings("PHPMD.BooleanArgumentFlag") */
     public function newAuditEntry(?CqrsCommandEvent $commandEvent, string $pluginEventType, array $data = [], bool $successful = true) {
-        $data = array_merge($data, ['pluginEventType' => $pluginEventType, 'workflowPluginName' => $this->getName()]);
+        self::newPluginAuditEntry($this->audit, $this->getName(), $commandEvent, $pluginEventType, $data, $successful);
+    }
+
+    /** @SuppressWarnings("PHPMD.BooleanArgumentFlag") */
+    public static function newPluginAuditEntry(
+        Audit $audit,
+        string $pluginName,
+        ?CqrsCommandEvent $commandEvent,
+        string $pluginEventType,
+        array $data = [],
+        bool $successful = true
+    ) {
+        $data = array_merge($data, ['pluginEventType' => $pluginEventType, 'workflowPluginName' => $pluginName]);
         if (!isset($data['resourceId']) && $commandEvent) {
             $data['resourceId'] = $commandEvent->getCommand()->getResource()->getId();
         }
-        $this->audit->newEntry(
-            self::AUDIT_ENTRY_PREFIX . $this->getName(),
+        $audit->newEntry(
+            self::AUDIT_ENTRY_PREFIX . $pluginName,
             $commandEvent ? $commandEvent->getCommand()->getExecutor() : null,
             $data,
             $successful

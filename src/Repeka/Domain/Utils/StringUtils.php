@@ -31,4 +31,11 @@ final class StringUtils {
         $unCamelCased = preg_replace('#([a-z])([A-Z])#', '$1 $2', $name);
         return (new Slugify(['separator' => '_']))->slugify($unCamelCased);
     }
+
+    /**
+     * @see https://stackoverflow.com/a/8215387/878514
+     */
+    public static function fixUtf8(string $string): string {
+        return mb_convert_encoding($string, 'UTF-8', 'UTF-8');
+    }
 }

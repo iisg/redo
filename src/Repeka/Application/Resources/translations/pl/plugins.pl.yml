@@ -110,10 +110,13 @@ workflowPlaceTagger:
       description: ~
 repekaEmailSender:
   label: 'Wyślij e-mail'
+  audit:
+    success: 'Wysłano {{sentCount}} wiadomości: "{{subject}}" do {{recipients}}'
+    failure: 'Błąd wysyłania: "{{subject}}" do {{recipients}} - {{exceptionMessage}}'
   options:
     email:
       label: 'Adresy email odbiorców'
-      placeholder: 'xxx@xxx.xxx , xxx@xxx.xxx , ...' 
+      placeholder: 'xxx@xxx.xxx , xxx@xxx.xxx , ...'
       description: ''
     subject:
       label: 'Temat wiadomości'
@@ -123,7 +126,3 @@ repekaEmailSender:
       label: 'Treść wiadomości'
       placeholder: ''
       description: ''
-    audit:
-      failure: 'Wiadomośc od wtyczki do wysyłania e-mailów: {{message}}'
-      bad_email: 'Niepoprawny adres e-mail'
-      not_sent: 'Wysłanie maila nie powiodło się'
