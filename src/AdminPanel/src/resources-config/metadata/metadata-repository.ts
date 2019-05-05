@@ -5,12 +5,31 @@ import {EntitySerializer} from "common/dto/entity-serializer";
 import {MetadataListQuery} from "./metadata-list-query";
 import {ApiRepository} from "../../common/repository/api-repository";
 import {cachedResponse, forOneMinute} from "../../common/repository/cached-response";
+import {debouncePromise} from "../../common/utils/function-utils";
+import {keyBy} from "lodash";
 
 @autoinject
 export class MetadataRepository extends ApiRepository<Metadata> {
+  private idsToQuery = [];
+
   constructor(httpClient: DeduplicatingHttpClient, entitySerializer: EntitySerializer) {
     super(httpClient, entitySerializer, Metadata, 'metadata');
   }
+
+  get(id: number | string, suppressError: boolean = false): Promise<Metadata> {
+    if (this.idsToQuery.indexOf(id) === -1) {
+      this.idsToQuery.push(id);
+    }
+    return this.fetchMetadata().then(metadataList => metadataList[id]);
+  }
+
+  private fetchMetadata = debouncePromise(() => {
+    if (this.idsToQuery.length) {
+      const query = this.getListQuery().filterByIds(this.idsToQuery);
+      this.idsToQuery = [];
+      return query.get().then(metadataList => keyBy(metadataList, 'id'));
+    }
+  }, 100);
 
   public getListQuery(): MetadataListQuery {
     return new MetadataListQuery(this.httpClient, this.endpoint, this.entitySerializer);
