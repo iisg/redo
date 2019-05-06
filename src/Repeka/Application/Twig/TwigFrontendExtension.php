@@ -231,7 +231,7 @@ ICON;
         string $configValueMetadata = 'cmsConfigValue'
     ): array {
         $query = ResourceListQuery::builder()
-            ->filterByContents([$configKeyMetadata => $configKey])
+            ->filterByContents([$configKeyMetadata => '^' . $configKey . '$'])
             ->setPage(1)
             ->setResultsPerPage(1)
             ->build();

@@ -68,6 +68,7 @@
                     </div>
                 </div>
             </div>
+            {% if not childrenAllowed %}
             <div class="download-options-container">
                 {% include 'redo/resource-details/available-formats.twig' %}
                 <div class="download-options">
@@ -114,6 +115,7 @@
                 {% endif %}
             </div>
         </div>
+        {% endif %}
         <div class="details-container">
             <dl>
                 {% for metadataName in metadataToDisplay %}

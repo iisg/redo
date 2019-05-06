@@ -1,12 +1,15 @@
+{# @formatter:off #}
 {% set metadataToDisplay = cmsConfig('display_metadata_' ~ resource.kind.name ~ '_bibtex', cmsConfig('display_metadata_DEFAULT_bibtex', cmsConfig('display_metadata_DEFAULT'))) %}
-{% set bibtexType = (resource | mBibtexType) is not empty ? (resource | mBibtexType) : '@misc' %}
-{% set bibtexKey = (resource | mBibtexKey | first) is not empty ? (resource | mBibtexKey) : (r|mLabel|first.value|slugify) %}
+{% set bibtexType = (resource | mBibtexType) is not empty ? (resource | mBibtexType | mLabel) : '@misc' %}
+{% set bibtexKey = (resource | mBibtexKey) is not empty and (resource | mBibtexKey | first.value is not empty) ? (resource | mBibtexKey) : (r|mLabel|first.value|slugify) %}
 {{ bibtexType }}{{ '{' }}{{ bibtexKey }},
-{% for metadataName in metadataToDisplay %}  {% set metadata = metadata(metadataName) %}
-{% if metadata
-and metadata.control != 'display-strategy'
-and metadata.control != 'wysiwyg-editor' %}{% set metadataValue = resource | metadata(metadata.id) | onlyMetadataInCurrentLanguage(metadata) | join((' ' ~ ('and' | trans) ~ ' ')) %}
-{{ metadata.label | default(metadata.label | first) | inCurrentLanguage | default(metadata.name) | replace({" ": ''}) }} = {{ metadataValue | bibtexEscape | raw }},
+{% for metadataName in metadataToDisplay %}
+{% set metadataDetails = metadataName|split('/') %}
+{% set metadata = metadata(metadataDetails[0]) %}
+{% if metadata and metadata.control != 'display-strategy' and metadata.control != 'wysiwyg-editor' %}
+{% set metadataLabel = metadataDetails[1] is defined ? metadataDetails[1] : metadata.name %}
+{% set metadataValue = resource | metadata(metadata.id) | onlyMetadataInCurrentLanguage(metadata) | join((' ' ~ ('and' | trans) ~ ' ')) %}
+  {{ metadataLabel }} = {{ metadataValue | bibtexEscape | raw }},
 {% endif %}
 {% endfor %}
 }
