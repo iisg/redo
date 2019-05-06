@@ -48,4 +48,11 @@ class UserCreateCommandAdjusterTest extends \PHPUnit_Framework_TestCase {
         $preparedCommand = $this->adjuster->adjustCommand($command);
         $this->assertEquals("repeka+a@local.pl", $preparedCommand->getUsername());
     }
+
+    public function testAcceptingEmailAddressWithDashAsUsername() {
+        $command = new UserCreateCommand("repeka-a@local.pl");
+        /** @var UserCreateCommand $preparedCommand */
+        $preparedCommand = $this->adjuster->adjustCommand($command);
+        $this->assertEquals("repeka-a@local.pl", $preparedCommand->getUsername());
+    }
 }
