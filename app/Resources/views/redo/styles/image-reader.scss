@@ -21,11 +21,20 @@ button.BRicon.full {
   background-image: url("../jspm_packages/github/internetarchive/bookreader@4.2.0/BookReader/images/BRicons.svg");
 }
 
-.download-left, .download-right {
+.download-btn {
   color: #303030;
-  font-size: medium;
   background: none;
+}
+
+.download-left, .download-right {
+  font-size: medium;
   padding: 2px;
+  height: 34px;
+}
+
+.download-onepg {
+  font-size: x-large;
+  padding: 4px;
 }
 
 .BRpageimage {

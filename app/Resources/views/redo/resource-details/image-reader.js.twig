@@ -31,7 +31,8 @@ function setCustomPrototypeMethods() {
       '.book_top': '{{ 'First page' | trans({}, 'bookreader') }}',
       '.book_bottom': '{{ 'Last page' | trans({}, 'bookreader') }}',
       '.download-left': '{{ 'Download left' | trans({}, 'bookreader') }}',
-      '.download-right': '{{ 'Download right' | trans({}, 'bookreader') }}'
+      '.download-right': '{{ 'Download right' | trans({}, 'bookreader') }}',
+      '.download-onepg': '{{ 'Download single page' | trans({}, 'bookreader') }}'
     };
     if ('rl' === this.pageProgression) {
       titles['.book_leftmost'] = '{{ 'Last page' | trans({}, 'bookreader') }}';
@@ -111,6 +112,7 @@ function buildPath(uri) {
 function hideDownloadButtons() {
   $('.download-left').hide();
   $('.download-right').hide();
+  $('.download-onepg').hide();
 }
 
 // adapted from https://github.com/internetarchive/bookreader/blob/87a0cbd219412da3d31e0e4fd51f8bd8397f1663/BookReaderDemo/BookReaderJSAdvanced.js
@@ -164,7 +166,9 @@ function instantiateBookReader(selector, extraOptions) {
   function toggleDownloadButtons() {
     var downloadLeftBtn = $('.download-left');
     var downloadRightBtn = $('.download-right');
+    var downloadSinglePageBtn = $('.download-onepg');
     if (br.mode == 2) {
+      downloadSinglePageBtn.hide();
       if (br.getPageNum(br.currentIndex()) == 1) {
         downloadLeftBtn.hide();
         downloadRightBtn.show();
@@ -176,6 +180,10 @@ function instantiateBookReader(selector, extraOptions) {
           downloadRightBtn.show();
         }
       }
+    } else {
+      downloadLeftBtn.hide();
+      downloadRightBtn.hide();
+      downloadSinglePageBtn.show();
     }
   }
 
@@ -183,17 +191,21 @@ function instantiateBookReader(selector, extraOptions) {
   var br = new BookReader(options);
   br.init();
   var downloadIcon = '<span class="icon" size="1" role="presentation"><svg viewBox="0 0 1 1"><use xlink:href="/files/icons.svg#download"></use></svg></span>';
+  {% set showButton = (r|m('katalog_plikow_master')|length) %}
   $('.BRcurrentpage').after(
-    "<button class=\"BRicon {{ (r|m('katalog_plikow_master')|length) ? 'download-left' : 'hidden' }} desktop-only js-tooltip\">L " + downloadIcon + "</button>"
-    + "<button class=\"BRicon {{ (r|m('katalog_plikow_master')|length) ? 'download-right' : 'hidden' }} desktop-only js-tooltip\">" + downloadIcon + " {{ 'R' | trans }}</button>"
+    "<button class=\"BRicon download-btn {{ showButton ? 'download-left' : 'hidden' }} desktop-only js-tooltip\">L " + downloadIcon + "</button>"
+    + "<button class=\"BRicon download-btn {{ showButton ? 'download-right' : 'hidden' }} desktop-only js-tooltip\">" + downloadIcon + " {{ 'R' | trans }}</button>"
+    + "<button class=\"BRicon download-btn {{ showButton ? 'download-onepg' : 'hidden' }} js-tooltip\">" + downloadIcon + "</button>"
   ).ready(toggleDownloadButtons).on('DOMSubtreeModified', toggleDownloadButtons);
   $('.download-left').click(function () {
+    download(buildPath(br._getPageURI(br.firstIndex)));
+  });
+  $('.download-onepg').click(function () {
     download(buildPath(br._getPageURI(br.firstIndex)));
   });
   $('.download-right').click(function () {
     download(buildPath(br._getPageURI(br.firstIndex + 1)));
   });
-  $('.onepg').click(hideDownloadButtons);
   $('.thumb').click(hideDownloadButtons);
   $('.twopg').click(toggleDownloadButtons);
   return br;
