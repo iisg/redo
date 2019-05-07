@@ -11,7 +11,9 @@ use Repeka\Domain\Entity\User;
 use Repeka\Domain\Exception\EntityNotFoundException;
 use Repeka\Domain\Factory\ResourceListQuerySqlFactory;
 use Repeka\Domain\Factory\ResourceTreeQuerySqlFactory;
+use Repeka\Domain\Factory\TasksQuerySqlFactory;
 use Repeka\Domain\Repository\ResourceRepository;
+use Repeka\Domain\Repository\ResourceWorkflowRepository;
 use Repeka\Domain\Repository\UserRepository;
 use Repeka\Domain\Service\ResourceDisplayStrategyDependencyMap;
 use Repeka\Domain\UseCase\PageResult;
@@ -27,10 +29,17 @@ use Repeka\Domain\Utils\EntityUtils;
 class ResourceDoctrineRepository extends EntityRepository implements ResourceRepository {
     /** @var UserRepository */
     private $userRepository;
+    /** @var ResourceWorkflowRepository */
+    private $workflowRepository;
 
     /** @required */
     public function setUserRepository(UserRepository $userRepository) {
         $this->userRepository = $userRepository;
+    }
+
+    /** @required */
+    public function setWorkflowRepository(ResourceWorkflowRepository $workflowRepository) {
+        $this->workflowRepository = $workflowRepository;
     }
 
     public function save(ResourceEntity $resource): ResourceEntity {
@@ -158,51 +167,10 @@ class ResourceDoctrineRepository extends EntityRepository implements ResourceRep
     }
 
     public function findAssignedTo(User $user): array {
-        if (defined('REPEKA_ENV') && REPEKA_ENV === 'prod') {
-            // FIXME REPEKA-1012
-            ini_set('memory_limit', '512M');
-            ini_set('max_execution_time', 60);
-        }
+        $query = (new TasksQuerySqlFactory($user, $this->workflowRepository))->getSelectQuery();
         $em = $this->getEntityManager();
         $resultSetMapping = ResultSetMappings::resourceEntity($em);
-        $query = $em->createNativeQuery(
-            <<<SQL
--- Filters rows by user data IDs (ie. ID of user's resource, not user's entity!)
-SELECT
-  resources_with_assignees.*
-FROM (
-       -- Picks only metadata_id from resource_contents object
-       -- Each row contains a resource ID and an array of users it's assigned to
-       SELECT
-         resources_with_assignee_metadata_ids.*,
-         jsonb_array_elements(contents -> metadata_id) ->> 'value' AS assignee_id
-       FROM (
-              -- Extracts arrays of assigneeMetadataIds from places and splits them into rows.
-              -- Rows are basically a cross join of resources with all assigneeMetadataIds
-              SELECT
-                -- ->> 0 turns JSONB string to text without "quotation marks"
-                jsonb_array_elements(place -> 'assigneeMetadataIds') ->> 0 AS metadata_id,
-                resources_with_places.*
-              FROM (
-                     -- Left-joins each place in each workflow with resources using these workflows
-                     -- Rows represent all possible combinations of resources and places in their workflows
-                     SELECT
-                       jsonb_array_elements(workflow.places) AS place,
-                       resource.*
-                     FROM workflow
-                       LEFT JOIN resource_kind ON workflow.id = resource_kind.workflow_id
-                       LEFT JOIN resource ON resource_kind.id = resource.kind_id
-                   ) AS resources_with_places
-            ) AS resources_with_assignee_metadata_ids
-     ) AS resources_with_assignees
-WHERE assignee_id IN(:userIds) ORDER BY resources_with_assignees.id
-SQL
-            ,
-            $resultSetMapping
-        );
-        $groupsIds = $user->getUserGroupsIds();
-        $groupsIds[] = $user->getUserData()->getId();
-        $query->setParameter('userIds', $groupsIds);
+        $query = $em->createNativeQuery($query, $resultSetMapping);
         return $query->getResult();
     }
 

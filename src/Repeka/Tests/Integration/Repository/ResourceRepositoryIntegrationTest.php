@@ -76,7 +76,6 @@ class ResourceRepositoryIntegrationTest extends IntegrationTestCase {
     }
 
     public function testDoesNotFindTaskIfNextTransitionIsNotGuardedByAssignee() {
-        $this->markTestSkipped('REPEKA-1012');
         $user = $this->getBudynekUser();
         $book = $this->getPhpBookResource();
         $resultsBeforeAssigning = $this->resourceRepository->findAssignedTo($user);
@@ -87,11 +86,10 @@ class ResourceRepositoryIntegrationTest extends IntegrationTestCase {
     }
 
     public function testFindsResourcesAssignedToUserByAutoAssignMetadata() {
-        $this->markTestSkipped('REPEKA-572');
         $user = $this->getBudynekUser();
+        $book = $this->movePhpBookResourceToBeforeScanPlace();
         $resultsBeforeAssigning = $this->resourceRepository->findAssignedTo($user);
         $this->assertCount(0, $resultsBeforeAssigning);
-        $book = $this->getPhpBookResource();
         $scannerMetadata = $this->findMetadataByName('Zeskanowane przez');
         $bookContents = $book->getContents()->withReplacedValues($scannerMetadata, $user->getUserData()->getId());
         $book->updateContents($bookContents);

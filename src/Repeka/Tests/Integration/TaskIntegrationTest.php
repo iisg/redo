@@ -9,8 +9,6 @@ use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Entity\Workflow\ResourceWorkflowPlace;
 use Repeka\Domain\Entity\Workflow\ResourceWorkflowTransition;
 use Repeka\Domain\Repository\MetadataRepository;
-use Repeka\Domain\Workflow\ResourceWorkflowDriver;
-use Repeka\Tests\Domain\Factory\SampleResourceWorkflowDriverFactory;
 use Repeka\Tests\Integration\Traits\FixtureHelpers;
 use Repeka\Tests\IntegrationTestCase;
 
@@ -35,13 +33,7 @@ class TaskIntegrationTest extends IntegrationTestCase {
 
     protected function setUp() {
         parent::setUp();
-        $this->addSupportForResourceKindToMetadata(
-            SystemMetadata::VISIBILITY,
-            SystemResourceKind::USER
-        );
-        $this->clearDefaultLanguages();
-        $this->createLanguage('PL', 'PL', 'polski'); //for validate parentMetadata
-        $this->createLanguage('EN', 'EN', 'angielski'); //for validate parentMetadata
+        $this->addSupportForResourceKindToMetadata(SystemMetadata::VISIBILITY, SystemResourceKind::USER);
         /** @var MetadataRepository $metadataRepository */
         $metadataRepository = $this->container->get(MetadataRepository::class);
         $this->parentMetadata = $metadataRepository->findOne(SystemMetadata::PARENT);
@@ -64,8 +56,6 @@ class TaskIntegrationTest extends IntegrationTestCase {
             [$this->workflowPlace1, $workflowPlace2],
             [$this->transition]
         );
-        $sampleResourceWorkflowDriverFactory = new SampleResourceWorkflowDriverFactory($this->createMock(ResourceWorkflowDriver::class));
-        $workflow = $sampleResourceWorkflowDriverFactory->setForWorkflow($workflow);
         $this->resourceKind = $this->createResourceKind(
             'Resource kind',
             ['PL' => 'Resource kind', 'EN' => 'Resource kind'],

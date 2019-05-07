@@ -153,4 +153,16 @@ class ResourceWorkflow implements Identifiable, HasResourceClass {
         $availableTransitionIds = $this->getWorkflowDriver()->getTransitionsFromPlace($place);
         return EntityUtils::filterByIds($availableTransitionIds, $this->getTransitionsAsObjects());
     }
+
+    /** @return ResourceWorkflowTransition[] */
+    public function getTransitionsToPlace(ResourceWorkflowPlace $place): array {
+        return array_values(
+            array_filter(
+                $this->getTransitionsAsObjects(),
+                function (ResourceWorkflowTransition $transition) use ($place) {
+                    return in_array($place->getId(), $transition->getToIds());
+                }
+            )
+        );
+    }
 }
