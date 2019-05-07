@@ -13,27 +13,29 @@
                     <th>{{ 'State' | trans }}</th>
                 </tr>
                 {% for resource in addedResources %}
-                    <tr>
-                        <td>
-                            <a href="/resources/{{ resource.id }}">{{ resource | metadata('label') | raw }}</a>
-                        </td>
-                        <td>
-                            {% set parentResourceId = resource | m(-1) | first %}
-                            {% if parentResourceId %}
-                                <a href="/resources/{{ parentResourceId }}">{{ r(parentResourceId) | metadata('label') }}</a>
-                            {% endif %}
-                        </td>
-                        <td>
-                            {% set depositPath = getWorkflowPlaceTaggedPath('deposit', resource) %}
-                            {% if depositPath.contains(resource.currentPlaces[0].id) and depositPath.lastPlace.id != resource.currentPlaces[0].id %}
-                                <a href="{{ path('depositTransition', {resource: resource.id, transition: depositPath.getNext(resource.currentPlaces[0].id).id}) }}">
-                                    {{ 'continue depositing' | trans }}
-                                </a>
-                            {% else %}
-                                {{ 'deposited' | trans }} &#10004;
-                            {% endif %}
-                        </td>
-                    </tr>
+                    {% set depositPath = getWorkflowPlaceTaggedPath('deposit', resource) %}
+                    {% if depositPath is defined %}
+                        <tr>
+                            <td>
+                                <a href="/resources/{{ resource.id }}">{{ resource | metadata('label') | raw }}</a>
+                            </td>
+                            <td>
+                                {% set parentResourceId = resource | m(-1) | first %}
+                                {% if parentResourceId %}
+                                    <a href="/resources/{{ parentResourceId }}">{{ r(parentResourceId) | metadata('label') }}</a>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if depositPath is defined and depositPath.contains(resource.currentPlaces[0].id) and depositPath.lastPlace.id != resource.currentPlaces[0].id %}
+                                    <a href="{{ path('depositTransition', {resource: resource.id, transition: depositPath.getNext(resource.currentPlaces[0].id).id}) }}">
+                                        {{ 'continue depositing' | trans }}
+                                    </a>
+                                {% else %}
+                                    {{ 'deposited' | trans }} &#10004;
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endif %}
                 {% endfor %}
             </table>
         </div>

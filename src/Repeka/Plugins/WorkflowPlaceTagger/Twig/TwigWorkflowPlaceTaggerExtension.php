@@ -31,9 +31,16 @@ class TwigWorkflowPlaceTaggerExtension extends \Twig_Extension {
      * @param ResourceEntity|ResourceKind|ResourceWorkflow $subject
      * @return WorkflowPlaceTaggedPath
      */
-    public function getWorkflowPlaceTaggedPath(string $tagName, $subject): WorkflowPlaceTaggedPath {
+    public function getWorkflowPlaceTaggedPath(string $tagName, $subject): ?WorkflowPlaceTaggedPath {
         $workflow = $this->workflowPlaceTaggerHelper->obtainWorkflow($subject);
-        return new WorkflowPlaceTaggedPath($tagName, $workflow, $this->workflowPlaceTaggerHelper);
+        try {
+            if ($workflow) {
+                return new WorkflowPlaceTaggedPath($tagName, $workflow, $this->workflowPlaceTaggerHelper);
+            }
+            return null;
+        } catch (\Exception $e) {
+            return null;
+        }
     }
 
     /**

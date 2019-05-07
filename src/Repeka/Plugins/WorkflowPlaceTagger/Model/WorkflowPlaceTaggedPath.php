@@ -30,7 +30,12 @@ class WorkflowPlaceTaggedPath {
         Assertion::count(
             $startAndEnd,
             2,
-            "Invalid path tags - there should be 2 places marked with $this->tagName to create a path, %d found."
+            sprintf(
+                "Invalid path tags - there should be 2 places marked with %s to create a path in  \"%d\" Worklow, %d found.",
+                $this->tagName,
+                $this->workflow->getId(),
+                count($startAndEnd)
+            )
         );
         /** @var ResourceWorkflowPlace $startPlace */
         $startPlace = $startAndEnd[0]['tagValues'][0] == 'start' ? $startAndEnd[0]['place'] : $startAndEnd[1]['place'];
