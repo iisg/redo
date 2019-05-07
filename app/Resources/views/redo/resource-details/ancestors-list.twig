@@ -13,13 +13,13 @@
     {% if canView(ancestor | resource) %}
         <a href="/resources/{{ ancestor }}">
             {% block linkPrefix %}{% endblock %}
-            {{ ancestor | metadata('label') }}
+            {{ ancestor | metadata('label') | raw }}
             {% block linkSuffix %}{% endblock %}
         </a>
     {% else %}
         <span>
             {% block labelPrefix %}{% endblock %}
-            {{ ancestor | metadata('label') }}
+            {{ ancestor | metadata('label') | raw }}
             {% block labelSuffix %}{% endblock %}
         </span>
     {% endif %}

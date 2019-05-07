@@ -24,7 +24,7 @@
         {% for resource in resources.results %}
             <a class="list-element"
                 href="/resources/{{ resource.id }}">
-                <span>{{ resource | mLabel }}</span>
+                <span>{{ resource | mLabel | raw }}</span>
                 <span class="icon-container">{{ icon('undo-3', 0.75) }}</span>
             </a>
         {% endfor %}

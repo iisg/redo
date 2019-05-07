@@ -16,7 +16,7 @@
         content="{{ share_img ?? '' }}">
     <meta property="og:description"
         content="{{ share_description ?? '' }}">
-    <title>{% if page_title is defined %} {{ page_title }} - {% endif %}{{ applicationName }}</title>
+    <title>{% if page_title is defined %} {{ page_title | raw }} - {% endif %}{{ applicationName }}</title>
 
     <link rel="shortcut icon"
         type="image/x-icon"

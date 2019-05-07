@@ -19,7 +19,7 @@
                     &gt;
                 {% endblock %}
             {% endembed %}
-            {{ resource | metadata('label') }}
+            {{ resource | metadata('label') | raw }}
         </div>
     {% endif %}
 
