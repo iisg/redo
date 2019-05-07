@@ -215,13 +215,13 @@ class VisibilityIntegrationTest extends IntegrationTestCase {
         $this->assertStatusCode(200, $client->getResponse());
     }
 
-    public function testFetchingSingleResourceInvisibleForAdminOfOtherClassForbidden() {
+    public function testFetchingSingleResourceInvisibleForAdminOfOtherClassIsForbidden() {
         $client = $this->createAuthenticatedClient($this->skaner->getUsername(), 'skaner');
         $client->apiRequest('GET', $this->singleResourceEndpoint($this->invisibleBook->getId()));
         $this->assertStatusCode(403, $client->getResponse());
     }
 
-    public function testFetchingSingleResourceInvisibleForCurrentUser() {
+    public function testFetchingSingleResourceInvisibleForCurrentUserIsForbidden() {
         $client = $this->createAuthenticatedClient($this->budynek->getUsername(), 'budynek');
         $client->apiRequest('GET', $this->singleResourceEndpoint($this->invisibleBook->getId()));
         $this->assertStatusCode(403, $client->getResponse());
@@ -233,7 +233,7 @@ class VisibilityIntegrationTest extends IntegrationTestCase {
         $this->assertStatusCode(403, $client->getResponse());
     }
 
-    public function testTreeVisibility() {
+    public function testTreeVisibilityForBudynekUser() {
         $client = $this->createAuthenticatedClient($this->budynek->getUsername(), 'budynek');
         $client->apiRequest('GET', self::TREE_ENDPOINT, [], ['resourceClasses' => ['books']]);
         $this->assertStatusCode(200, $client->getResponse());
@@ -289,13 +289,13 @@ class VisibilityIntegrationTest extends IntegrationTestCase {
         );
     }
 
-    public function testFetchingHierarchyOfInvisibleResourceForbidden() {
+    public function testFetchingHierarchyOfInvisibleResourceForBudynekUserForbidden() {
         $client = $this->createAuthenticatedClient($this->budynek->getUsername(), 'budynek');
         $client->apiRequest('GET', $this->hierarchyEndpoint($this->invisibleBook->getId()));
         $this->assertStatusCode(403, $client->getResponse());
     }
 
-    public function testFetchingResourceHierarchy() {
+    public function testFetchingResourceHierarchyForBudynekUser() {
         $client = $this->createAuthenticatedClient($this->budynek->getUsername(), 'budynek');
         $client->apiRequest('GET', $this->hierarchyEndpoint($this->resourceVisibleForEverybody->getId()));
         $this->assertStatusCode(200, $client->getResponse());

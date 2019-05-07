@@ -4,7 +4,6 @@ namespace Repeka\Application\Security\Voters;
 use Repeka\Domain\Cqrs\CommandBus;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Repository\ResourceRepository;
-use Repeka\Domain\Service\ReproductorPermissionHelper;
 use Repeka\Domain\Service\UnauthenticatedUserPermissionHelper;
 use Repeka\Domain\UseCase\ResourceKind\ResourceKindListQuery;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -23,10 +22,7 @@ class MetadataViewVoter extends ResourceKindViewVoter {
         $this->commandBus = $commandBus;
     }
 
-    protected function supports(
-        $attribute,
-        $subject
-    ) {
+    protected function supports($attribute, $subject) {
         return $attribute === 'VIEW' && $subject instanceof Metadata;
     }
 

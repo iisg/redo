@@ -12,7 +12,7 @@ use Repeka\Tests\IntegrationTestCase;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 /** @small */
-class ResourceKindVisibilityIntegrationTest extends IntegrationTestCase {
+class EntityViewPermissionIntegrationTest extends IntegrationTestCase {
     use FixtureHelpers;
     /** @var SecurityOracle */
     private $oracle;
@@ -40,12 +40,10 @@ class ResourceKindVisibilityIntegrationTest extends IntegrationTestCase {
         $this->usernameMetadata = $this->findMetadataByName('username');
     }
 
-    public function testTesterCannotViewResourceKindsWithNoVisibleResources() {
+    public function testTesterCannotViewResourceKindWithNoVisibleResources() {
         $this->assertFalse($this->oracle->hasViewPermission($this->userRk, $this->testerUserToken));
         $this->assertFalse($this->oracle->hasViewPermission($this->groupRk, $this->testerUserToken));
         $this->assertFalse($this->oracle->hasViewPermission($this->universityRk, $this->testerUserToken));
-        $this->assertFalse($this->oracle->hasViewPermission($this->userRk->getWorkflow(), $this->testerUserToken));
-        $this->assertFalse($this->oracle->hasViewPermission($this->usernameMetadata, $this->testerUserToken));
     }
 
     public function testTesterCanViewResourceKindsWithAnyVisibleResources() {
@@ -53,6 +51,23 @@ class ResourceKindVisibilityIntegrationTest extends IntegrationTestCase {
         $forbiddenBookRk = $this->getResourceKindRepository()->findByName('forbidden-book');
         $this->assertTrue($this->oracle->hasViewPermission($bookRk, $this->testerUserToken));
         $this->assertTrue($this->oracle->hasViewPermission($forbiddenBookRk, $this->testerUserToken));
+    }
+
+    public function testTesterCannotViewMetadataWithNoVisibleResources() {
+        $this->assertFalse($this->oracle->hasViewPermission($this->usernameMetadata, $this->testerUserToken));
+    }
+
+    public function testTesterCanViewMetadataWithAnyVisibleResources() {
+        $bookRk = $this->getResourceKindRepository()->findByName('book');
+        $this->assertTrue($this->oracle->hasViewPermission($bookRk->getMetadataByIdOrName('tytuł'), $this->testerUserToken));
+    }
+
+    public function testTesterCannotViewWorkflowWithNoVisibleResources() {
+        $this->assertFalse($this->oracle->hasViewPermission($this->userRk->getWorkflow(), $this->testerUserToken));
+    }
+
+    public function testTesterCanViewWorkflowWithAnyVisibleResources() {
+        $bookRk = $this->getResourceKindRepository()->findByName('book');
         $this->assertTrue($this->oracle->hasViewPermission($bookRk->getWorkflow(), $this->testerUserToken));
     }
 }

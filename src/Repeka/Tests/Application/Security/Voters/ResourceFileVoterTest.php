@@ -5,8 +5,6 @@ use Repeka\Application\Entity\UserEntity;
 use Repeka\Application\Security\Voters\ResourceFileVoter;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\MetadataControl;
-use Repeka\Domain\Entity\ResourceEntity;
-use Repeka\Domain\Entity\User;
 use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Domain\UseCase\Metadata\MetadataListQuery;
 use Repeka\Tests\Traits\StubsTrait;

@@ -5,7 +5,6 @@ use Repeka\Application\Entity\UserEntity;
 use Repeka\Application\Security\Voters\ResourceKindViewVoter;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Repository\ResourceRepository;
-use Repeka\Domain\Service\ReproductorPermissionHelper;
 use Repeka\Domain\Service\UnauthenticatedUserPermissionHelper;
 use Repeka\Domain\UseCase\PageResult;
 use Repeka\Tests\Traits\StubsTrait;
@@ -32,6 +31,7 @@ class ResourceKindViewVoterTest extends \PHPUnit_Framework_TestCase {
         $this->resourceRepository = $this->createMock(ResourceRepository::class);
         $mockedUser = $this->createMock(UserEntity::class);
         $mockedUser->method('getGroupIdsWithUserId')->willReturn([-1]);
+        /** @var UnauthenticatedUserPermissionHelper $unauthenticatedUserPermissionHelper */
         $unauthenticatedUserPermissionHelper = $this->createMock(UnauthenticatedUserPermissionHelper::class);
         $unauthenticatedUserPermissionHelper->method('getUnauthenticatedUser')->willReturn($mockedUser);
         $this->voter = new ResourceKindViewVoter($this->resourceRepository, $unauthenticatedUserPermissionHelper);

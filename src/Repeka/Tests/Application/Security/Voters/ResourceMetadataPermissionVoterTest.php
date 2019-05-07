@@ -31,6 +31,7 @@ class ResourceMetadataPermissionVoterTest extends \PHPUnit_Framework_TestCase {
         $metadataRepository = $this->createMetadataRepositoryStub([$this->createMetadataMock(1, null, null, [], 'books', [], 'unicorn')]);
         $mockedUser = $this->createMock(UserEntity::class);
         $mockedUser->method('getGroupIdsWithUserId')->willReturn([-1]);
+        /** @var UnauthenticatedUserPermissionHelper $unauthenticatedUserPermissionHelper */
         $unauthenticatedUserPermissionHelper = $this->createMock(UnauthenticatedUserPermissionHelper::class);
         $unauthenticatedUserPermissionHelper->method('getUnauthenticatedUser')->willReturn($mockedUser);
         $this->voter = new ResourceMetadataPermissionVoter($metadataRepository, $unauthenticatedUserPermissionHelper);
