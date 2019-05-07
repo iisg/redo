@@ -46,6 +46,7 @@ export class ResourceForm extends ChangeLossPreventerForm implements ComponentAt
   validationError: boolean = false;
   places: WorkflowPlace[] = [];
   resource: Resource;
+  validationRenderer: BootstrapValidationRenderer;
 
   private validationController: ValidationController;
 
@@ -61,8 +62,9 @@ export class ResourceForm extends ChangeLossPreventerForm implements ComponentAt
   }
 
   attached() {
-    if (!this.skipValidation) {
-      this.validationController.addRenderer(new BootstrapValidationRenderer());
+    if (!this.validationRenderer && !this.skipValidation) {
+      this.validationRenderer = new BootstrapValidationRenderer();
+      this.validationController.addRenderer(this.validationRenderer);
     }
     if (this.currentlyEditedResource
       && this.currentlyEditedResource.kind
