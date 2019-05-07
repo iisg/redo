@@ -21,6 +21,7 @@ class TwigRedoExtension extends \Twig_Extension {
         return [
             new \Twig_Function('getUserDataMapping', [$this, 'getUserDataMapping']),
             new \Twig_Function('insertLinks', [$this, 'insertLinks']),
+            new \Twig_Function('valueWithHighlights', [$this, 'addHighlightsToMetadataValue']),
         ];
     }
 
@@ -61,5 +62,10 @@ class TwigRedoExtension extends \Twig_Extension {
             $str = str_replace($keyword, $link, $str);
         }
         return $value->withNewValue($str);
+    }
+
+    public function addHighlightsToMetadataValue(string $value, string $highlight): string {
+        $valueWithoutHighlights = preg_replace('%</?em>%', '', $highlight);
+        return preg_replace("/$valueWithoutHighlights/", $highlight, $value);
     }
 }
