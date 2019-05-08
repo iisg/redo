@@ -319,9 +319,11 @@ class ResourcesSchemaLoader {
             $resource = $this->resourceRepository->save($resource);
         }
         $newContents = $this->ensureExistingContentsNotRemoved($resource->getContents(), $newContents);
-        $update = ResourceGodUpdateCommand::builder()->setResource($resource)->setNewContents($newContents)->build();
-        $this->commandBus->handle($update);
-        $this->commandBus->handle(new ResourceEvaluateDisplayStrategiesCommand($resource));
+        if ($newContents != $resource->getContents()) {
+            $update = ResourceGodUpdateCommand::builder()->setResource($resource)->setNewContents($newContents)->build();
+            $this->commandBus->handle($update);
+            $this->commandBus->handle(new ResourceEvaluateDisplayStrategiesCommand($resource));
+        }
         return $resource;
     }
 
