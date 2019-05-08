@@ -2,14 +2,20 @@
 {% set metadataToDisplay = cmsConfig('display_metadata_' ~ resource.kind.name ~ '_bibtex', cmsConfig('display_metadata_DEFAULT_bibtex', cmsConfig('display_metadata_DEFAULT'))) %}
 {% set bibtexType = (resource | mBibtexType) is not empty ? (resource | mBibtexType | mLabel) : '@misc' %}
 {% set bibtexKey = (resource | mBibtexKey) is not empty and (resource | mBibtexKey | first.value is not empty) ? (resource | mBibtexKey) : (r|mLabel|first.value|slugify) %}
-{{ bibtexType }}{{ '{' }}{{ bibtexKey }},
+{% set metadataWithValues = [] %}
 {% for metadataName in metadataToDisplay %}
 {% set metadataDetails = metadataName|split('/') %}
 {% set metadata = metadata(metadataDetails[0]) %}
 {% if metadata and metadata.control != 'display-strategy' and metadata.control != 'wysiwyg-editor' %}
 {% set metadataLabel = metadataDetails[1] is defined ? metadataDetails[1] : metadata.name %}
 {% set metadataValue = resource | metadata(metadata.id) | onlyMetadataInCurrentLanguage(metadata) | join((' ' ~ ('and' | trans) ~ ' ')) %}
-  {{ metadataLabel }} = {{ metadataValue | bibtexEscape | raw }},
+{% if metadataValue %}
+{% set metadataWithValues = metadataWithValues|merge([{label: metadataLabel, value: metadataValue}]) %}
 {% endif %}
+{% endif %}
+{% endfor %}
+{{ bibtexType }}{{ '{' }}{{ bibtexKey }},
+{% for metadataWithValue in metadataWithValues %}
+    {{ metadataWithValue.label }} = {{ ((metadataWithValue.value | bibtexEscape) ~ (loop.last ? '' : ',')) | raw }}
 {% endfor %}
 }

@@ -75,10 +75,10 @@ class TwigFrontendExtensionTest extends \PHPUnit_Framework_TestCase {
 
     public function testBibtexEscaping() {
         foreach ([
-                     ['{ala}', '"\{ala\}"'],
-                     ['"a$a"', '"\"a\$a\""'],
-                     ['a\a', '"a\\\\a"'],
-                     ['a\$\"{}a', '"a\\\\\$\\\\\"\{\}a"'],
+                     ['{ala}', '{\{ala\}}'],
+                     ['"a$a"', '{\"a\$a\"}'],
+                     ['a\a', '{a\\\\a}'],
+                     ['a\$\"{}a', '{a\\\\\$\\\\\"\{\}a}'],
                  ] as $testCase) {
             list($initialValue, $expectedValue) = $testCase;
             $this->assertEquals(

@@ -68,8 +68,7 @@
                     </div>
                 </div>
             </div>
-            {% if not childrenAllowed %}
-            <div class="download-options-container">
+            <div class="download-options-container {{ childrenAllowed ? 'invisible' : '' }}">
                 {% include 'redo/resource-details/available-formats.twig' %}
                 <div class="download-options">
                     <span class="download-options-icon">{{ icon('examination', 1.5) }}</span>
@@ -115,7 +114,6 @@
                 {% endif %}
             </div>
         </div>
-        {% endif %}
         <div class="details-container">
             <dl>
                 {% for metadataName in metadataToDisplay %}

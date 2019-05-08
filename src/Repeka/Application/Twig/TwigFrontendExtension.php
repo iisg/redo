@@ -251,7 +251,7 @@ ICON;
     }
 
     public function bibtexEscape($value) {
-        return '"' . addcslashes($value, '{}"$\\') . '"';
+        return '{' . addcslashes($value, '{}"$\\') . '}';
     }
 
     public function xmlEscape($value) {
