@@ -1,4 +1,4 @@
-{% set resources = resources({
+{% set recentResources = resources({
     page: 1,
     resultsPerPage: 3,
     resourceClass: 'books',
@@ -17,11 +17,16 @@
     resourceClass: 'books',
     contentsFilter: {data_utworzenia_rekordu: ('now' | date('Y')) ~ '.+'}
 }).totalCount %}
+{% set allResourcesCount = resources({
+    page: 1,
+    resultsPerPage: 1,
+    resourceClass: 'books'
+}).totalCount %}
 
 <div class="statistics">
     <div>
         <h4>{{ 'Recently added' | trans | upper }}</h4>
-        {% for resource in resources.results %}
+        {% for resource in recentResources.results %}
             <a class="list-element"
                 href="/resources/{{ resource.id }}">
                 <span>{{ resource | mLabel | raw }}</span>
@@ -33,7 +38,7 @@
         <h4>{{ 'Statistics' | trans | upper }}</h4>
         <div class="list-element">
             <span>{{ 'All items' | trans }}</span>
-            <span>{{ resources.totalCount }}</span>
+            <span>{{ allResourcesCount }}</span>
         </div>
         <div class="list-element">
             <span>{{ 'Items added last month' | trans }}</span>
