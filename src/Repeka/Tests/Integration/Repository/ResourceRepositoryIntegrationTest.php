@@ -5,12 +5,11 @@ use Doctrine\ORM\EntityRepository;
 use Repeka\Application\Entity\UserEntity;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\ResourceEntity;
-use Repeka\Domain\Repository\ResourceKindRepository;
 use Repeka\Domain\Repository\ResourceRepository;
 use Repeka\Domain\Repository\UserRepository;
 use Repeka\Domain\UseCase\Resource\ResourceListQuery;
+use Repeka\Domain\UseCase\Resource\ResourceTransitionCommand;
 use Repeka\Domain\UseCase\User\UserListQuery;
-use Repeka\Domain\Utils\EntityUtils;
 use Repeka\Tests\Integration\Traits\FixtureHelpers;
 use Repeka\Tests\IntegrationTestCase;
 
@@ -67,29 +66,24 @@ class ResourceRepositoryIntegrationTest extends IntegrationTestCase {
 
     public function testFindsResourcesAssignedToUserByAssigneeMetadata() {
         $user = $this->getBudynekUser();
+        $book = $this->movePhpBookResourceToBeforeScanPlace();
         $resultsBeforeAssigning = $this->resourceRepository->findAssignedTo($user);
-        $this->assertCount(0, $resultsBeforeAssigning);
-        $book = $this->getPhpBookResource();
+        $this->assertEmpty($resultsBeforeAssigning);
         $this->assignUserAsScanner($book, $user);
         $resultsAfterAssigning = $this->resourceRepository->findAssignedTo($user);
         $this->assertCount(1, $resultsAfterAssigning);
         $this->assertEquals($book->getId(), reset($resultsAfterAssigning)->getId());
     }
 
-    public function testFindAssignedToReturnsTasksSortedById() {
+    public function testDoesNotFindTaskIfNextTransitionIsNotGuardedByAssignee() {
+        $this->markTestSkipped('REPEKA-1012');
         $user = $this->getBudynekUser();
-        $bookResourceKind = $this->container->get(ResourceKindRepository::class)->findByName('book');
-        $query = ResourceListQuery::builder()->filterByResourceKind($bookResourceKind)->build();
-        $books = $this->resourceRepository->findByQuery($query)->getResults();
-        foreach ($books as $book) {
-            $this->assignUserAsScanner($book, $user);
-        }
-        $books[] = $this->createResource($bookResourceKind, [$this->scannerMetadata->getId() => [$user->getUserGroupsIds()[0]]]);
-        $books[] = $this->createResource($bookResourceKind, [$this->scannerMetadata->getId() => [$user->getUserGroupsIds()[0]]]);
-        $tasksIds = EntityUtils::mapToIds($this->resourceRepository->findAssignedTo($user));
-        $booksIds = EntityUtils::mapToIds($books);
-        sort($booksIds);
-        $this->assertEquals($booksIds, $tasksIds);
+        $book = $this->getPhpBookResource();
+        $resultsBeforeAssigning = $this->resourceRepository->findAssignedTo($user);
+        $this->assertEmpty($resultsBeforeAssigning);
+        $this->assignUserAsScanner($book, $user);
+        $resultsAfterAssigning = $this->resourceRepository->findAssignedTo($user);
+        $this->assertEmpty($resultsAfterAssigning);
     }
 
     public function testFindsResourcesAssignedToUserByAutoAssignMetadata() {
@@ -110,9 +104,9 @@ class ResourceRepositoryIntegrationTest extends IntegrationTestCase {
 
     public function testFindsResourcesAssignedToUserByItsGroupIdInAssigneeMetadata() {
         $user = $this->getBudynekUser();
+        $book = $this->movePhpBookResourceToBeforeScanPlace();
         $resultsBeforeAssigning = $this->resourceRepository->findAssignedTo($user);
         $this->assertCount(0, $resultsBeforeAssigning);
-        $book = $this->getPhpBookResource();
         $scannerMetadata = $this->findMetadataByName('Skanista');
         $groupsIds = $user->getUserGroupsIds();
         $bookContents = $book->getContents()->withReplacedValues($scannerMetadata, $groupsIds[0]);
@@ -149,5 +143,12 @@ class ResourceRepositoryIntegrationTest extends IntegrationTestCase {
         $resource->updateContents($contents);
         $this->resourceRepository->save($resource);
         $this->getEntityManager()->flush();
+    }
+
+    private function movePhpBookResourceToBeforeScanPlace(): ResourceEntity {
+        $book = $this->getPhpBookResource();
+        $transitionId = 'e7d756ed-d6b3-4f2f-9517-679311e88b17';
+        $this->handleCommandBypassingFirewall(new ResourceTransitionCommand($book, $book->getContents(), $transitionId));
+        return $book;
     }
 }
