@@ -20,6 +20,7 @@ class ResourceKindsFixture extends RepekaFixture {
     const REFERENCE_RESOURCE_KIND_DICTIONARY_UNIVERSITY = 'resource-kind-university';
     const REFERENCE_RESOURCE_KIND_DICTIONARY_PUBLISHING_HOUSE = 'resource-kind-publishing-house';
     const REFERENCE_RESOURCE_KIND_DICTIONARY_ALLOWED_ADDR_IP = 'resource-kind-allowed-addr-ip';
+    const REFERENCE_RESOURCE_KIND_DICTIONARY_ALLOWED_FOR_AUTHENTICATED = 'resource-kind-allowed-for-authenticated';
     const REFERENCE_RESOURCE_KIND_USER_GROUP = 'resource-kind-user-group';
     const REFERENCE_RESOURCE_KIND_CMS_STATIC_PAGE = 'resource-kind-cms-static-page';
     const REFERENCE_RESOURCE_KIND_CMS_CONFIG = 'resource-kind-cms-config';
@@ -190,6 +191,18 @@ class ResourceKindsFixture extends RepekaFixture {
                 ]
             ),
             self::REFERENCE_RESOURCE_KIND_DICTIONARY_ALLOWED_ADDR_IP
+        );
+        $this->handleCommand(
+            new ResourceKindCreateCommand(
+                'dostep_ograniczony_uzytkownicy_zalogowani',
+                ['PL' => 'Dostęp dla użytkowników zalogowanych', 'EN' => 'Allowed for authenticated users'],
+                [
+                    $this->resourceLabelMetadata("{{r|m{$nameMetadata->getId()}}}"),
+                    $nameMetadata->withOverrides(['label' => ['PL' => 'Dostęp dla użytkowników zalogowanych']]),
+                    $this->getReference(MetadataFixture::REFERENCE_METADATA_CODE_NAME),
+                ]
+            ),
+            self::REFERENCE_RESOURCE_KIND_DICTIONARY_ALLOWED_FOR_AUTHENTICATED
         );
     }
 

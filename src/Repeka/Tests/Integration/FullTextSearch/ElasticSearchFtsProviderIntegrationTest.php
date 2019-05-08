@@ -360,13 +360,13 @@ class ElasticSearchFtsProviderIntegrationTest extends IntegrationTestCase {
     public function testFindAll() {
         /** @var ResultSet $results */
         $results = $this->handleCommandBypassingFirewall(new ResourceListFtsQuery('', [], [], ['books']));
-        $this->assertCount(9, $results);
+        $this->assertCount(10, $results);
     }
 
     public function testFindOnlyTopLevel() {
         /** @var ResultSet $results */
         $results = $this->handleCommandBypassingFirewall(new ResourceListFtsQuery('', [], [], ['books'], false, [], [], true));
-        $this->assertCount(7, $results);
+        $this->assertCount(8, $results);
     }
 
     public function testFilteringByTimestamp() {

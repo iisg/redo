@@ -1,10 +1,8 @@
 <?php
-namespace Repeka\Plugins\Redo\Security\Voters;
+namespace Repeka\Plugins\Redo\Security\Voters\FileVoters;
 
-use Repeka\Application\Entity\UserEntity;
-use Repeka\Application\Security\Voters\ResourceFileVoter;
-use Repeka\Domain\Constants\SystemRole;
-use Repeka\Domain\Entity\HasResourceClass;
+use Exception;
+use Repeka\Application\Security\Voters\FileDownloadVoter;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Domain\Repository\ResourceRepository;
@@ -12,7 +10,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
-class ResourceFileByAddressIpVoter implements VoterInterface {
+class ResourceFileByAddressIpVoter implements FileDownloadVoter {
     private const METADATA_PERMISSION_NAME = 'prawa_dostepu';
     private const METADATA_ADDR_IP = 'dozwolony_adres_ip';
 
@@ -33,25 +31,20 @@ class ResourceFileByAddressIpVoter implements VoterInterface {
         $this->requestStack = $requestStack;
     }
 
-    public function vote(TokenInterface $token, $subject, array $attributes) {
-        if (in_array(ResourceFileVoter::FILE_DOWNLOAD_PERMISSION, $attributes)) {
-            $user = $token->getUser();
-            /** @var ResourceEntity $resource */
-            $resource = $subject['resource'];
-            $request = $this->requestStack->getCurrentRequest();
+    public function voteOnAccessToFile(TokenInterface $token, ResourceEntity $resource, ?string $path = null): int {
+        $request = $this->requestStack->getCurrentRequest();
+        if ($request) {
             $addrIp = $request->getClientIp();
-            if ($user instanceof UserEntity && $resource instanceof HasResourceClass) {
-                if ($user->hasRole(SystemRole::ADMIN()->roleName($resource->getResourceClass()))) {
-                    return self::ACCESS_GRANTED;
+            try {
+                $allowedRightsMetadata = $this->metadataRepository->findByName(self::METADATA_PERMISSION_NAME);
+                $accessRights = $resource->getContents()->getValuesWithoutSubmetadata($allowedRightsMetadata);
+                if ($accessRights) {
+                    return $this->accessGrantedForCurrentAddressIp($accessRights, $addrIp);
                 }
-            }
-            $allowedRightsMetadata = $this->metadataRepository->findByName(self::METADATA_PERMISSION_NAME);
-            $accessRights = $resource->getContents()->getValuesWithoutSubmetadata($allowedRightsMetadata);
-            if ($accessRights) {
-                return $this->accessGrantedForCurrentAddressIp($accessRights, $addrIp);
+            } catch (Exception $e) {
             }
         }
-        return self::ACCESS_ABSTAIN;
+        return VoterInterface::ACCESS_ABSTAIN;
     }
 
     private function accessGrantedForCurrentAddressIp(array $accessRightsIds, String $currentAddrIp) {
@@ -63,16 +56,16 @@ class ResourceFileByAddressIpVoter implements VoterInterface {
                 $network = $allowedIp->getValue();
                 if (strpos($network, '/')) {
                     if ($this->cidrMatch($currentAddrIp, $network)) {
-                        return self::ACCESS_GRANTED;
+                        return VoterInterface::ACCESS_GRANTED;
                     }
                 } else {
                     if ($network == $currentAddrIp) {
-                        return self::ACCESS_GRANTED;
+                        return VoterInterface::ACCESS_GRANTED;
                     }
                 }
             }
         }
-        return self::ACCESS_DENIED;
+        return VoterInterface::ACCESS_DENIED;
     }
 
     /** @see https://stackoverflow.com/a/594134/878514 */

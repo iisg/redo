@@ -64,7 +64,10 @@ class MetadataStage2Fixture extends RepekaFixture {
         );
         $this->addRelationshipResourceKindConstraint(
             MetadataFixture::REFERENCE_METADATA_ACCESS_RIGHTS,
-            [ResourceKindsFixture::REFERENCE_RESOURCE_KIND_DICTIONARY_ALLOWED_ADDR_IP]
+            [
+                ResourceKindsFixture::REFERENCE_RESOURCE_KIND_DICTIONARY_ALLOWED_ADDR_IP,
+                ResourceKindsFixture::REFERENCE_RESOURCE_KIND_DICTIONARY_ALLOWED_FOR_AUTHENTICATED,
+            ]
         );
         $this->addRelationshipResourceKindConstraint(
             SystemMetadata::REPRODUCTOR,

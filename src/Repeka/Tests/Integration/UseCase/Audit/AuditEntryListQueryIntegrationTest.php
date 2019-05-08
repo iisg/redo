@@ -10,7 +10,7 @@ class AuditEntryListQueryIntegrationTest extends IntegrationTestCase {
     use FixtureHelpers;
 
     private const MOMENT_DATE_FORMAT = 'Y-m-d\TH:i:s';
-    private const NUMBER_OF_FIXTURE_AUDIT_ENTRIES = 36;
+    private const NUMBER_OF_FIXTURE_AUDIT_ENTRIES = 38;
 
     protected function initializeDatabaseForTests() {
         $this->loadAllFixtures();

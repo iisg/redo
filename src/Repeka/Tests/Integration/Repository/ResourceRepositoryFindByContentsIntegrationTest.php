@@ -179,7 +179,7 @@ class ResourceRepositoryFindByContentsIntegrationTest extends IntegrationTestCas
             ->filterByContents([$descriptionMetadata->getId() => 'poradnik'])
             ->build();
         $results = $this->handleCommandBypassingFirewall($query);
-        $this->assertCount(2, $results);
+        $this->assertCount(3, $results);
         $this->assertContains($this->getPhpBookResource()->getId(), EntityUtils::mapToIds($results));
     }
 
@@ -240,6 +240,6 @@ class ResourceRepositoryFindByContentsIntegrationTest extends IntegrationTestCas
     public function testFindingByDateRegex() {
         $query = ResourceListQuery::builder()->filterByContents(['data_utworzenia_rekordu' => '2.+'])->build();
         $results = $this->handleCommandBypassingFirewall($query);
-        $this->assertCount(4, $results);
+        $this->assertCount(5, $results);
     }
 }

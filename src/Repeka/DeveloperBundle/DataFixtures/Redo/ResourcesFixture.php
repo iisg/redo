@@ -2,7 +2,6 @@
 namespace Repeka\DeveloperBundle\DataFixtures\Redo;
 
 use Doctrine\Common\Persistence\ObjectManager;
-use phpDocumentor\Reflection\Types\This;
 use Repeka\Application\Entity\UserEntity;
 use Repeka\DeveloperBundle\DataFixtures\RepekaFixture;
 use Repeka\Domain\Constants\SystemMetadata;
@@ -27,6 +26,8 @@ class ResourcesFixture extends RepekaFixture {
     const REFERENCE_BOOK_1 = 'resource-book-1';
     const REFERENCE_ALLOWED_FOR_ALL = 'resource-allowed-for-all';
     const REFERENCE_NOT_ALLOWED = 'resource-not-allowed';
+    const REFERENCE_ALLOWED_FOR_AUTHENTICATED = 'resource-allowed-for-authenticated';
+    const REFERENCE_RESOURCE_KISS = 'resource-kiss';
 
     /**
      * @inheritdoc
@@ -47,6 +48,9 @@ class ResourcesFixture extends RepekaFixture {
         $universityResourceKind = $this->getReference(ResourceKindsFixture::REFERENCE_RESOURCE_KIND_DICTIONARY_UNIVERSITY);
         $publishingHouseResouceKind = $this->getReference(ResourceKindsFixture::REFERENCE_RESOURCE_KIND_DICTIONARY_PUBLISHING_HOUSE);
         $allowedAddrIpResouceKind = $this->getReference(ResourceKindsFixture::REFERENCE_RESOURCE_KIND_DICTIONARY_ALLOWED_ADDR_IP);
+        $allowedForAuthenticatedResouceKind = $this->getReference(
+            ResourceKindsFixture::REFERENCE_RESOURCE_KIND_DICTIONARY_ALLOWED_FOR_AUTHENTICATED
+        );
         $userAdmin = $this->getReference(AdminAccountFixture::REFERENCE_USER_ADMIN);
         $agh = $this->handleCommand(
             new ResourceCreateCommand(
@@ -174,7 +178,7 @@ class ResourcesFixture extends RepekaFixture {
                             $this->getReference(self::REFERENCE_USER_GROUP_ADMINS)->getId(),
                             $this->getReference(self::REFERENCE_USER_GROUP_SCANNERS)->getId(),
                             $this->getReference(self::REFERENCE_USER_GROUP_SIGNED)->getId(),
-                            SystemResource::UNAUTHENTICATED_USER
+                            SystemResource::UNAUTHENTICATED_USER,
                         ],
                     ]
                 ),
@@ -197,13 +201,36 @@ class ResourcesFixture extends RepekaFixture {
                             $this->getReference(self::REFERENCE_USER_GROUP_ADMINS)->getId(),
                             $this->getReference(self::REFERENCE_USER_GROUP_SCANNERS)->getId(),
                             $this->getReference(self::REFERENCE_USER_GROUP_SIGNED)->getId(),
-                            SystemResource::UNAUTHENTICATED_USER
+                            SystemResource::UNAUTHENTICATED_USER,
                         ],
                     ]
                 ),
                 $userAdmin
             ),
             self::REFERENCE_NOT_ALLOWED
+        );
+        $this->handleCommand(
+            new ResourceCreateCommand(
+                $allowedForAuthenticatedResouceKind,
+                $this->contents(
+                    [
+                        MetadataFixture::REFERENCE_METADATA_DEPARTMENTS_NAME => 'Dostęp dla użytkowników zalogowanych',
+                        MetadataFixture::REFERENCE_METADATA_CODE_NAME => 'dostep_ograniczony_uzytkownicy_zalogowani',
+                        SystemMetadata::VISIBILITY => [
+                            $this->getReference(self::REFERENCE_USER_GROUP_ADMINS)->getId(),
+                            $this->getReference(self::REFERENCE_USER_GROUP_SCANNERS)->getId(),
+                        ],
+                        SystemMetadata::TEASER_VISIBILITY => [
+                            $this->getReference(self::REFERENCE_USER_GROUP_ADMINS)->getId(),
+                            $this->getReference(self::REFERENCE_USER_GROUP_SCANNERS)->getId(),
+                            $this->getReference(self::REFERENCE_USER_GROUP_SIGNED)->getId(),
+                            SystemResource::UNAUTHENTICATED_USER,
+                        ],
+                    ]
+                ),
+                $userAdmin
+            ),
+            self::REFERENCE_ALLOWED_FOR_AUTHENTICATED
         );
     }
 
@@ -318,6 +345,45 @@ class ResourcesFixture extends RepekaFixture {
                 $userAdmin
             ),
             self::REFERENCE_RESOURCE_CATEGORY_EBOOKS
+        );
+        $this->handleCommand(
+            new ResourceCreateCommand(
+                $bookResourceKind,
+                $this->contents(
+                    [
+                        MetadataFixture::REFERENCE_METADATA_TITLE => [
+                            [
+                                'value' => 'KISS - czyli jak uniknąć legacy code',
+                                'submetadata' => [
+                                    $titleLanguageMetadataId => [['value' => 'PL']],
+                                ],
+                            ],
+                        ],
+                        MetadataFixture::REFERENCE_METADATA_DESCRIPTION =>
+                            ['Poradnik dla nieporadnych deweloperów.'],
+                        MetadataFixture::REFERENCE_METADATA_CREATOR => [$userAdmin->getUserData()],
+                        MetadataFixture::REFERENCE_METADATA_ASSIGNED_SCANNER => [$userScanner->getUserData()],
+                        MetadataFixture::REFERENCE_METADATA_ACCESS_RIGHTS => [
+                            $this->getReference(self::REFERENCE_ALLOWED_FOR_AUTHENTICATED)->getId(),
+                            $this->getReference(self::REFERENCE_ALLOWED_FOR_ALL)->getId(),
+                        ],
+                        SystemMetadata::VISIBILITY => [
+                            $this->getReference(self::REFERENCE_USER_GROUP_ADMINS)->getId(),
+                            $this->getReference(self::REFERENCE_USER_GROUP_SCANNERS)->getId(),
+                            $this->getReference(self::REFERENCE_USER_GROUP_SIGNED)->getId(),
+                            SystemResource::UNAUTHENTICATED_USER,
+                        ],
+                        SystemMetadata::TEASER_VISIBILITY => [
+                            $this->getReference(self::REFERENCE_USER_GROUP_ADMINS)->getId(),
+                            $this->getReference(self::REFERENCE_USER_GROUP_SCANNERS)->getId(),
+                            $this->getReference(self::REFERENCE_USER_GROUP_SIGNED)->getId(),
+                            SystemResource::UNAUTHENTICATED_USER,
+                        ],
+                    ]
+                ),
+                $userAdmin
+            ),
+            self::REFERENCE_RESOURCE_KISS
         );
         $this->handleCommand(
             new ResourceCreateCommand(

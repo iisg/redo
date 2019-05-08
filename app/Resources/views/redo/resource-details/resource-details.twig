@@ -76,34 +76,50 @@
                 </div>
             </div>
             <div class="download-options-container {{ childrenAllowed ? 'invisible' : '' }}">
-                {% if hasBrowsableContents %}
+                {% if filesAllowed %}
+                    {% if hasBrowsableContents %}
+                        <div class="download-options">
+                            <span class="download-options-icon">{{ icon('book', 1.5) }}</span>
+                            <fieldset>
+                                <div class="formats in-one-line">
+                                    <a href="/resources/{{ resource.id }}/browse"
+                                        title="{{ 'Browse resource' | trans }}">
+                                        {{ 'Browse' | trans }}
+                                    </a>
+                                </div>
+                            </fieldset>
+                        </div>
+                    {% endif %}
+                    {% include 'redo/resource-details/available-formats.twig' %}
+                    {% set masterFilesDir = resource | m('katalog_plikow_master') %}
+                    {% if masterFilesDir is not empty %}
+                        <div class="download-options">
+                            <span class="download-options-icon">{{ icon('zip', 1.5) }}</span>
+                            <fieldset>
+                                <legend align="left"
+                                    id="archive-legend">
+                                    <span title="{{ 'Download archives' | trans }}">{{ 'Download archives' | trans }}</span>
+                                </legend>
+                                <div class="formats in-one-line">
+                                    <a href="/redo/resources/{{ resource.id }}/archive/{{ masterFilesDir|first.value }}"
+                                        title="{{ 'Full resolution scans' | trans }}"
+                                        aria-labelledby="archive-legend archive-tiff">
+                                        <span id="archive-tiff">{{ 'Full resolution scans' | trans }}</span>
+                                    </a>
+                                </div>
+                            </fieldset>
+                        </div>
+                    {% endif %}
+                {% else %}
                     <div class="download-options">
-                        <span class="download-options-icon">{{ icon('book', 1.5) }}</span>
-                        <fieldset>
-                            <div class="formats in-one-line">
-                                <a href="/resources/{{ resource.id }}/browse"
-                                    title="{{ 'Browse resource' | trans }}">
-                                    {{ 'Browse' | trans }}
-                                </a>
-                            </div>
-                        </fieldset>
-                    </div>
-                {% endif %}
-                {% include 'redo/resource-details/available-formats.twig' %}
-                {% set masterFilesDir = resource | m('katalog_plikow_master') %}
-                {% if masterFilesDir is not empty %}
-                    <div class="download-options">
-                        <span class="download-options-icon">{{ icon('zip', 1.5) }}</span>
+                        <span class="download-options-icon">{{ icon('resource-2', 1.5) }}</span>
                         <fieldset>
                             <legend align="left"
-                                id="archive-legend"><span title="{{ 'Download archives' | trans }}">{{ 'Download archives' | trans }}</span>
-                            </legend>
+                                id="cite-legend"><span title="{{ 'Files' | trans }}">{{ 'Files' | trans }}</span></legend>
                             <div class="formats in-one-line">
-                                <a href="/redo/resources/{{ resource.id }}/archive/{{ masterFilesDir|first.value }}"
-                                    title="{{ 'Full resolution scans' | trans }}"
-                                    aria-labelledby="archive-legend archive-tiff">
-                                    <span id="archive-tiff">{{ 'Full resolution scans' | trans }}</span>
-                                </a>
+                                <span class="text-center small">
+                                    {{ resource | m('prawa_dostepu') | mLabel }}
+                                </span>
                             </div>
                         </fieldset>
                     </div>
@@ -137,25 +153,6 @@
                         </div>
                     </fieldset>
                 </div>
-                {% if hasBrowsableContents %}
-                    <div class="download-options">
-                        <span class="download-options-icon">{{ icon('book', 1.5) }}</span>
-                        <fieldset>
-                            <div class="formats in-one-line">
-                                {% if filesAllowed %}
-                                    <a href="/resources/{{ resource.id }}/browse"
-                                        title="{{ 'Browse resource' | trans }}">
-                                        {{ 'Browse' | trans }}
-                                    </a>
-                                {% else %}
-                                    <span class="text-center small">
-                                        {{ resource | m('prawa_dostepu') | mLabel }}
-                                    </span>
-                                {% endif %}
-                            </div>
-                        </fieldset>
-                    </div>
-                {% endif %}
             </div>
         </div>
         <div class="details-container">

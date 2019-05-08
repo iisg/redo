@@ -1,19 +1,21 @@
 <?php
-namespace Repeka\Plugins\Redo\Tests\Security\Voters;
+namespace Repeka\Plugins\Redo\Tests\Security\Voters\FileVoters;
 
+use PHPUnit_Framework_MockObject_MockObject;
+use PHPUnit_Framework_TestCase;
 use Repeka\Application\Entity\UserEntity;
 use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Domain\Repository\ResourceRepository;
-use Repeka\Plugins\Redo\Security\Voters\ResourceFileByAddressIpVoter;
+use Repeka\Plugins\Redo\Security\Voters\FileVoters\ResourceFileByAddressIpVoter;
 use Repeka\Tests\Traits\StubsTrait;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
-class ResourceFileByAddressIpVoterTest extends \PHPUnit_Framework_TestCase {
+class ResourceFileByAddressIpVoterTest extends PHPUnit_Framework_TestCase {
     use StubsTrait;
 
     /** @var ResourceFileByAddressIpVoter */
@@ -30,9 +32,9 @@ class ResourceFileByAddressIpVoterTest extends \PHPUnit_Framework_TestCase {
     private $resourceForEveryone;
     /** @var ResourceEntity */
     private $resourceNotAllowed;
-    /** @var MetadataRepository|\PHPUnit_Framework_MockObject_MockObject */
+    /** @var MetadataRepository|PHPUnit_Framework_MockObject_MockObject */
     private $metadataRepository;
-    /** @var ResourceRepository|\PHPUnit_Framework_MockObject_MockObject */
+    /** @var ResourceRepository|PHPUnit_Framework_MockObject_MockObject */
     private $resourceRepository;
     private $request;
 
@@ -91,65 +93,58 @@ class ResourceFileByAddressIpVoterTest extends \PHPUnit_Framework_TestCase {
         );
     }
 
-    public function testAccessGrantedIfUserAdmin() {
-        $this->user->updateRoles(['ADMIN-books']);
-        $this->request->method('getClientIp')->willReturn('');
-        $voterDecision = $this->voter->vote(
-            $this->userToken,
-            $this->subject($this->resource),
-            ['FILE_DOWNLOAD']
-        );
-        $this->assertEquals(VoterInterface::ACCESS_GRANTED, $voterDecision);
-    }
-
     public function testAccesGrantedIfUserIsNotAdminAndIpIsInMetadataValues() {
         $this->request->method('getClientIp')->willReturn('127.0.0.1');
-        $voterDecision = $this->voter->vote(
+        $voterDecision = $this->voter->voteOnAccessToFile(
             $this->userToken,
-            $this->subject($this->resource),
-            ['FILE_DOWNLOAD']
+            $this->resource
         );
         $this->assertEquals(VoterInterface::ACCESS_GRANTED, $voterDecision);
     }
 
     public function testAccessGrantedIfUserIsNotAdminAndIpIsInSubnet() {
         $this->request->method('getClientIp')->willReturn('10.5.21.30');
-        $voterDecision = $this->voter->vote(
+        $voterDecision = $this->voter->voteOnAccessToFile(
             $this->userToken,
-            $this->subject($this->resource),
-            ['FILE_DOWNLOAD']
+            $this->resource
         );
         $this->assertEquals(VoterInterface::ACCESS_GRANTED, $voterDecision);
     }
 
     public function testAccessGrantedForEveryone() {
         $this->request->method('getClientIp')->willReturn('10.5.21.30');
-        $voterDecision = $this->voter->vote(
+        $voterDecision = $this->voter->voteOnAccessToFile(
             $this->userToken,
-            $this->subject($this->resourceForEveryone),
-            ['FILE_DOWNLOAD']
+            $this->resourceForEveryone
         );
         $this->assertEquals(VoterInterface::ACCESS_GRANTED, $voterDecision);
     }
 
     public function testAccessDeniedForEveryone() {
         $this->request->method('getClientIp')->willReturn('10.5.21.30');
-        $voterDecision = $this->voter->vote(
+        $voterDecision = $this->voter->voteOnAccessToFile(
             $this->userToken,
-            $this->subject($this->resourceNotAllowed),
-            ['FILE_DOWNLOAD']
+            $this->resourceNotAllowed
         );
         $this->assertEquals(VoterInterface::ACCESS_DENIED, $voterDecision);
     }
 
     public function testAccessDeniedIfUserIsNotAdminAndIpIsNotInMetadataValues() {
         $this->request->method('getClientIp')->willReturn('127.0.0.2');
-        $voterDecision = $this->voter->vote(
+        $voterDecision = $this->voter->voteOnAccessToFile(
             $this->userToken,
-            $this->subject($this->resource),
-            ['FILE_DOWNLOAD']
+            $this->resource
         );
         $this->assertEquals(VoterInterface::ACCESS_DENIED, $voterDecision);
+    }
+
+    public function testAbstainIfNoRequest() {
+        $voter = new ResourceFileByAddressIpVoter(
+            $this->metadataRepository,
+            $this->resourceRepository,
+            $this->createMock(RequestStack::class)
+        );
+        $this->assertEquals(VoterInterface::ACCESS_ABSTAIN, $voter->voteOnAccessToFile($this->userToken, $this->resource));
     }
 
     /** @dataProvider networkExamples */
@@ -168,9 +163,5 @@ class ResourceFileByAddressIpVoterTest extends \PHPUnit_Framework_TestCase {
             ['149.156.100.254', '149.156.100.1/24', true],
             ['149.156.101.254', '149.156.100.1/24', false],
         ];
-    }
-
-    private function subject($resource) {
-        return ['resource' => $resource];
     }
 }

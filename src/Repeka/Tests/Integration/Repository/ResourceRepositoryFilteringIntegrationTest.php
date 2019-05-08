@@ -4,7 +4,6 @@ namespace Repeka\Tests\Integration\Repository;
 use Doctrine\ORM\EntityRepository;
 use Repeka\Application\Entity\UserEntity;
 use Repeka\Domain\Constants\SystemMetadata;
-use Repeka\Domain\Constants\SystemResource;
 use Repeka\Domain\Constants\SystemResourceKind;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\ResourceEntity;
@@ -51,7 +50,7 @@ class ResourceRepositoryFilteringIntegrationTest extends IntegrationTestCase {
         $unauthenticatedUser = $this->getUnauthenticatedUser();
         EntityUtils::forceSetField($query, $unauthenticatedUser, 'executor');
         $resourcesIds = EntityUtils::mapToIds($this->resourceRepository->findByQuery($query)->getResults());
-        $this->assertCount(6, $resourcesIds);
+        $this->assertCount(7, $resourcesIds);
         $this->assertNotContains(1, $resourcesIds);
         $this->assertNotContains(5, $resourcesIds);
         $this->assertNotContains(6, $resourcesIds);
@@ -66,7 +65,7 @@ class ResourceRepositoryFilteringIntegrationTest extends IntegrationTestCase {
     public function testFindAllByBookResourceClass() {
         $query = ResourceListQuery::builder()->filterByResourceClass('books')->build();
         $paginatedResources = $this->resourceRepository->findByQuery($query);
-        $this->assertCount(6, $paginatedResources->getResults());
+        $this->assertCount(7, $paginatedResources->getResults());
         foreach ($paginatedResources->getResults() as $resource) {
             $this->assertNotEquals(SystemResourceKind::USER, $resource->getKind()->getId());
         }
@@ -75,14 +74,14 @@ class ResourceRepositoryFilteringIntegrationTest extends IntegrationTestCase {
     public function testFindAllBookResourceClassResourceIfPageAndResultsPerPageNotSet() {
         $query = ResourceListQuery::builder()->filterByResourceClass('books')->build();
         $paginatedResources = $this->resourceRepository->findByQuery($query);
-        $this->assertCount(6, $paginatedResources->getResults());
+        $this->assertCount(7, $paginatedResources->getResults());
     }
 
     public function testFindFirstThreeResourcesByBookResourceClass() {
         $query = ResourceListQuery::builder()->filterByResourceClass('books')->setPage(1)->setResultsPerPage(3)->build();
         $paginatedResources = $this->resourceRepository->findByQuery($query);
         $this->assertCount(3, $paginatedResources->getResults());
-        $this->assertEquals(6, $paginatedResources->getTotalCount());
+        $this->assertEquals(7, $paginatedResources->getTotalCount());
     }
 
     public function testFindAllByWorkflowPlacesIdsOneId() {
@@ -94,7 +93,7 @@ class ResourceRepositoryFilteringIntegrationTest extends IntegrationTestCase {
     public function testFindAllByWorkflowPlacesIdsManyIds() {
         $query = ResourceListQuery::builder()->filterByWorkflowPlacesIds(['qqd3yk499', 'y1oosxtgf'])->build();
         $paginatedResources = $this->resourceRepository->findByQuery($query);
-        $this->assertEquals(4, $paginatedResources->getTotalCount());
+        $this->assertEquals(5, $paginatedResources->getTotalCount());
     }
 
     public function testFindDifferResultsForDifferPages() {
@@ -129,7 +128,7 @@ class ResourceRepositoryFilteringIntegrationTest extends IntegrationTestCase {
             ->sortBy([['columnId' => $titleMetadataId, 'direction' => 'ASC']])
             ->build();
         $resources = $this->resourceRepository->findByQuery($query);
-        $this->assertCount(6, $resources->getResults());
+        $this->assertCount(7, $resources->getResults());
     }
 
     public function testSortingAscendingPutsResourcesWithoutMetadataAtEnd() {
@@ -140,8 +139,8 @@ class ResourceRepositoryFilteringIntegrationTest extends IntegrationTestCase {
             ->build();
         /** @var ResourceEntity[] $resources */
         $resources = $this->resourceRepository->findByQuery($query)->getResults();
-        $lastWithMetadata = $resources[4];
-        $firstWithoutMetadata = $resources[5];
+        $lastWithMetadata = $resources[5];
+        $firstWithoutMetadata = $resources[6];
         $this->assertArrayHasKey($titleMetadataId, $lastWithMetadata->getContents());
         $this->assertArrayNotHasKey($titleMetadataId, $firstWithoutMetadata->getContents());
     }
@@ -198,7 +197,7 @@ class ResourceRepositoryFilteringIntegrationTest extends IntegrationTestCase {
     public function testResourceCountByKind() {
         $bookResourceKind = $this->getBookResourceKind();
         $booksCount = $this->resourceRepository->countByResourceKind($bookResourceKind);
-        $this->assertEquals(4, $booksCount);
+        $this->assertEquals(5, $booksCount);
     }
 
     public function testFindUsersInGroup() {

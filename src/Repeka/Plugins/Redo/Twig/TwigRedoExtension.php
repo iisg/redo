@@ -3,7 +3,8 @@ namespace Repeka\Plugins\Redo\Twig;
 
 use Repeka\Application\Cqrs\Middleware\FirewallMiddleware;
 use Repeka\Application\Security\SecurityOracle;
-use Repeka\Application\Security\Voters\ResourceFileVoter;
+use Repeka\Application\Security\Voters\CompositeFileDownloadVoter;
+use Repeka\Application\Security\Voters\FileDownloadVoter;
 use Repeka\Application\Service\CurrentUserAware;
 use Repeka\Domain\Entity\MetadataValue;
 use Repeka\Domain\Entity\ResourceEntity;
@@ -54,7 +55,7 @@ class TwigRedoExtension extends \Twig_Extension {
     }
 
     public function canUserSeeFiles(ResourceEntity $resource) {
-        return $this->securityOracle->hasPermission(['resource' => $resource], ResourceFileVoter::FILE_DOWNLOAD_PERMISSION);
+        return $this->securityOracle->hasPermission(['resource' => $resource], FileDownloadVoter::FILE_DOWNLOAD_ATTRIBUTE);
     }
 
     /**

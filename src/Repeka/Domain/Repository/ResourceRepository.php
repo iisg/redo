@@ -4,6 +4,7 @@ namespace Repeka\Domain\Repository;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Entity\User;
+use Repeka\Domain\Exception\EntityNotFoundException;
 use Repeka\Domain\UseCase\PageResult;
 use Repeka\Domain\UseCase\Resource\ResourceListQuery;
 use Repeka\Domain\UseCase\Resource\ResourceTreeQuery;
@@ -13,6 +14,9 @@ interface ResourceRepository {
     /** @return ResourceEntity[] */
     public function findAll();
 
+    /**
+     * @throws EntityNotFoundException if the entity could not be found
+     */
     public function findOne(int $id): ResourceEntity;
 
     public function save(ResourceEntity $resource): ResourceEntity;

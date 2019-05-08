@@ -113,6 +113,10 @@ services:
     tags:
       - { name: security.voter, priority: 100 }
 
+  Repeka\Application\Security\Voters\FileVoters\ResourceFileOperatorVoter:
+    tags:
+      - { name: security.voter, priority: 50 }
+
   Repeka\Application\Service\FileSystemResourceFileStorage:
     $uploadDirs: '%repeka.upload_dirs%'
 
@@ -166,3 +170,6 @@ services:
 
   Repeka\Application\Elasticsearch\Model\ElasticSearchQueryCreator\ElasticSearchQueryCreatorComposite:
     - !tagged repeka.elastic_search_query_creator
+
+  Repeka\Application\Security\Voters\CompositeFileDownloadVoter:
+    - !tagged repeka.file_download_voter

@@ -12,7 +12,10 @@ use Repeka\Domain\UseCase\Metadata\MetadataListQuery;
 use Repeka\Domain\UseCase\Metadata\MetadataUpdateOrderCommand;
 use Repeka\Domain\Utils\EntityUtils;
 
-/** @SuppressWarnings(PHPMD.ExcessiveMethodLength) */
+/**
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.ExcessiveClassLength)
+ */
 class MetadataFixture extends RepekaFixture {
     use MetadataFixtureTrait;
 
@@ -73,6 +76,7 @@ class MetadataFixture extends RepekaFixture {
     const REFERENCE_METADATA_DEPARTMENTS_UNIVERSITY = 'metadata-departments-university';
     const REFERENCE_METADATA_ISSUING_DEPARTMENT = 'metadata-issuing-department';
     const REFERENCE_METADATA_ALLOWED_ADDR_IP = 'metadata-allowed-addr-ip';
+    const REFERENCE_METADATA_CODE_NAME = 'metadata-code-name';
 
     /**
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
@@ -803,6 +807,21 @@ TEMPLATE
                 ]
             ),
             self::REFERENCE_METADATA_ALLOWED_ADDR_IP
+        );
+        $metadata[] = $this->handleCommand(
+            MetadataCreateCommand::fromArray(
+                [
+                    'name' => 'nazwa_kodowa',
+                    'label' => [
+                        'PL' => 'Nazwa kodowa',
+                        'EN' => 'Code name',
+                    ],
+                    'control' => MetadataControl::TEXT,
+                    'shownInBrief' => false,
+                    'resourceClass' => 'dictionaries',
+                ]
+            ),
+            self::REFERENCE_METADATA_CODE_NAME
         );
     }
 

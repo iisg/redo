@@ -64,8 +64,8 @@ class TwigFrontendExtensionIntegrationTest extends IntegrationTestCase {
         $couldUseWebpackId = $this->findResourceByContents(['tytul' => 'Mogliśmy użyć Webpacka'])->getId();
         $phpBookId = $this->getPhpBookResource()->getId();
         $testCases = [
-            ['{}', [18, 10, 16], [100]],
-            ['{parentId: null}', [16, 10, 17], [$couldUseWebpackId]],
+            ['{}', [18, 10, 17], [100]],
+            ['{parentId: null}', [17, 10, 18], [$couldUseWebpackId]],
             ['{resourceClass: "books"}', [$phpBookId, $couldUseWebpackId], [1, 2]],
             ["{resourceKindIds: [{$this->getPhpBookResource()->getKind()->getId()}]}", [$phpBookId, $couldUseWebpackId], [1, 2]],
         ];
