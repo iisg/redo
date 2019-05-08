@@ -362,7 +362,7 @@ class VisibilityIntegrationTest extends IntegrationTestCase {
         foreach ($resources as $resource) {
             $this->assertArrayHasKey('contents', $resource);
             $contents = $resource['contents'];
-            $this->assertCount(2, $contents);
+            $this->assertLessThanOrEqual(3, count($contents));
             $this->assertArrayHasKey(SystemMetadata::PARENT, $contents);
             $this->assertArrayHasKey(SystemMetadata::RESOURCE_LABEL, $contents);
             $this->assertArrayHasKey('isTeaser', $resource);

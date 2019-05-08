@@ -4,6 +4,7 @@ namespace Repeka\Domain\Entity;
 use Assert\Assertion;
 use Repeka\Application\Entity\UserEntity;
 use Repeka\Domain\Constants\SystemMetadata;
+use Repeka\Domain\Constants\SystemResourceKind;
 use Repeka\Domain\Constants\SystemTransition;
 use Repeka\Domain\Entity\Workflow\ResourceWorkflowPlace;
 use Repeka\Domain\Service\ResourceDisplayStrategyDependencyMap;
@@ -51,12 +52,14 @@ class ResourceEntity implements Identifiable, HasResourceClass {
     }
 
     public function getTeaser(): ResourceContents {
-        return ResourceContents::fromArray(
-            [
-                SystemMetadata::RESOURCE_LABEL => $this->getValues(SystemMetadata::RESOURCE_LABEL),
-                SystemMetadata::PARENT => $this->getValues(SystemMetadata::PARENT),
-            ]
-        );
+        $strippedContents = [
+            SystemMetadata::RESOURCE_LABEL => $this->getValues(SystemMetadata::RESOURCE_LABEL),
+            SystemMetadata::PARENT => $this->getValues(SystemMetadata::PARENT),
+        ];
+        if ($this->getKind()->getId() == SystemResourceKind::USER) {
+            $strippedContents[SystemMetadata::USERNAME] = $this->getValues(SystemMetadata::USERNAME);
+        }
+        return ResourceContents::fromArray($strippedContents);
     }
 
     /**
