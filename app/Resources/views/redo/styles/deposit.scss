@@ -4,7 +4,7 @@ $image-height: 200px;
 $gap-size: 2 * $default-gap-size;
 $breadcrumb-mark-width: 23px;
 $breadcrumb-height: 64px;
-$breadcrumb-font-size: 16px;
+$breadcrumb-font-size: em(16px);
 $gap-between-breadcrumb-arrows: $default-gap-size / 4;
 $breadcrumb-arrowhead-width: $breadcrumb-height / 4;
 $breadcrumb-mark-z-index: 4;

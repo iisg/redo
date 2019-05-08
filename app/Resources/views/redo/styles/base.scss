@@ -31,19 +31,19 @@ h1 {
   font-size: $title-font-size;
 }
 h2 {
-  font-size: $subtitle-font-size + 2px;
+  font-size: $subtitle-font-size + em(2px);
 }
 h3 {
   font-size: $subtitle-font-size;
 }
 h4 {
-  font-size: $subtitle-font-size - 2px;
+  font-size: $subtitle-font-size - em(2px);
 }
 h5 {
-  font-size: $subtitle-font-size - 4px;
+  font-size: $subtitle-font-size - em(4px);
 }
 h6 {
-  font-size: $subtitle-font-size - 6px;
+  font-size: $subtitle-font-size - em(6px);
 }
 
 .no-margin-top {
@@ -77,6 +77,10 @@ button {
   border: none;
   background: none;
   padding: 0;
+}
+
+button, input, select, textarea {
+  font-size: 1em; // WCAG fix - Bootstrap has 14px here
 }
 
 @mixin button-colors($text-color: $accents-color, $background-color: inherit, $border-color: $default-border-color,

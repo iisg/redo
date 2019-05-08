@@ -2,12 +2,15 @@
 
 <div class="resource-image {{ resourceImageURL ? '' : childrenAllowed ? 'horizontal placeholder' : 'placeholder' }}">
     {% if resourceImageURL %}
-        <img src="/api/resources/{{ resource.id }}/file/{{ resourceImageURL }}">
+        <img src="/api/resources/{{ resource.id }}/file/{{ resourceImageURL }}"
+            alt="{{ resource|mLabel }}">
     {% else %}
         {% if childrenAllowed %}
             {{ icon('folder', 1, '0 0 36.63 28.073') }}
         {% else %}
             {{ icon('document', 1, '0 0 24.443 30.037') }}
         {% endif %}
+        <span class="hidden"
+            aria-hidden="false">{{ resource|mLabel }}</span>
     {% endif %}
 </div>

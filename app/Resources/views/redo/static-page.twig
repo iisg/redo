@@ -1,5 +1,5 @@
 {% extends "redo/layout.twig" %}
-{% set page_title = resource | mTytulStrony %}
+{% set page_title = resource | mTytulStrony | onlyMetadataInCurrentLanguage(metadata('tytulStrony'), true) %}
 {% block content %}
     {% include "redo/title-bar.twig" %}
     {% include "redo/menu.twig" %}

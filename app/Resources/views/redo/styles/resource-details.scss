@@ -83,7 +83,7 @@ $download-options-flex-grow: 1;
       }
       .formats {
         align-items: stretch;
-        font-size: $default-font-size + 2px;
+        font-size: $default-font-size + em(2px);
         & > * {
           padding: $gap-size / 8 $gap-size / 2;
         }

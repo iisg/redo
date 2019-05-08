@@ -5,7 +5,11 @@
     role="search">
     <div class="search-box-with-expand-toggle">
         <div class="input-with-button">
+            <label for="main-search-field"
+                class="hidden"
+                aria-hidden="false">{{ 'search_large_placeholder' | trans }}</label>
             <input type="text"
+                id="main-search-field"
                 name="phrase"
                 {% if app.request.query.has('phrase') %}
                     value="{{ app.request.query.get('phrase') }}"
@@ -51,13 +55,13 @@
                 {% set filterableMetadata = parentPathMetadata %}
                 {% embed 'redo/search/search-metadata-filter.twig' %}
                     {% block propertyNameContainer %}
-                        <h3 class="section-title">{{ 'Collections' | trans }}</h3>
+                        <h2 class="section-title">{{ 'Collections' | trans }}</h2>
                     {% endblock %}
                 {% endembed %}
             {% endif %}
             {% if departmentMetadata %}
                 <div>
-                    <h3 class="section-title">{{ departmentMetadata.label | inCurrentLanguage }}</h3>
+                    <h2 class="section-title">{{ departmentMetadata.label | inCurrentLanguage }}</h2>
                     {% set filterableMetadata = departmentMetadata %}
                     {% embed 'redo/search/search-metadata-filter.twig' %}
                         {% block propertyNameContainer %}{% endblock %}

@@ -24,8 +24,8 @@
             collapsible="collapsed.two-way: filtersPanelCollapsed">
             <button class="title-with-toggle"
                 click.delegate="filtersPanelCollapsed = !filtersPanelCollapsed">
-                <h3 id="filtersHeading"
-                    class="title no-margin-top"><strong>{{ 'Filters' | trans }}</strong></h3>
+                <h2 id="filtersHeading"
+                    class="title no-margin-top"><strong>{{ 'Filters' | trans }}</strong></h2>
                 <div class="toggle expand-toggle horizontally-expand-toggle-on-regular-screens"
                     class.bind="filtersPanelCollapsed ? '' : 'toggled'"
                     title.bind="filtersPanelCollapsed ? '{{ 'Hide filters' | trans }}' : '{{ 'Show filters' | trans }}'"
@@ -42,7 +42,8 @@
                     value="{{ phrase }}">
                 <div class="filter-button-container">
                     <div>
-                        <button class="default">{{ 'Filter' | trans }}</button>
+                        <button class="default"
+                            type="submit">{{ 'Filter' | trans }}</button>
                     </div>
                 </div>
                 <hr>
@@ -81,16 +82,18 @@
                                     <strong>{{ aggregationName == 'kindId' ? 'Resource kind' | trans
                                         : metadata(aggregationName).label | inCurrentLanguage }}</strong>
                                     {% for bucket in aggregationData.buckets.0[aggregationName].buckets %}
+                                        {% set fieldLabel = (aggregationName == 'kindId' ? resourceKind(bucket.key).label | inCurrentLanguage : r(bucket.key) | mLabel) ~ ' (' ~ bucket.doc_count ~ ')' %}
                                         <label class="label-with-checkbox">
                                             <input type="checkbox"
                                                 name="facetFilters[{{ aggregationName }}][]"
                                                 value="{{ bucket.key }}"
+                                                aria-label="{{ fieldLabel }}"
+                                                title="{{ fieldLabel }}"
                                                 {% if isFilteringByFacet(aggregationName, bucket.key,
                                                     app.request.query.get('facetFilters') ?? []) %}
                                             checked
                                                 {% endif %}>
-                                            <span>{{ aggregationName == 'kindId' ? resourceKind(bucket.key).label | inCurrentLanguage
-                                                : r(bucket.key) | mLabel }} ({{ bucket.doc_count }})</span>
+                                            <span>{{ fieldLabel }}</span>
                                         </label>
                                     {% endfor %}
                                 </div>
@@ -122,23 +125,23 @@
             if (localStorage && localStorage.getItem && localStorage.getItem('filtersPanelCollapsed') != undefined) {
               shouldBeCollapsed = localStorage.getItem('filtersPanelCollapsed') == 'true';
             } else {
-                if (window.matchMedia("(max-width: 420px)").matches) {
-                    shouldBeCollapsed = filtersPanelClassList.contains('collapsed')
-                        && !filtersPanelClassList.contains('expanded-by-default-on-narrow-screens')
-                        || filtersPanelClassList.contains('collapsed-by-default-on-narrow-screens');
-                } else {
-                    shouldBeCollapsed = filtersPanelClassList.contains('collapsed')
-                        && !filtersPanelClassList.contains('expanded-by-default-on-regular-screens')
-                        || filtersPanelClassList.contains('collapsed-by-default-on-regular-screens');
-                }
+              if (window.matchMedia("(max-width: 420px)").matches) {
+                shouldBeCollapsed = filtersPanelClassList.contains('collapsed')
+                  && !filtersPanelClassList.contains('expanded-by-default-on-narrow-screens')
+                  || filtersPanelClassList.contains('collapsed-by-default-on-narrow-screens');
+              } else {
+                shouldBeCollapsed = filtersPanelClassList.contains('collapsed')
+                  && !filtersPanelClassList.contains('expanded-by-default-on-regular-screens')
+                  || filtersPanelClassList.contains('collapsed-by-default-on-regular-screens');
+              }
             }
             if (shouldBeCollapsed) {
-                filtersPanelClassList.add('collapsed');
-                filtersPanelClassList.remove('expanded');
+              filtersPanelClassList.add('collapsed');
+              filtersPanelClassList.remove('expanded');
             } else {
-                filtersPanelClassList.add('expanded');
-                filtersPanelClassList.remove('collapsed');
-                document.getElementsByClassName('expand-toggle')[0].classList.add('toggled');
+              filtersPanelClassList.add('expanded');
+              filtersPanelClassList.remove('collapsed');
+              document.getElementsByClassName('expand-toggle')[0].classList.add('toggled');
             }
             filtersPanelClassList.remove('hidden-while-loading');
         </script>

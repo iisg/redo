@@ -10,16 +10,20 @@ $pk-logo-height: calc(#{$logo-height} - 2 * #{$default-gap-size / 8} - #{$option
   &, & > :not(.right-side-container) {
     padding: $default-gap-size / 2;
   }
-  .logo-container img {
-    height: $logo-height;
-  }
-  .title-container {
-    display: inline-block; // For browsers with worst or none Flexbox support.
-    vertical-align: top; //
-    color: $secondary-text-color;
-    span {
-      display: block;
-      font-size: $title-font-size;
+  .logo-container {
+    text-decoration: none;
+    img {
+      height: $logo-height;
+      margin-right: 10px;
+    }
+    .title-container {
+      display: inline-block; // For browsers with worst or none Flexbox support.
+      vertical-align: top; //
+      color: $secondary-text-color;
+      span {
+        display: block;
+        font-size: $title-font-size;
+      }
     }
   }
   .right-side-container {

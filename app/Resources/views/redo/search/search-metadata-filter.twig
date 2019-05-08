@@ -1,12 +1,13 @@
 {% if filterableMetadata.control.value in ['text', 'textarea'] %}
-    <label class="text-property-filter">
-        <span>{{ filterableMetadata.label | inCurrentLanguage }}</span>
+    <div class="text-property-filter">
+        <label for="metadataFilter{{ filterableMetadata.id }}">{{ filterableMetadata.label | inCurrentLanguage }}</label>
         <div>
             <input type="text"
+                id="metadataFilter{{ filterableMetadata.id }}"
                 name="metadataFilters[{{ filterableMetadata.id }}]"
                 value="{{ app.request.query.all.metadataFilters[filterableMetadata.id] ?? '' }}">
         </div>
-    </label>
+    </div>
 {% elseif filterableMetadata.control.value in ['flexible-date','timestamp', 'date-range'] %}
     <div class="form-group filters">
         <label>{{ filterableMetadata.label | inCurrentLanguage }}</label>
@@ -16,17 +17,27 @@
         {% set rangeMode = app.request.query.all.metadataFilters[filterableMetadata.id]['rangeMode'] ?? "year" %}
 
         <div class="date-property-filter">
+            <label for="year-from"
+                class="hidden"
+                aria-hidden="false">{{ 'From' | trans }}</label>
             <input type="text"
+                id="year-from"
                 maxlength="4"
                 name="metadataFilters[{{ filterableMetadata.id }}][from]"
                 placeholder="yyyy"
-                value="{{ from }}">
+                value="{{ from }}"
+                aria-label="{{ filterableMetadata.label | inCurrentLanguage }}">
             <span>&nbsp;&mdash;&nbsp;</span>
+            <label for="year-to"
+                class="hidden"
+                aria-hidden="false">{{ 'To' | trans }}</label>
             <input type="text"
+                id="year-to"
                 maxlength="4"
                 name="metadataFilters[{{ filterableMetadata.id }}][to]"
                 placeholder="yyyy"
-                value="{{ to }}">
+                value="{{ to }}"
+                aria-label="{{ filterableMetadata.label | inCurrentLanguage }}">
             <input type="hidden"
                 name="metadataFilters[{{ filterableMetadata.id }}][rangeMode]"
                 value="{{ rangeMode }}">
@@ -83,6 +94,8 @@
                         <input type="checkbox"
                             name="metadataFilters[{{ filterableMetadata.id }}][]"
                             value="{{ resource.id }}"
+                            title="{{ resource | mLabel }}"
+                            aria-label="{{ resource | mLabel }}"
                             {% if resource.id in relationshipFilters %}checked{% endif %}>
                         <span><span>{{ resource | mLabel }}</span></span>
                     </label>

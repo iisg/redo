@@ -3,9 +3,8 @@
         href="/">
         <img src="/files/redo/rpk-logo.svg"
             title="{{ 'Main page of Repozytorium Politechniki Krakowskiej' | trans }}"
+            alt="Logo"
             aria-label="{{ 'Go to main page of Repozytorium Politechniki Krakowskiej' | trans }}">
-    </a>
-    <a href="/">
         <div class="title-container">
             <span>REPOZYTORIUM</span>
             <span>POLITECHNIKI KRAKOWSKIEJ</span>
@@ -18,7 +17,11 @@
                     href="https://www.facebook.com/bpk.biblioteka/"
                     target="_blank"
                     title="{{ 'Facebook' | trans }}"
-                    aria-label="{{ 'Facebook' | trans }}">{{ icon('facebook') }}</a>
+                    aria-label="{{ 'Facebook' | trans }}">
+                    {{ icon('facebook') }}
+                    <span class="hidden"
+                        aria-hidden="false">Facebook</span>
+                </a>
             </div>
             <div class="page-view-options">
                 <button class="options-bar-item page-view-option"

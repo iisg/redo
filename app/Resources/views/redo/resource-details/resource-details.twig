@@ -59,8 +59,11 @@
                         <div class="share-buttons">
                             <a href="https://www.facebook.com/sharer/sharer.php?sdk=joey&u={{ app.request.uri }}&display=popup&ref=plugin&src=share_button"
                                 title="{{ 'Share on Facebook' | trans }}"
-                                aria-label="{{ 'Share on Facebook' | trans }}"
-                                onclick="return !window.open(this.href, 'Facebook', 'width=640,height=580')">{{ icon('facebook', 2) }}</a>
+                                onclick="return !window.open(this.href, 'Facebook', 'width=640,height=580')">
+                                {{ icon('facebook', 2) }}
+                                <span class="hidden"
+                                    aria-hidden="false">{{ 'Share on Facebook' | trans }}</span>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -86,7 +89,12 @@
                             <a href="/resources/{{ resource.id }}/iso-690"
                                 title="{{ 'Download resource data in ISO 690 format' | trans }}"
                                 aria-labelledby="cite-legend cite-iso690">
-                                <span id="cite-iso690">{{ icon('double-quote-sign', 1.25) }}</span>
+                                <span id="cite-iso690">
+                                    {{ icon('double-quote-sign', 1.25) }}
+                                    <span id="cite-iso690"
+                                        class="hidden"
+                                        aria-hidden="false">ISO-690</span>
+                                </span>
                             </a>
                         </div>
                     </fieldset>

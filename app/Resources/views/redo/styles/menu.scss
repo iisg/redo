@@ -109,7 +109,7 @@ a.menu-item {
   margin: 0;
   border: none;
   border-radius: 0;
-  font-size: inherit;
+  font-size: 1em; // WCAG fix, bootstrap has 14px here
   background-color: $background-color;
   box-shadow: none;
   overflow: hidden;

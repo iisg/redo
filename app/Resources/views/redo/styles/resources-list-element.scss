@@ -40,6 +40,11 @@ $collapsible-metadata-list-toggle-height: $default-line-height * 1em;
   }
   .resource-name {
     display: flex;
+    font-size: em(20px);
+  }
+
+  .resource-author {
+    font-size: em(16px);
   }
 
   .download-options {

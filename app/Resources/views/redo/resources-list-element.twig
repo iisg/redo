@@ -33,7 +33,7 @@
             } %}
         {% endif %}
         <div class="details">
-            <h3 class="resource-name no-margin-top no-margin-bottom">
+            <h2 class="resource-name no-margin-top no-margin-bottom">
                 <a href="/resources/{{ resource.id }}">
                     {% if highlightedMetadata is defined and highlightedMetadata.tytul is defined %}
                         {{ highlightedMetadata.tytul.highlights[0] | raw }}
@@ -42,9 +42,9 @@
                         {{ resource | metadata('tytul') | default(resource | metadata('label')) }}
                     {% endif %}
                 </a>
-            </h3>
+            </h2>
             {% if resource | metadata('autor') is not empty %}
-                <h5 class="no-margin-top no-margin-bottom">{{ resource | metadata('autor') }}</h5>
+                <div class="resource-author">{{ resource | metadata('autor') }}</div>
             {% endif %}
             <div>
                 <span class="metadata-label">{{ 'Type'| trans }}:</span> {{ resource.kind.label | inCurrentLanguage }}

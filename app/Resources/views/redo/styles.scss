@@ -1,6 +1,11 @@
 // Please remember to keep `high-contrast-styles.scss` up to date after making changes in this file.
+@import "styles/functions";
 @import "styles/colors";
 @import "styles/variables";
+
+html, body {
+  font-size: em(15px);
+}
 
 .redo-website {
   @import "styles/base";
