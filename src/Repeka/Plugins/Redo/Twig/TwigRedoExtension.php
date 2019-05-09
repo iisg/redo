@@ -65,7 +65,11 @@ class TwigRedoExtension extends \Twig_Extension {
     }
 
     public function addHighlightsToMetadataValue(string $value, string $highlight): string {
-        $valueWithoutHighlights = preg_replace('%</?em>%', '', $highlight);
-        return preg_replace("/$valueWithoutHighlights/", $highlight, $value);
+        preg_match_all('#<em>(.+?)</em>#', $highlight, $matches);
+        $phrases = $matches[1];
+        foreach ($phrases as $phrase) {
+            $value = preg_replace('#(^|\s)' . preg_quote($phrase, '#') . '($|\s)#', '$1<em>' . $phrase . '</em>$2', $value);
+        }
+        return $value;
     }
 }

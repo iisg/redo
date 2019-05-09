@@ -37,4 +37,26 @@ class TwigRedoExtensionTest extends \PHPUnit_Framework_TestCase {
             . 'some <a href="http://firstlinkinsearch.com">keyword</a> here';
         $this->assertEquals($expected, $actual);
     }
+
+    /** @dataProvider addHighlightsToMetadataValueData */
+    public function testAddHighlightsToMetadataValue(string $value, string $highlight, string $expected) {
+        $actual = $this->extension->addHighlightsToMetadataValue($value, $highlight);
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function addHighlightsToMetadataValueData() {
+        return [
+            ['ala ma kota', 'ala <em>ma</em> kota', 'ala <em>ma</em> kota'],
+            ['ala ma kota', '<em>ma</em> kota', 'ala <em>ma</em> kota'],
+            ['ala ma kota', '<em>ma</em>', 'ala <em>ma</em> kota'],
+            ['ala ma kota [', '<em>ma</em>', 'ala <em>ma</em> kota ['],
+            ['ala ma kota [', '<em>ma</em> kota [', 'ala <em>ma</em> kota ['],
+            ['ala ma kota [', '<em>ma</em> kota <em>[</em>', 'ala <em>ma</em> kota <em>[</em>'],
+            ['ala ma kota [kota]', '<em>ma</em> <em>[kota]</em>', 'ala <em>ma</em> kota <em>[kota]</em>'],
+            ['ala ma kota i ma psa', '<em>ma</em>', 'ala <em>ma</em> kota i <em>ma</em> psa'],
+            ['ala ma kota i ma psa', '<em>ma</em> <em>kota</em>', 'ala <em>ma</em> <em>kota</em> i <em>ma</em> psa'],
+            ['ala ma kota i chomika', '<em>kota</em> <em>i</em>', 'ala ma <em>kota</em> <em>i</em> chomika'],
+            ['ala ma kota i chomika', 'ma <em>kota</em> <em>i</em> <em>chomika</em>', 'ala ma <em>kota</em> <em>i</em> <em>chomika</em>'],
+        ];
+    }
 }
