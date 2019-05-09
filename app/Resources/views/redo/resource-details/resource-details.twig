@@ -64,6 +64,12 @@
                                 <span class="hidden"
                                     aria-hidden="false">{{ 'Share on Facebook' | trans }}</span>
                             </a>
+                            {% if app.user and 'OPERATOR-' ~ resource.resourceClass in app.user.roles %}
+                                <a href="/admin/resources/details/{{ resource.id }}"
+                                    title="{{ 'See in admin panel' | trans }}">
+                                    {{ icon('examination-2', 2) }}
+                                </a>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
