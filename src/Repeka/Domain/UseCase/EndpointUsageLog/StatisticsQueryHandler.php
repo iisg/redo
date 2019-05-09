@@ -49,8 +49,8 @@ class StatisticsQueryHandler {
         $statistics = new StatisticsCollection($resourcesCount, $openResources->getTotalCount());
         $stats = $this->endpointUsageLogEntryRepository->getUsageStatistics($query->getDateFrom(), $query->getDateTo());
         $this->addStatistics($statistics, $stats);
-        $sessionStats = $this->endpointUsageLogEntryRepository->getSessionsStatistics($query->getDateFrom(), $query->getDateTo());
-        $this->addStatistics($statistics, $sessionStats, 'sessions');
+        $requestStats = $this->endpointUsageLogEntryRepository->getRequestsStatistics($query->getDateFrom(), $query->getDateTo());
+        $this->addStatistics($statistics, $requestStats, 'requests');
         $ipStats = $this->endpointUsageLogEntryRepository->getIpStatistics($query->getDateFrom(), $query->getDateTo());
         $this->addStatistics($statistics, $ipStats, 'ips');
         return $statistics;

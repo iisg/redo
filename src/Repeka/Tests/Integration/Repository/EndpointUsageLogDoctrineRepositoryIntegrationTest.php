@@ -30,7 +30,7 @@ class EndpointUsageLogDoctrineRepositoryIntegrationTest extends IntegrationTestC
 
     public function testFindAll() {
         $statistics = $this->endpointUsageLogEntryRepository->findAll();
-        $this->assertCount(5, $statistics);     // one log is from creating admin client
+        $this->assertCount(6, $statistics);     // one log is from creating admin client and one from adding session endpoint
     }
 
     public function testGetStatisticsFromCurrentMonth() {
@@ -38,9 +38,9 @@ class EndpointUsageLogDoctrineRepositoryIntegrationTest extends IntegrationTestC
         $dateTo = date(DATE_ATOM, strtotime("+ 1 month"));
         $statistics = $this->endpointUsageLogEntryRepository->getUsageStatistics($dateFrom, $dateTo);
         $this->assertArrayHasAllValues(
-            ['resourceDetails', 'home', 'bibtex'],
+            ['resourceDetails', 'home', 'bibtex', 'sessions'],
             array_column($statistics, 'usage_key')
         );
-        $this->assertCount(3, $statistics);
+        $this->assertCount(4, $statistics);
     }
 }

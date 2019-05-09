@@ -1,5 +1,6 @@
 home: Home page
 ips: The most popular IP addresses
+requests: Number of requests
 sessions: Number of sessions
 resourceDetails: Resource details
 bibtex: Bibtex details

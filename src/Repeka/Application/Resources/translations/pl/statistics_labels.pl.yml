@@ -1,5 +1,6 @@
 home: Strona główna
 ips: Najpopularniejsze adresy IP
+requests: Liczba requestów
 sessions: Liczba sesji
 resourceDetails: Szczegóły zasobów
 bibtex: Wyświetlenia w formacie bibtex

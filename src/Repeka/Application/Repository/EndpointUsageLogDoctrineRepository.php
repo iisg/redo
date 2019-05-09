@@ -33,7 +33,7 @@ SQL
         return $query->getArrayResult();
     }
 
-    public function getSessionsStatistics(string $dateFrom, string $dateTo): array {
+    public function getRequestsStatistics(string $dateFrom, string $dateTo): array {
         $em = $this->getEntityManager();
         $resultSetMapping = ResultSetMappings::scalar('stat_month', 'string')
             ->addScalarResult('monthly_sum', 'monthly_sum', 'integer');
