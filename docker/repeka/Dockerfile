@@ -13,6 +13,7 @@ RUN apt-get update && apt-get -y install gnupg2 \
      libcurl4-gnutls-dev \
      git \
      unzip \
+     zip \
      bzip2 \
      netcat-openbsd \
      libfontconfig1 \

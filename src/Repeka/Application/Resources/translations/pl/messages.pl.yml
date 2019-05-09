@@ -100,7 +100,7 @@ Download resource data in BibTeX format: Pobierz informacje o zasobie w formacie
 Download resource data in EndNote format: Pobierz informacje o zasobie w formacie EndNote
 Download resource data in ISO 690 format: Pobierz informacje o zasobie w formacie ISO 690
 Unavailable: Niedostępne
-Cite resource: Cytuj zasób
+Cite: Cytuj
 No scans: Brak skanów
 
 Add to favorites: Dodaj do ulubionych
@@ -142,6 +142,8 @@ Remark content: Treść uwagi
 Report: Zgłoś
 Congratulations! Your remark has been reported.: Gratulacje! Twoja uwaga została zgłoszona.
 Save: Zapisz
+Full resolution scans: Skany w pełnej rozdzielczości
+Download archives: Pobierz archiwa
 
 title: tytuł
 year: rok
