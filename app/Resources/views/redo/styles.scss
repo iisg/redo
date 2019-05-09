@@ -17,6 +17,10 @@ html, body {
     display: initial;
   }
 
+  .admin-logo {
+    background-image: url('/files/redo/rpk-logo.svg');
+  }
+
   .admin-footer-image-left {
     $height: 32px + 2 * $default-gap-size;
     $imageRatio: 2.218;

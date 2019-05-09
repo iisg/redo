@@ -16,16 +16,18 @@ sidebar {
     overflow: hidden;
     background-color: $light-grey;
     border-bottom: $orange solid $default-gap-size / 4;
+    color: $grey;
     & > div {
       display: flex;
       width: $default-sidebar-width;
       align-items: center;
-      redo-logo {
-        box-sizing: content-box;
+      .admin-logo {
         width: $navigation-menu-item-icon-width-and-height;
-        padding: $logo-container-top-and-bottom-padding-size $navigation-menu-item-icon-left-and-right-padding-size;
-        color: $orange;
-        background-color: $dark-grey;
+        height: $navigation-menu-item-icon-width-and-height * 1.5;
+        margin: $logo-container-top-and-bottom-padding-size $navigation-menu-item-icon-left-and-right-padding-size;
+        background-repeat: no-repeat;
+        background-position: center center;
+        background-size: contain;
       }
       span {
         flex: 1;
@@ -38,7 +40,6 @@ sidebar {
         text-transform: uppercase;
         text-align: center;
         font-weight: bold;
-        color: $grey;
       }
     }
   }
