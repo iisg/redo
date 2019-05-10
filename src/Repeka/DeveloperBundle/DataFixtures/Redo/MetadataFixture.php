@@ -52,6 +52,7 @@ class MetadataFixture extends RepekaFixture {
     const REFERENCE_METADATA_RESOURCE_BIBTEX_TYPE = 'metadata-resource-bibtex-type';
     const REFERENCE_METADATA_RESOURCE_BIBTEX_KEY = 'metadata-resource-bibtex-key';
     const REFERENCE_METADATA_RESOURCE_ORDER = 'metadata-resource-order';
+    const REFERENCE_METADATA_MASTER_FILES = 'metadata-master-files';
 
     const REFERENCE_METADATA_CMS_TITLE = 'metadata-cms-name';
     const REFERENCE_METADATA_CMS_CONTENT = 'metadata-cms-template';
@@ -671,6 +672,21 @@ TEMPLATE
                 ]
             ),
             self::REFERENCE_METADATA_RESOURCE_BIBTEX_KEY
+        );
+        $addedMetadata[] = $this->handleCommand(
+            MetadataCreateCommand::fromArray(
+                [
+                    'name' => 'katalog_plikow_master',
+                    'label' => [
+                        'PL' => 'Pliki master',
+                        'EN' => 'Master files',
+                    ],
+                    'control' => MetadataControl::DIRECTORY(),
+                    'shownInBrief' => false,
+                    'resourceClass' => 'books',
+                ]
+            ),
+            self::REFERENCE_METADATA_MASTER_FILES
         );
         $addedMetadata[] = $this->handleCommand(
             MetadataCreateCommand::fromArray(

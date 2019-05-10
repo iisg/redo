@@ -191,11 +191,14 @@ function instantiateBookReader(selector, extraOptions) {
   var br = new BookReader(options);
   br.init();
   var downloadIcon = '<span class="icon" size="1" role="presentation"><svg viewBox="0 0 1 1"><use xlink:href="/files/icons.svg#download"></use></svg></span>';
-  {% set showButton = (r|m('katalog_plikow_master')|length) %}
+    {% set showButton = (r|m('katalog_plikow_master')|length) %}
   $('.BRcurrentpage').after(
-    "<button class=\"BRicon download-btn {{ showButton ? 'download-left' : 'hidden' }} desktop-only js-tooltip\">L " + downloadIcon + "</button>"
-    + "<button class=\"BRicon download-btn {{ showButton ? 'download-right' : 'hidden' }} desktop-only js-tooltip\">" + downloadIcon + " {{ 'R' | trans }}</button>"
-    + "<button class=\"BRicon download-btn {{ showButton ? 'download-onepg' : 'hidden' }} js-tooltip\">" + downloadIcon + "</button>"
+    "<button class=\"BRicon download-btn {{ showButton ? 'download-left' : 'hidden' }} desktop-only js-tooltip\""
+    + " title=\"{{ 'Download left' | trans({}, 'bookreader') }}\">L " + downloadIcon + "</button>"
+    + "<button class=\"BRicon download-btn {{ showButton ? 'download-right' : 'hidden' }} desktop-only js-tooltip\""
+    + " title=\"{{ 'Downlaod right' | trans({}, 'bookreader') }}\">" + downloadIcon + " {{ 'R' | trans({}, 'bookreader') }}</button>"
+    + "<button class=\"BRicon download-btn {{ showButton ? 'download-onepg' : 'hidden' }} js-tooltip\""
+    + " title=\"{{ 'Download single page' | trans({}, 'bookreader') }}\">" + downloadIcon + "</button>"
   ).ready(toggleDownloadButtons).on('DOMSubtreeModified', toggleDownloadButtons);
   $('.download-left').click(function () {
     download(buildPath(br._getPageURI(br.firstIndex)));
