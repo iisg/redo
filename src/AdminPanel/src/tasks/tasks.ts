@@ -1,6 +1,4 @@
 import {autoinject} from "aurelia-dependency-injection";
-import {getMergedBriefMetadata} from "common/utils/metadata-utils";
-import {Metadata} from "resources-config/metadata/metadata";
 import {ResourceKindRepository} from "resources-config/resource-kind/resource-kind-repository";
 import {TaskRepository} from "./task-repository";
 import {TaskCollection, TaskStatus} from "./task-collection";
@@ -19,7 +17,6 @@ import {I18N} from "aurelia-i18n";
 
 @autoinject
 export class Tasks {
-  briefMetadata: AnyMap<Metadata[]> = {};
   resourceClasses: string[] = [];
   resourceKindsByClass: StringMap<ResourceKind[]> = {};
   fetching: boolean = true;
@@ -43,7 +40,6 @@ export class Tasks {
       .then(async () => {
         for (const resourceClass of this.resourceClasses) {
           const resourceKinds = await this.resourceKindRepository.getListQuery().filterByResourceClasses(resourceClass).get();
-          this.briefMetadata[resourceClass] = getMergedBriefMetadata(resourceKinds);
           this.resourceKindsByClass[resourceClass] = resourceKinds;
         }
       })

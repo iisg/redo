@@ -22,7 +22,7 @@
                     sort-by.bind="sortBy"
                     event-target.bind="eventTarget"></sort-button>
             </th>
-            <th repeat.for="metadata of columnMetadata">
+            <th repeat.for="metadata of briefMetadata">
                 ${metadata | metadataLabel}
                 <sort-button column-id.bind="metadata.id"
                     sort-by.bind="sortBy"
@@ -62,7 +62,7 @@
             <td>
                 ${resource.kind.label | inCurrentLanguage}
             </td>
-            <td repeat.for="metadata of columnMetadata">
+            <td repeat.for="metadata of briefMetadata">
                 <a route-href="route: resources/details; params.bind: {id: resource.id}"
                     disabled-link.bind="resource.pendingRequest">
                     <resource-metadata-values resource.one-time="resource"

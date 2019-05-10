@@ -9,7 +9,6 @@ import {booleanAttribute} from "common/components/boolean-attribute";
 import {DisabilityReason} from "common/components/buttons/toggle-button";
 import {Alert} from "common/dialog/alert";
 import {LocalStorage} from "common/utils/local-storage";
-import {getMergedBriefMetadata} from "common/utils/metadata-utils";
 import {safeJsonParse} from "common/utils/object-utils";
 import {getQueryParameters} from "common/utils/url-utils";
 import {Metadata} from "resources-config/metadata/metadata";
@@ -54,7 +53,6 @@ export class ResourcesList {
   sortBy: ResourceSort[];
   totalNumberOfResources: number;
   addFormOpened: boolean;
-  briefMetadata: Metadata[];
   resourceKinds: ResourceKind[] = [];
   displayProgressBar: boolean;
   activated: boolean;
@@ -200,8 +198,7 @@ export class ResourcesList {
       this.resources = new PageResult<Resource>();
     }
     this.addFormOpened = false;
-    this.briefMetadata = [];
-    this.fetchBriefMetadata();
+    this.fetchPossibleResourceKinds();
   }
 
   private obtainResultsPerPageValue(parameters: any): boolean {
@@ -291,7 +288,7 @@ export class ResourcesList {
     });
   }
 
-  fetchBriefMetadata() {
+  fetchPossibleResourceKinds() {
     let query = this.resourceKindRepository.getListQuery();
     if (this.allowedResourceKinds) {
       (this.allowedResourceKinds as Array<ResourceKind | number>).forEach(resourceKindOrId => {
@@ -310,7 +307,6 @@ export class ResourcesList {
       // this.resourceKinds should stay the same instance. Reassigning causes no detection of list changes in resource-list-places-filter
       this.resourceKinds.splice(0, this.resourceKinds.length);
       this.resourceKinds.push(...resourceKinds);
-      this.briefMetadata = getMergedBriefMetadata(resourceKinds);
     });
   }
 
@@ -425,7 +421,7 @@ export class ResourcesList {
 
   metadataChanged(newValue: Metadata, oldValue: Metadata) {
     this.resourceClass = this.metadata.resourceClass;
-    this.fetchBriefMetadata();
+    this.fetchPossibleResourceKinds();
     this.updateContentsFilter(newValue, oldValue);
   }
 

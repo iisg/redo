@@ -4,7 +4,6 @@ import {I18N} from "aurelia-i18n";
 import {bindable} from "aurelia-templating";
 import {Alert} from "common/dialog/alert";
 import {LocalStorage} from "common/utils/local-storage";
-import {Metadata} from "resources-config/metadata/metadata";
 import {MetadataRepository} from "resources-config/metadata/metadata-repository";
 import {ResourceKind} from "resources-config/resource-kind/resource-kind";
 import {ResourceKindRepository} from "resources-config/resource-kind/resource-kind-repository";
@@ -25,7 +24,6 @@ export class ResourcesListPaginated {
   private readonly DEFAULT_SORTING = [new ResourceSort('id', SortDirection.DESC, this.i18n.getLocale().toUpperCase())];
 
   @bindable resourceClass: string;
-  @bindable columnMetadata: Metadata[];
   @bindable(oneTime) extraColumnNames: string[] = [];
   @bindable(oneTime) extraColumnViews: string[] = [];
   @bindable eventTarget: any;

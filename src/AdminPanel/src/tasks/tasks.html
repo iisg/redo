@@ -28,7 +28,6 @@
                     display-progress-bar.bind="fetching || tasksDoubleMap[resourceClass][taskStatus].fetching"
                     resource-class.bind="resourceClass"
                     resource-kinds.bind="resourceKindsByClass[resourceClass]"
-                    column-metadata.bind="briefMetadata[resourceClass]"
                     extra-column-names.one-time="['Possible actions']"
                     extra-column-views.one-time="['tasks/possible-actions.html']"
                     hide-top-pagination.one-time="true"></resources-list-paginated>
