@@ -31,6 +31,8 @@ containsUnavailableValues: "Contains unavailable values ({{originalMessage}})"
 metadataContainUnavailableLanguage: "Metadata {{invalidMetadataIds}} contain unavailable language"
 violationFields:
   metadata: Metadata kind
+  name: Name
+  label: Displayed name
   resource: Resource
   resourceKind: Resource kind
   resourceWorkflow: Workflow

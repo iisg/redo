@@ -53,9 +53,11 @@ class MetadataCreateCommandValidator extends CommandAttributesValidator {
             ::attribute('label', $this->notBlankInAllLanguagesRule)
             ->attribute(
                 'name',
-                Validator::notBlank()
-                    ->callback([$this, 'metadataNameIsUnique'])
-                    ->setTemplate('metadataNameIsNotUnique')
+                Validator::allOf(
+                    Validator::notBlank(),
+                    Validator::callback([$this, 'metadataNameIsUnique'])
+                        ->setTemplate('metadataNameIsNotUnique')
+                )
             )
             ->attribute(
                 'controlName',

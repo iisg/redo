@@ -73,12 +73,14 @@ class MetadataCreateCommandValidatorTest extends \PHPUnit_Framework_TestCase {
 
     public function testFailsValidationBecauseOfNoLabelInMainLanguage() {
         $this->expectException(InvalidCommandException::class);
+        $this->expectExceptionMessage('value must be set in all languages');
         $command = new MetadataCreateCommand('nazwa', ['EN' => 'Test'], [], [], 'text', 'books');
         $this->validator->validate($command);
     }
 
     public function testFailsValidationBecauseThereIsNoName() {
         $this->expectException(InvalidCommandException::class);
+        $this->expectExceptionMessage('name must not be blank');
         $command = new MetadataCreateCommand('', ['PL' => 'Test'], [], [], 'text', 'books');
         $this->validator->validate($command);
     }

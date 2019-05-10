@@ -28,6 +28,7 @@ metadataConstrainedToUsers: relacja '{{name}}' musi być ograniczona do użytkow
 violationFields:
   metadata: Rodzaj metadanej
   name: Nazwa
+  label: Nazwa wyświetlana
   resource: Zasób
   resourceKind: Rodzaj zasobu
   resourceWorkflow: Proces
@@ -54,6 +55,7 @@ Workflow places you want to delete are occupied: Występują zasoby w miejscach 
 First place cannot contain assignee metadata: W pierwszym stanie nie można wymagać przypisania osoby
 Places or Transitions exist without a name specified in every language: Istnieją stany albo przejścia bez nazwy określonej w każdym języku
 value must be set in all languages: musi mieć wartość we wszystkich językach
+name must not be blank: nazwa nie może być pusta
 invalidRegex: Niewłaściwa deklaracja wyrażania regularnego.
 invalidConstraintArguments: "zawierają niepoprawne deklaracje ograniczeń: '{{constraintError}}'"
 Resource does not match required resource contents filter: Zasób nie spełnia wymagań dodatkowego filtra zasobów
