@@ -8,7 +8,7 @@ use Repeka\Domain\UseCase\Metadata\MetadataUpdateCommand;
 use Repeka\Domain\UseCase\Metadata\MetadataUpdateCommandHandler;
 
 class MetadataUpdateCommandHandlerTest extends \PHPUnit_Framework_TestCase {
-    /** @var Metadata */
+    /** @var Metadata|\PHPUnit_Framework_MockObject_MockObject */
     private $metadata;
     /** @var  MetadataRepository|\PHPUnit_Framework_MockObject_MockObject */
     private $metadataRepository;
@@ -45,5 +45,19 @@ class MetadataUpdateCommandHandlerTest extends \PHPUnit_Framework_TestCase {
         );
         $updated = $this->handler->handle($command);
         $this->assertEquals('books', $updated->getResourceClass());
+    }
+
+    public function testUsingCurrentMetadataValuesWhenMissing() {
+        $dummy = new \stdClass();
+        $this->metadata->update(['LABEL'], ['PLACEHOLDER'], ['DESCRIPTION'], [], 'AAA', null, true, false);
+        $command = MetadataUpdateCommand::fromArray($this->metadata, ['constraints' => [$dummy]]);
+        $updated = $this->handler->handle($command);
+        $this->assertEquals(['LABEL'], $updated->getLabel());
+        $this->assertEquals(['PLACEHOLDER'], $updated->getPlaceholder());
+        $this->assertEquals(['DESCRIPTION'], $updated->getDescription());
+        $this->assertEquals([$dummy], $updated->getConstraints());
+        $this->assertEquals('AAA', $updated->getGroupId());
+        $this->assertTrue($updated->isShownInBrief());
+        $this->assertFalse($updated->isCopiedToChildResource());
     }
 }

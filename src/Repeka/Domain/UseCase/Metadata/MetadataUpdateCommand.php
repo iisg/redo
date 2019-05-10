@@ -76,17 +76,22 @@ class MetadataUpdateCommand extends ResourceClassAwareCommand implements Adjusta
         return $this->newDisplayStrategy;
     }
 
-    public static function fromArray($metadataOrId, array $data): MetadataUpdateCommand {
+    /**
+     * @param Metadata|int $metadataOrId
+     * @param array $data
+     * @return self
+     */
+    public static function fromArray($metadataOrId, array $data): self {
         return new MetadataUpdateCommand(
             $metadataOrId,
-            $data['label'] ?? [],
-            $data['description'] ?? [],
-            $data['placeholder'] ?? [],
-            $data['constraints'] ?? [],
-            $data['groupId'] ?? Metadata::DEFAULT_GROUP,
+            $data['label'] ?? ($metadataOrId instanceof Metadata ? $metadataOrId->getLabel() : []),
+            $data['description'] ?? ($metadataOrId instanceof Metadata ? $metadataOrId->getDescription() : []),
+            $data['placeholder'] ?? ($metadataOrId instanceof Metadata ? $metadataOrId->getPlaceholder() : []),
+            $data['constraints'] ?? ($metadataOrId instanceof Metadata ? $metadataOrId->getConstraints() : []),
+            $data['groupId'] ?? ($metadataOrId instanceof Metadata ? $metadataOrId->getGroupId() : Metadata::DEFAULT_GROUP),
             $data['displayStrategy'] ?? null,
-            $data['shownInBrief'] ?? false,
-            $data['copyToChildResource'] ?? false
+            $data['shownInBrief'] ?? ($metadataOrId instanceof Metadata ? $metadataOrId->isShownInBrief() : false),
+            $data['copyToChildResource'] ?? ($metadataOrId instanceof Metadata ? $metadataOrId->isCopiedToChildResource() : false)
         );
     }
 }
