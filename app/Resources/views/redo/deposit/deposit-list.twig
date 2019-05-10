@@ -14,7 +14,7 @@
                 </tr>
                 {% for resource in addedResources %}
                     {% set depositPath = getWorkflowPlaceTaggedPath('deposit', resource) %}
-                    {% if depositPath is defined %}
+                    {% if depositPath is not null %}
                         <tr>
                             <td>
                                 <a href="/resources/{{ resource.id }}">{{ resource | metadata('label') | raw }}</a>
