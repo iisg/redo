@@ -129,8 +129,8 @@ specifies auto assignee: wartość metadanej określa użytkownika przypisanego 
 only for relationships with users: opcja dostępna tylko dla relacji z użytkownikami
 tasks:
   header:
-    own: Twoje bieżące zadania
-    possible: Inne zadania, które możesz wykonać
+    own: Moje zadania
+    possible: Zadania, w których jestem jedną z przypisanych osób
   empty:
     own: Brak bieżących zadań!
     possible: Brak zadań.

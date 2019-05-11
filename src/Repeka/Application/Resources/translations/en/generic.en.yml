@@ -9,8 +9,8 @@ Filter_verb: Filter
 Metadata_single: Metadata
 tasks:
   header:
-    own: Your current tasks
-    possible: Other tasks you can do
+    own: My tasks
+    possible: Tasks in which I am one of the assignees
   empty:
     own: No current tasks!
     possible: No tasks.
