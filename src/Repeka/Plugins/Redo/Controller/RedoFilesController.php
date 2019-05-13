@@ -54,6 +54,7 @@ class RedoFilesController extends Controller {
      */
     public function streamCompressedFileAction(Request $request, ResourceEntity $resource, string $path) {
         $this->denyAccessUnlessGranted('FILE_DOWNLOAD', ['resource' => $resource, 'filepath' => $path]);
+        ini_set('max_execution_time', 120);
         $response = new StreamedResponse(
             function () use ($path, $resource) {
                 $outputName = substr($path, strpos($path, '/') + 1) . '.zip';
