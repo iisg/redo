@@ -108,6 +108,7 @@ class ESMapping {
                         'path_match' => '*.value_file',
                         'mapping' => [
                             'type' => 'text',
+                            'term_vector'=> 'with_positions_offsets',
                         ],
                     ],
                 ],
