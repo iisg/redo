@@ -9,6 +9,8 @@ services:
       context: ./repeka
       args:
         WWW_DATA_UID: ${UID}
+    environment:
+      REPEKA_SSL_ONLY: ${REPEKA_SSL_ONLY:-false}
     volumes:
       - ../:/var/www/html:z
       - ../var/ssl:/etc/apache2/ssl:z

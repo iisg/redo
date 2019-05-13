@@ -34,6 +34,11 @@ DirectoryIndex app.php
     RewriteCond %{HTTP:Authorization} .
     RewriteRule ^ - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
 
+    # Redirect traffic to HTTPS if asked
+    RewriteCond %{ENV:REPEKA_SSL_ONLY} ^true$
+    RewriteCond %{HTTPS} !=on
+    RewriteRule ^/?(.*) https://%{SERVER_NAME}/$1 [L,R=301]
+
     # Redirect to URI without front controller to prevent duplicate content
     # (with and without `/app.php`). Only do this redirect on the initial
     # rewrite by Apache and not on subsequent cycles. Otherwise we would get an
