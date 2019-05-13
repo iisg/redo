@@ -66,6 +66,7 @@ class RedoFilesController extends Controller {
 
     public function createZipFile(string $path, string $outputName) {
         header("Content-Type: application/zip");
+        header("Content-Length: " . $this->getDirContentsSize($path));
         header("Content-disposition: attachment; filename=$outputName");
         $fp = popen("zip -1jr - $path", "r");
         $chunkSize = 8192;
@@ -74,6 +75,16 @@ class RedoFilesController extends Controller {
             echo $buff;
         }
         pclose($fp);
+    }
+
+    private function getDirContentsSize($path): int {
+        $bytes = 0;
+        $files = scandir($path);
+        foreach ($files as $file) {
+            $bytes += filesize("$path/$file");
+        }
+        unset($files);
+        return $bytes;
     }
 
     private function logEndpointUsage(ResourceEntity $resource, Request $request) {
