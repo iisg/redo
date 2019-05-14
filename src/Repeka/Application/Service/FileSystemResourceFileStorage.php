@@ -1,6 +1,7 @@
 <?php
 namespace Repeka\Application\Service;
 
+use Exception;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Exception\DomainException;
 use Repeka\Domain\Service\FileSystemDriver;
@@ -52,13 +53,15 @@ class FileSystemResourceFileStorage implements ResourceFileStorage {
     }
 
     public function uploadDirsForResource(ResourceEntity $resource): array {
-        $uploadDirs = array_map(
-            function (array $uploadDir) use ($resource) {
-                $uploadDir['path'] = $this->displayStrategyEvaluator->render($resource, $uploadDir['path']);
-                return $uploadDir;
-            },
-            $this->uploadDirs
-        );
+        $uploadDirs = [];
+        foreach ($this->uploadDirs as $uploadDir) {
+            $id = $uploadDir['id'];
+            if (!isset($uploadDirs[$id])) {
+                $uploadDirs[$id] = [];
+            }
+            $uploadDirs[$id] = array_replace($uploadDirs[$id], $uploadDir);
+            $uploadDirs[$id]['path'] = $this->displayStrategyEvaluator->render($resource, $uploadDirs[$id]['path']);
+        }
         foreach ($uploadDirs as &$uploadDir) {
             if ($uploadDir['condition']) {
                 $conditionMet = trim($this->displayStrategyEvaluator->render($resource, $uploadDir['condition']));
@@ -70,7 +73,7 @@ class FileSystemResourceFileStorage implements ResourceFileStorage {
                 if (!file_exists($uploadDir['path'])) {
                     try {
                         $this->fileSystemDriver->mkdirRecursive($uploadDir['path']);
-                    } catch (\Exception $e) {
+                    } catch (Exception $e) {
                     }
                 }
                 $uploadDir['path'] = StringUtils::unixSlashes(realpath($uploadDir['path']));
