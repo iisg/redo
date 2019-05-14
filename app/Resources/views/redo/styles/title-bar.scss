@@ -52,6 +52,9 @@ $pk-logo-height: calc(#{$logo-height} - 2 * #{$default-gap-size / 8} - #{$option
         padding-right: $default-gap-size * 3 / 4;
       }
       .page-view-options {
+        button:focus {
+          outline: -webkit-focus-ring-color auto 1px;
+        }
         align-items: center;
         & > :not(:first-child) {
           border-left: $default-border-width $default-border-style $tertiary-text-color;

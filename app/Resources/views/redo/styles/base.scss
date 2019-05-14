@@ -260,6 +260,9 @@ textarea {
       background: radial-gradient($high-contrast-accents-color 40%, transparent 40%);
     }
   }
+  &:focus + ::before {
+    outline: -webkit-focus-ring-color auto 1px;
+  }
   & + * > * {
     display: inline-block;
     width: calc(100% - #{$checkbox-or-radio-button-width-and-height} - #{$checkbox-or-radio-button-right-margin});

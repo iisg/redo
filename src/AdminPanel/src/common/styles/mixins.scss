@@ -107,8 +107,11 @@
   color: $color;
   transition: color $default-transition-duration;
   &:not(.disabled):not([disabled]) {
-    &:hover, &:focus {
+    &:hover {
       color: $color-when-active;
+    }
+    &:focus {
+      color: $light-blue;
     }
   }
   &.disabled, &[disabled] {

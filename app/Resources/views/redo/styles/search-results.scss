@@ -6,6 +6,9 @@ $filters-panel-width: 340px;
   .search-bar {
     background-color: $primary-background-color;
     border-bottom: 1px solid $light-grey;
+    .search-button:focus {
+      background-color: $light-blue;
+    }
     .input-with-button {
       input {
         border-top-color: $main-theme-color;
@@ -28,6 +31,11 @@ $filters-panel-width: 340px;
   padding-top: $default-gap-size;
   padding-bottom: $default-gap-size;
   .filters-panel {
+    button:focus {
+      .toggle {
+        color: $blue;
+      }
+    }
     margin-left: $default-gap-size;
     margin-right: $default-gap-size;
     padding-top: $default-gap-size / 2;
@@ -74,6 +82,9 @@ $filters-panel-width: 340px;
       transition-duration: $collapse-and-expand-animations-duration;
       & > :not(hr) {
         padding: $default-gap-size / 4;
+      }
+      button:focus {
+        outline: -webkit-focus-ring-color auto 1px;
       }
       hr {
         margin-top: $default-gap-size;

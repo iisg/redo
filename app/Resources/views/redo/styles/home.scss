@@ -17,6 +17,9 @@
       margin-top: 2 * $default-gap-size;
     }
     .search-bar {
+      button:focus {
+        outline: -webkit-focus-ring-color auto 1px;
+      }
       .input-with-button {
         input {
           border-right: none;

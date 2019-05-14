@@ -20,6 +20,13 @@ $breadcrumb-mark-z-index: 4;
   }
   .deposit-form {
     margin: $gap-size / 2 $gap-size;
+    button.primary:focus {
+      outline: -webkit-focus-ring-color auto 1px;
+      background-color: $light-blue;
+    }
+    button:focus {
+      color: $light-blue;
+    }
   }
 
   .deposit-page-header {
