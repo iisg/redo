@@ -224,6 +224,9 @@ export class ResourceForm extends ChangeLossPreventerForm implements ComponentAt
       const currentValues = this.resource.contents[metadataId].map(v => v.value);
       for (const metadataValue of importedValues) {
         if (!inArray(+metadataId, lockedMetadataIds) && !inArray(metadataValue.value, currentValues)) {
+          if (this.resource.contents[metadataId].length) {
+            this.resource.contents[metadataId] = this.resource.contents[metadataId].filter(metadataValue => metadataValue.value);
+          }
           this.resource.contents[metadataId].push(metadataValue);
         }
       }
