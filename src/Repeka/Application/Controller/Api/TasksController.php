@@ -7,6 +7,7 @@ use Repeka\Domain\UseCase\Resource\ResourceListQuery;
 use Repeka\Domain\UseCase\Resource\ResourceListQueryBuilder;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 
 /** @Route("/tasks") */
@@ -14,7 +15,7 @@ class TasksController extends ApiController {
     /**
      * @Route
      * @Method("GET")
-     * @throws \Assert\AssertionFailedException
+     * @Security("has_role('ROLE_OPERATOR_SOME_CLASS')")
      */
     public function getListAction(Request $request) {
         $user = $this->getUser();
@@ -22,8 +23,7 @@ class TasksController extends ApiController {
         $onlyQueriedCollections = $request->query->getBoolean('onlyQueriedCollections', false);
         Assertion::isArray($queries);
         Assertion::boolean($onlyQueriedCollections);
-        $query = TaskCollectionsQuery::builder()
-            ->forUser($user);
+        $query = TaskCollectionsQuery::builder()->forUser($user);
         if ($onlyQueriedCollections) {
             $query->onlyQueriedCollections();
         }
