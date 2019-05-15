@@ -56,18 +56,9 @@ describe('Resource Tests', function() {
 	browser.driver.switchTo().activeElement().sendKeys(protractor.Key.ENTER);
 	browser.sleep(500);
 
-	waitForElement(element(by.className('new-metadata-value-button-container')));
-	waitForElement(element(by.className('form-control au-target')));
-	var metadataValueFieldBlanks = element(by.className('form-control au-target'));
-	metadataValueFieldBlanks.sendKeys('Value1');
-
-	var newMetadataValuesFields = element.all(by.className('new-metadata-value-button-container'));
-	var secondMetadataValueField = newMetadataValuesFields.get(0);
-	var secondMetadataValueButton = secondMetadataValueField.all(by.className('au-target'));
-	secondMetadataValueButton.get(0).click();
-
 	waitForElement(element(by.className('form-control au-target')));
 	var newMetadataValueFieldBlanks = element.all(by.className('form-control au-target'));
+	newMetadataValueFieldBlanks.get(0).sendKeys('Value1');
 	newMetadataValueFieldBlanks.get(1).sendKeys('Value2');
 
 	waitForElement(element(by.buttonText('Dodaj')));
@@ -102,9 +93,11 @@ describe('Resource Tests', function() {
   });
 
   it('Modify metadata value', function() {
-	alertDialog = browser.switchTo().alert();
-	alertDialog.accept();
-
+	browser.switchTo().alert().then(
+		function (alert) { alert.accept(); },
+		function (err) { }
+	);
+		
 	waitForElement(element(by.className('current-page-number')));
 	var resources = element.all(by.cssContainingText('td', 'Rodzaj_do_testowania_automatycznego'));
 	var lastResource = resources.get(0);
@@ -140,12 +133,10 @@ describe('Resource Tests', function() {
 	var editButton = element(by.buttonText('Edytuj'));
 	editButton.click();
 
-	waitForElement(element(by.className('buttons')));
+	waitForElement(element(by.className('form-control au-target')));
 	browser.sleep(1000);
-	var buttonsPanels = element.all(by.className('buttons'));
-	var firstValueButtonPanel = buttonsPanels.get(2);
-	var deleteValueButton = firstValueButtonPanel.all(by.className('au-target')).get(0);
-	deleteValueButton.click();
+	var metadataValueFields = element.all(by.className('form-control au-target'));
+	metadataValueFields.get(1).clear();
 
 	waitForElement(element(by.buttonText('Zapisz')));
 	var editButton = element(by.buttonText('Zapisz'));

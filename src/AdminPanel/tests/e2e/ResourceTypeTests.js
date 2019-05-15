@@ -24,6 +24,7 @@ describe('Resource Type Tests', function() {
 		var fields = element.all(by.className('form-control au-target'));
 		fields.get(0).sendKeys('Nazwa_Testowanie_Automatyczne');
 		fields.get(1).sendKeys('Nazwa_Testowanie_Automatyczne');
+		fields.get(2).sendKeys('Nazwa_Testowanie_Automatyczne');
 
 		waitForElement(element(by.buttonText('Dodaj')));
 		var addButton = element(by.buttonText('Dodaj'));
@@ -44,19 +45,19 @@ describe('Resource Type Tests', function() {
 		var addResourceTypeButton = element(by.cssContainingText('span', 'rodzaj zasobu'));
 		browser.sleep(500);
 		addResourceTypeButton.click();
-
+		
 		waitForElement(element(by.className('form-control au-target')));
 		var fields = element.all(by.className('form-control au-target'));
 		fields.get(0).sendKeys('Nazwa_Testowanie_Automatyczne');
-
-		browser.sleep(500);
+		fields.get(1).sendKeys('Nazwa_Testowanie_Automatyczne');
+		
 		waitForElement(element(by.className('select2-selection__rendered')));
+		browser.sleep(5000);
 		var lists = element.all(by.className('select2-selection__rendered'));
-		var listToClick = lists.get(1);
-		browser.sleep(500);
-		listToClick.click();
+		lists.get(1).click();
 		browser.sleep(500);
 		browser.driver.switchTo().activeElement().sendKeys('Metadana_do_testowania_automatycznego1');
+		browser.sleep(500);
 		browser.driver.switchTo().activeElement().sendKeys(protractor.Key.ENTER);
 		browser.sleep(500);
 
@@ -83,6 +84,7 @@ describe('Resource Type Tests', function() {
 		waitForElement(element(by.className('form-control au-target')));
 		var fields = element.all(by.className('form-control au-target'));
 		fields.get(1).sendKeys('Nazwa_Testowanie_Automatyczne');
+		fields.get(2).sendKeys('Nazwa_Testowanie_Automatyczne');
 
 		waitForElement(element(by.className('select2-selection__rendered')));
 		var lists = element.all(by.className('select2-selection__rendered'));
@@ -118,6 +120,7 @@ describe('Resource Type Tests', function() {
 		var fields = element.all(by.className('form-control au-target'));
 		fields.get(0).sendKeys('Nazwa_Testowanie_Automatyczne');
 		fields.get(1).sendKeys('Nazwa_Testowanie_Automatyczne');
+		fields.get(2).sendKeys('Nazwa_Testowanie_Automatyczne');
 
 		waitForElement(element(by.className('select2-selection__rendered')));
 		var lists = element.all(by.className('select2-selection__rendered'));

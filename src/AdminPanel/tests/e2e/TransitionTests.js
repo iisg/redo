@@ -25,18 +25,9 @@ describe('Transition Tests', function() {
 	browser.driver.switchTo().activeElement().sendKeys(protractor.Key.ENTER);
 	browser.sleep(500);
 
-	waitForElement(element(by.className('new-metadata-value-button-container')));
-	waitForElement(element(by.className('form-control au-target')));
-	var metadataValueFieldBlanks = element(by.className('form-control au-target'));
-	metadataValueFieldBlanks.sendKeys('Value1');
-
-	var newMetadataValuesFields = element.all(by.className('new-metadata-value-button-container'));
-	var secondMetadataValueField = newMetadataValuesFields.get(0);
-	var secondMetadataValueButton = secondMetadataValueField.all(by.className('au-target'));
-	secondMetadataValueButton.get(0).click();
-
 	waitForElement(element(by.className('form-control au-target')));
 	var newMetadataValueFieldBlanks = element.all(by.className('form-control au-target'));
+	newMetadataValueFieldBlanks.get(0).sendKeys('Value1');
 	newMetadataValueFieldBlanks.get(1).sendKeys('Value2');
 
 	waitForElement(element(by.buttonText('Dodaj')));
@@ -45,38 +36,6 @@ describe('Transition Tests', function() {
 
 	waitForElement(element(by.cssContainingText('span', 'Rodzaj_do_testowania_automatycznego')));
   });
-
-  // it('Try to make a transition without any designated person', function() {
-	// browser.get('https://repekadev.fslab.agh.edu.pl/admin/resources/books?currentPageNumber=1&resourcesPerPage=1000');
-	// waitForElement(element(by.className('au-animate fade-inup-outdown au-target')));
-	// var resourcesList = element.all(by.className('au-animate fade-inup-outdown au-target'));
-	// var lastResource = resourcesList.get(0);
-	// lastResource.click();
-
-	// waitForElement(element(by.cssContainingText('span', 'przejście')));
-	// var transitionButton = element(by.cssContainingText('span', 'przejście'));
-	// transitionButton.click();
-
-	// expect(element(by.buttonText('Edytuj')).isPresent()).toBe(true);
-
-	// browser.get('https://repekadev.fslab.agh.edu.pl/admin/resources/books?currentPageNumber=1&resourcesPerPage=1000');
-	// waitForElement(element(by.className('au-animate fade-inup-outdown au-target')));
-	// var resourcesList = element.all(by.className('au-animate fade-inup-outdown au-target'));
-	// var lastResource = resourcesList.get(0);
-	// lastResource.click();
-
-	// waitForElement(element(by.cssContainingText('span', 'Usuń')));
-	// var deleteButton = element(by.cssContainingText('span', 'Usuń'));
-	// deleteButton.click();
-
-	// waitForElement(element(by.className('swal2-confirm toggle-button red')));
-	// var confirmButton = element.all(by.className('swal2-confirm toggle-button red'));
-	// confirmButton.click();
-	// browser.sleep(500);
-
-	// waitForElement(element(by.className('current-page-number')));
-	// browser.sleep(1000);
-  // });
 
   it('Try to make a transition without a proper designated person', function() {
 	browser.get('https://repekadev.fslab.agh.edu.pl/admin/resources/books?currentPageNumber=1&resourcesPerPage=1000');
@@ -98,13 +57,16 @@ describe('Transition Tests', function() {
 	personMetadataValueButton.get(2).click();
 	browser.sleep(500);
 
-	var formsList = element.all(by.className('form-control au-target'));
-	formsList.get(2).sendKeys('#1000001');
-	waitForElement(element(by.cssContainingText('ul', '#1000001')));
+	waitForElement(element(by.className('select2-selection__rendered')));
+	var lists = element.all(by.className('select2-selection__rendered'));
+	var listToClick = lists.get(1);
+	browser.sleep(1000);
+	listToClick.click();
+	browser.sleep(500);
+	browser.driver.switchTo().activeElement().sendKeys('#1000001');
 	browser.sleep(3000);
-	waitForElement(element(by.className('fancytree-checkbox')));
-	var checkboxProper = element(by.className('fancytree-checkbox'));
-	checkboxProper.click();
+	browser.driver.switchTo().activeElement().sendKeys(protractor.Key.ENTER);
+	browser.sleep(500);
 
 	waitForElement(element(by.buttonText('Zapisz')));
 	var editButton = element(by.buttonText('Zapisz'));
@@ -149,21 +111,21 @@ describe('Transition Tests', function() {
 	var editButton = element(by.buttonText('Edytuj'));
 	editButton.click();
 
-	waitForElement(element(by.className('transparent au-target')));
-	browser.sleep(3000);
-	var newMetadataValuesFields = element.all(by.className('transparent au-target'));
-	var personMetadataValueField = newMetadataValuesFields.get(3);
-	var personMetadataValueButton = personMetadataValueField.all(by.className('au-target'));
-	personMetadataValueButton.get(2).click();
+	waitForElement(element(by.className('form-control au-target')));
+	var metadataValuesFields = element.all(by.className('form-control au-target'));
+	metadataValuesFields.get(1).clear();
 	browser.sleep(500);
 
-	var formsList = element.all(by.className('form-control au-target'));
-	formsList.get(2).sendKeys('#1000000');
-	waitForElement(element(by.cssContainingText('ul', '#1000000')));
+	waitForElement(element(by.className('select2-selection__rendered')));
+	var lists = element.all(by.className('select2-selection__rendered'));
+	var listToClick = lists.get(1);
+	browser.sleep(1000);
+	listToClick.click();
+	browser.sleep(500);
+	browser.driver.switchTo().activeElement().sendKeys('#1000000');
 	browser.sleep(3000);
-	waitForElement(element(by.className('fancytree-checkbox')));
-	var checkboxProper = element(by.className('fancytree-checkbox'));
-	checkboxProper.click();
+	browser.driver.switchTo().activeElement().sendKeys(protractor.Key.ENTER);
+	browser.sleep(500);
 
 	waitForElement(element(by.buttonText('Zapisz')));
 	var editButton = element(by.buttonText('Zapisz'));
@@ -221,21 +183,16 @@ describe('Transition Tests', function() {
 	var editButton = element(by.buttonText('Edytuj'));
 	editButton.click();
 
-	waitForElement(element(by.className('transparent au-target')));
-	browser.sleep(3000);
-	var newMetadataValuesFields = element.all(by.className('transparent au-target'));
-	var personMetadataValueField = newMetadataValuesFields.get(3);
-	var personMetadataValueButton = personMetadataValueField.all(by.className('au-target'));
-	personMetadataValueButton.get(2).click();
+	waitForElement(element(by.className('select2-selection__rendered')));
+	var lists = element.all(by.className('select2-selection__rendered'));
+	var listToClick = lists.get(1);
+	browser.sleep(1000);
+	listToClick.click();
 	browser.sleep(500);
-
-	var formsList = element.all(by.className('form-control au-target'));
-	formsList.get(2).sendKeys('#1000000');
-	waitForElement(element(by.cssContainingText('ul', '#1000000')));
+	browser.driver.switchTo().activeElement().sendKeys('#1000000');
 	browser.sleep(3000);
-	waitForElement(element(by.className('fancytree-checkbox')));
-	var checkboxProper = element(by.className('fancytree-checkbox'));
-	checkboxProper.click();
+	browser.driver.switchTo().activeElement().sendKeys(protractor.Key.ENTER);
+	browser.sleep(500);
 
 	waitForElement(element(by.buttonText('Zapisz')));
 	var editButton = element(by.buttonText('Zapisz'));
@@ -286,21 +243,16 @@ describe('Transition Tests', function() {
 	var editButton = element(by.buttonText('Edytuj'));
 	editButton.click();
 
-	waitForElement(element(by.className('transparent au-target')));
-	browser.sleep(3000);
-	var newMetadataValuesFields = element.all(by.className('transparent au-target'));
-	var personMetadataValueField = newMetadataValuesFields.get(3);
-	var personMetadataValueButton = personMetadataValueField.all(by.className('au-target'));
-	personMetadataValueButton.get(2).click();
+	waitForElement(element(by.className('select2-selection__rendered')));
+	var lists = element.all(by.className('select2-selection__rendered'));
+	var listToClick = lists.get(1);
+	browser.sleep(1000);
+	listToClick.click();
 	browser.sleep(500);
-
-	var formsList = element.all(by.className('form-control au-target'));
-	formsList.get(2).sendKeys('#1000000');
-	waitForElement(element(by.cssContainingText('ul', '#1000000')));
+	browser.driver.switchTo().activeElement().sendKeys('#1000000');
 	browser.sleep(3000);
-	waitForElement(element(by.className('fancytree-checkbox')));
-	var checkboxProper = element(by.className('fancytree-checkbox'));
-	checkboxProper.click();
+	browser.driver.switchTo().activeElement().sendKeys(protractor.Key.ENTER);
+	browser.sleep(500);
 
 	waitForElement(element(by.buttonText('Zapisz')));
 	var editButton = element(by.buttonText('Zapisz'));
