@@ -21,6 +21,8 @@ describe('Resource Type Tests', function() {
 		browser.sleep(500);
 		addResourceTypeButton.click();
 
+		waitForElement(element(by.className('form-control au-target')));
+		browser.sleep(3000);
 		var fields = element.all(by.className('form-control au-target'));
 		fields.get(0).sendKeys('Nazwa_Testowanie_Automatyczne');
 		fields.get(1).sendKeys('Nazwa_Testowanie_Automatyczne');
@@ -47,12 +49,13 @@ describe('Resource Type Tests', function() {
 		addResourceTypeButton.click();
 		
 		waitForElement(element(by.className('form-control au-target')));
+		browser.sleep(3000);
 		var fields = element.all(by.className('form-control au-target'));
 		fields.get(0).sendKeys('Nazwa_Testowanie_Automatyczne');
 		fields.get(1).sendKeys('Nazwa_Testowanie_Automatyczne');
 		
 		waitForElement(element(by.className('select2-selection__rendered')));
-		browser.sleep(5000);
+		browser.sleep(3000);
 		var lists = element.all(by.className('select2-selection__rendered'));
 		lists.get(1).click();
 		browser.sleep(500);
@@ -82,6 +85,7 @@ describe('Resource Type Tests', function() {
 		addResourceTypeButton.click();
 
 		waitForElement(element(by.className('form-control au-target')));
+		browser.sleep(3000);
 		var fields = element.all(by.className('form-control au-target'));
 		fields.get(1).sendKeys('Nazwa_Testowanie_Automatyczne');
 		fields.get(2).sendKeys('Nazwa_Testowanie_Automatyczne');
@@ -117,6 +121,7 @@ describe('Resource Type Tests', function() {
 		addResourceTypeButton.click();
 
 		waitForElement(element(by.className('form-control au-target')));
+		browser.sleep(3000);
 		var fields = element.all(by.className('form-control au-target'));
 		fields.get(0).sendKeys('Nazwa_Testowanie_Automatyczne');
 		fields.get(1).sendKeys('Nazwa_Testowanie_Automatyczne');
@@ -154,6 +159,7 @@ describe('Resource Type Tests', function() {
 		editButton.click();
 
 		waitForElement(element(by.className('form-control au-target')));
+		browser.sleep(3000);
 		var fields = element.all(by.className('form-control au-target'));
 		var confirmButton = element(by.buttonText('Zatwierdź'));
 		fields.get(1).clear();
@@ -180,6 +186,7 @@ describe('Resource Type Tests', function() {
 		editButton.click();
 
 		waitForElement(element(by.className('form-control au-target')));
+		browser.sleep(3000);
 		var fields = element.all(by.className('form-control au-target'));
 		var confirmButton = element(by.buttonText('Zatwierdź'));
 		fields.get(0).clear();
@@ -259,6 +266,7 @@ describe('Resource Type Tests', function() {
 		editButton.click();
 
 		waitForElement(element(by.className('form-control au-target')));
+		browser.sleep(3000);
 		var fields = element.all(by.className('form-control au-target'));
 		var confirmButton = element(by.buttonText('Zatwierdź'));
 		fields.get(1).clear();
