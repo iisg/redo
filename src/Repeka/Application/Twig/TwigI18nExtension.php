@@ -77,7 +77,7 @@ class TwigI18nExtension extends \Twig_Extension {
      * @SuppressWarnings("PHPMD.BooleanArgumentFlag")
      */
     public function onlyMetadataValuesInCurrentLanguage(iterable $metadataValues, Metadata $metadata, bool $returnFirstIfEmpty = false) {
-        $locale = strtoupper($this->request->getLocale());
+        $locale = $this->request ? strtoupper($this->request->getLocale()) : 'PL';
         $submetadataIdsToCheck = $this->getSystemLanguageSubmetadataIds($metadata);
         if (empty($submetadataIdsToCheck)) {
             // metadata does not have system language submetadata, so there's nothing to remove
@@ -143,6 +143,9 @@ class TwigI18nExtension extends \Twig_Extension {
     }
 
     public function resourceLabel($resource) {
+        if ($resource instanceof PrintableArray) {
+            $resource = $resource->flatten()[0];
+        }
         $values = $this->resourceDisplayStrategyEvaluatorExtension->getMetadataValues([], $resource, SystemMetadata::RESOURCE_LABEL);
         return $this->onlyMetadataValuesInCurrentLanguage($values, SystemMetadata::RESOURCE_LABEL()->toMetadata(), true);
     }
