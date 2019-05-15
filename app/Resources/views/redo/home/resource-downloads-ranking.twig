@@ -11,7 +11,7 @@
 }) %}
 {% if rankingResources is not empty %}
     <div>
-        <h4>{{ 'Most downloads' | trans | upper }}</h4>
+        <h4>{{ (mostDownloadsHeader is defined ? mostDownloadsHeader : 'Most downloads') | trans | upper }}</h4>
         {% for resource in rankingResources.results %}
             <a class="list-element"
                 href="/resources/{{ resource.id }}">
