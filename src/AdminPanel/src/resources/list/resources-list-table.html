@@ -65,9 +65,12 @@
             <td repeat.for="metadata of briefMetadata">
                 <a route-href="route: resources/details; params.bind: {id: resource.id}"
                     disabled-link.bind="resource.pendingRequest">
-                    <resource-metadata-values resource.one-time="resource"
+                    <resource-label if.one-time="metadata.id === -5"
+                        resource.one-time="resource"></resource-label>
+                    <resource-metadata-values else
+                        resource.one-time="resource"
                         metadata.one-time="metadata"
-                        check-metadata-brief.bind="true"></resource-metadata-values>
+                        check-metadata-brief.one-time="true"></resource-metadata-values>
                 </a>
             </td>
             <td>
