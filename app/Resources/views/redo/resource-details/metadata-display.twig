@@ -5,13 +5,13 @@
 {% elseif metadata.control == 'relationship' %}
     {% set relatedResource = resource(metadataValue) %}
     {% if relatedResource is not empty %}
-        {% set label = relatedResource | mLabel | onlyMetadataInCurrentLanguage(labelMetadata, true) %}
+        {% set label = relatedResource | resourceLabel %}
         {% if relatedResource.resourceClass == 'books' and canView(relatedResource) %}
-            <a href="/resources/{{ relatedResource.id }}">{{ label }}</a>
+            <a href="/resources/{{ relatedResource.id }}">{{ label|raw }}</a>
         {% elseif relatedResource|m('five_star_data_keyword')|length %}
             {{ insertLinks(label | first, relatedResource | m('five_star_data_keyword')) | raw }}
         {% elseif canViewTeaser(relatedResource) %}
-            {{ label }}
+            {{ label|raw }}
         {% else %}
             {{ 'You are not allowed to view this resource' | trans }}
         {% endif %}

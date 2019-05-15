@@ -78,7 +78,7 @@
                     {% endif %}
                     <child-resources-group
                         resource-id="{{ resource.id }}"
-                        resource-label="{{ resource | mLabel }}"
+                        resource-label="{{ resource | resourceLabel | xmlEscape }}"
                         {% if childResources is not empty %}
                             stringified-child-resources-data="{{ childResourcesData | json_encode }}"
                         {% endif %}
@@ -94,10 +94,10 @@
                         <input type="checkbox"
                             name="metadataFilters[{{ filterableMetadata.id }}][]"
                             value="{{ resource.id }}"
-                            title="{{ resource | mLabel }}"
-                            aria-label="{{ resource | mLabel }}"
+                            title="{{ resource | resourceLabel | xmlEscape }}"
+                            aria-label="{{ resource | resourceLabel | xmlEscape }}"
                             {% if resource.id in relationshipFilters %}checked{% endif %}>
-                        <span><span>{{ resource | mLabel }}</span></span>
+                        <span><span>{{ resource | resourceLabel }}</span></span>
                     </label>
                 {% endfor %}
             {% endif %}

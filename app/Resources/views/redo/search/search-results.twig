@@ -82,13 +82,13 @@
                                     <strong>{{ aggregationName == 'kindId' ? 'Resource kind' | trans
                                         : metadata(aggregationName).label | inCurrentLanguage }}</strong>
                                     {% for bucket in aggregationData.buckets.0[aggregationName].buckets %}
-                                        {% set fieldLabel = (aggregationName == 'kindId' ? resourceKind(bucket.key).label | inCurrentLanguage : r(bucket.key) | mLabel) ~ ' (' ~ bucket.doc_count ~ ')' %}
+                                        {% set fieldLabel = (aggregationName == 'kindId' ? resourceKind(bucket.key).label | inCurrentLanguage : r(bucket.key) | resourceLabel) ~ ' (' ~ bucket.doc_count ~ ')' %}
                                         <label class="label-with-checkbox">
                                             <input type="checkbox"
                                                 name="facetFilters[{{ aggregationName }}][]"
                                                 value="{{ bucket.key }}"
-                                                aria-label="{{ fieldLabel }}"
-                                                title="{{ fieldLabel }}"
+                                                aria-label="{{ fieldLabel | xmlEscape }}"
+                                                title="{{ fieldLabel | xmlEscape }}"
                                                 {% if isFilteringByFacet(aggregationName, bucket.key,
                                                     app.request.query.get('facetFilters') ?? []) %}
                                             checked

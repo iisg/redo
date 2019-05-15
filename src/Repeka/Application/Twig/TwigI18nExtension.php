@@ -2,6 +2,7 @@
 namespace Repeka\Application\Twig;
 
 use Repeka\Application\Cqrs\CommandBusAware;
+use Repeka\Domain\Constants\SystemMetadata;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Entity\MetadataValue;
@@ -12,6 +13,9 @@ use Repeka\Domain\Utils\PrintableArray;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
+/**
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class TwigI18nExtension extends \Twig_Extension {
     use CommandBusAware;
 
@@ -21,21 +25,30 @@ class TwigI18nExtension extends \Twig_Extension {
     private $metadataRepository;
     /** @var FrontendConfig */
     private $frontendConfig;
+    /** @var RequestStack */
+    private $requestStack;
+    /** @var TwigResourceDisplayStrategyEvaluatorExtension */
+    private $resourceDisplayStrategyEvaluatorExtension;
 
     public function __construct(
         RequestStack $requestStack,
         MetadataRepository $metadataRepository,
-        FrontendConfig $frontendConfig
+        FrontendConfig $frontendConfig,
+        TwigResourceDisplayStrategyEvaluatorExtension $resourceDisplayStrategyEvaluatorExtension
     ) {
         $this->request = $requestStack->getCurrentRequest();
         $this->metadataRepository = $metadataRepository;
         $this->frontendConfig = $frontendConfig;
+        $this->requestStack = $requestStack;
+        $this->resourceDisplayStrategyEvaluatorExtension = $resourceDisplayStrategyEvaluatorExtension;
     }
 
     public function getFilters() {
         return [
             new \Twig_Filter('inCurrentLanguage', [$this, 'inCurrentLanguage']),
+            new \Twig_Filter('multilingualLabel', [$this, 'multilingualLabel']),
             new \Twig_Filter('onlyMetadataInCurrentLanguage', [$this, 'onlyMetadataValuesInCurrentLanguage']),
+            new \Twig_Filter('resourceLabel', [$this, 'resourceLabel'], ['is_safe' => ['html']]),
         ];
     }
 
@@ -109,5 +122,28 @@ class TwigI18nExtension extends \Twig_Extension {
             }
         }
         return false;
+    }
+
+    public function multilingualLabel(PrintableArray $values) {
+        $label = [];
+        foreach ($values as $value) {
+            /** @var MetadataValue $value */
+            $value = $value->toArray();
+            $submetadata = $value['submetadata'] ?? [];
+            unset($value['submetadata']);
+            if ($submetadata) {
+                $language = current($submetadata);
+                if ($language) {
+                    $value['submetadata'] = [SystemMetadata::RESOURCE_LABEL_LANGUAGE => $language[0]];
+                }
+            }
+            $label[] = $value;
+        }
+        return json_encode($label);
+    }
+
+    public function resourceLabel($resource) {
+        $values = $this->resourceDisplayStrategyEvaluatorExtension->getMetadataValues([], $resource, SystemMetadata::RESOURCE_LABEL);
+        return $this->onlyMetadataValuesInCurrentLanguage($values, SystemMetadata::RESOURCE_LABEL()->toMetadata(), true);
     }
 }

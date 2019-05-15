@@ -21,7 +21,7 @@
             </p>
             <p>
                 {{ 'Selected collection' | trans }}:
-                <span class="deposit-selected-value">{{ resource | mParent | mLabel | raw }}</span>
+                <span class="deposit-selected-value">{{ resource | mParent | resourceLabel }}</span>
             </p>
         </div>
         <hr>
@@ -47,9 +47,9 @@
                                 {% elseif metadata.control == 'relationship' %}
                                     {% set relatedResource = resource(metadataValue) %}
                                     {% if relatedResource.resourceClass == 'books' and canView(relatedResource) %}
-                                        <a href="/resources/{{ relatedResource.id }}">{{ relatedResource | mLabel | raw }}</a>
+                                        <a href="/resources/{{ relatedResource.id }}">{{ relatedResource | resourceLabel }}</a>
                                     {% elseif canViewTeaser(relatedResource) %}
-                                        {{ relatedResource | mLabel | raw }}
+                                        {{ relatedResource | resourceLabel }}
                                     {% endif %}
                                 {% elseif metadata.dynamic %}
                                     {{ metadataValue | raw }}

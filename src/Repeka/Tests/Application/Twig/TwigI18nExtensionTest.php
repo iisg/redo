@@ -3,6 +3,7 @@ namespace Repeka\Tests\Application\Upload;
 
 use Repeka\Application\Twig\FrontendConfig;
 use Repeka\Application\Twig\TwigI18nExtension;
+use Repeka\Application\Twig\TwigResourceDisplayStrategyEvaluatorExtension;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Entity\MetadataValue;
@@ -50,7 +51,8 @@ class TwigI18nExtensionTest extends \PHPUnit_Framework_TestCase {
         $this->extension = new TwigI18nExtension(
             $requestStack,
             $metadataRepository,
-            $this->frontendConfig
+            $this->frontendConfig,
+            $this->createMock(TwigResourceDisplayStrategyEvaluatorExtension::class)
         );
         $this->request->method('getLocale')->willReturn('pl');
         $this->frontendConfig->method('getConfig')->willReturn(['fallback_ui_languages' => ['en']]);
