@@ -37,63 +37,63 @@ describe('Transition Tests', function() {
 	waitForElement(element(by.cssContainingText('span', 'Rodzaj_do_testowania_automatycznego')));
   });
 
-  it('Try to make a transition without a proper designated person', function() {
-	browser.get('https://repekadev.fslab.agh.edu.pl/admin/resources/books?currentPageNumber=1&resourcesPerPage=1000');
-	waitForElement(element(by.className('current-page-number')));
-	browser.sleep(1000);
-	var resources = element.all(by.cssContainingText('td', 'Rodzaj_do_testowania_automatycznego'));
-	var lastResource = resources.get(0);
-	lastResource.click();
+  // it('Try to make a transition without a proper designated person', function() {
+	// browser.get('https://repekadev.fslab.agh.edu.pl/admin/resources/books?currentPageNumber=1&resourcesPerPage=1000');
+	// waitForElement(element(by.className('current-page-number')));
+	// browser.sleep(1000);
+	// var resources = element.all(by.cssContainingText('td', 'Rodzaj_do_testowania_automatycznego'));
+	// var lastResource = resources.get(0);
+	// lastResource.click();
 
-	waitForElement(element(by.buttonText('Edytuj')));
-	var editButton = element(by.buttonText('Edytuj'));
-	editButton.click();
+	// waitForElement(element(by.buttonText('Edytuj')));
+	// var editButton = element(by.buttonText('Edytuj'));
+	// editButton.click();
 
-	waitForElement(element(by.className('transparent au-target')));
-	browser.sleep(3000);
-	var newMetadataValuesFields = element.all(by.className('transparent au-target'));
-	var personMetadataValueField = newMetadataValuesFields.get(3);
-	var personMetadataValueButton = personMetadataValueField.all(by.className('au-target'));
-	personMetadataValueButton.get(2).click();
-	browser.sleep(500);
+	// waitForElement(element(by.className('transparent au-target')));
+	// browser.sleep(3000);
+	// var newMetadataValuesFields = element.all(by.className('transparent au-target'));
+	// var personMetadataValueField = newMetadataValuesFields.get(3);
+	// var personMetadataValueButton = personMetadataValueField.all(by.className('au-target'));
+	// personMetadataValueButton.get(2).click();
+	// browser.sleep(500);
 
-	waitForElement(element(by.className('select2-selection__rendered')));
-	var lists = element.all(by.className('select2-selection__rendered'));
-	var listToClick = lists.get(1);
-	browser.sleep(1000);
-	listToClick.click();
-	browser.sleep(500);
-	browser.driver.switchTo().activeElement().sendKeys('#1000001');
-	browser.sleep(3000);
-	browser.driver.switchTo().activeElement().sendKeys(protractor.Key.ENTER);
-	browser.sleep(500);
+	// waitForElement(element(by.className('select2-selection__rendered')));
+	// var lists = element.all(by.className('select2-selection__rendered'));
+	// var listToClick = lists.get(1);
+	// browser.sleep(1000);
+	// listToClick.click();
+	// browser.sleep(500);
+	// browser.driver.switchTo().activeElement().sendKeys('#1000001');
+	// browser.sleep(3000);
+	// browser.driver.switchTo().activeElement().sendKeys(protractor.Key.ENTER);
+	// browser.sleep(500);
 
-	waitForElement(element(by.buttonText('Zapisz')));
-	var editButton = element(by.buttonText('Zapisz'));
-	editButton.click();
+	// waitForElement(element(by.buttonText('Zapisz')));
+	// var editButton = element(by.buttonText('Zapisz'));
+	// editButton.click();
 
-	waitForElement(element(by.className('toggle-button disabled')));
-	browser.sleep(3000);
+	// waitForElement(element(by.className('toggle-button disabled')));
+	// browser.sleep(3000);
 
-	browser.get('https://repekadev.fslab.agh.edu.pl/admin/resources/books?currentPageNumber=1&resourcesPerPage=1000');
-	waitForElement(element(by.className('current-page-number')));
-	browser.sleep(1000);
-	var resources = element.all(by.cssContainingText('td', 'Rodzaj_do_testowania_automatycznego'));
-	var lastResource = resources.get(0);
-	lastResource.click();
+	// browser.get('https://repekadev.fslab.agh.edu.pl/admin/resources/books?currentPageNumber=1&resourcesPerPage=1000');
+	// waitForElement(element(by.className('current-page-number')));
+	// browser.sleep(1000);
+	// var resources = element.all(by.cssContainingText('td', 'Rodzaj_do_testowania_automatycznego'));
+	// var lastResource = resources.get(0);
+	// lastResource.click();
 
-	waitForElement(element(by.cssContainingText('span', 'Usuń')));
-	var deleteButton = element(by.cssContainingText('span', 'Usuń'));
-	deleteButton.click();
+	// waitForElement(element(by.cssContainingText('span', 'Usuń')));
+	// var deleteButton = element(by.cssContainingText('span', 'Usuń'));
+	// deleteButton.click();
 
-	waitForElement(element(by.className('swal2-confirm toggle-button red')));
-	var confirmButton = element.all(by.className('swal2-confirm toggle-button red'));
-	confirmButton.click();
-	browser.sleep(500);
+	// waitForElement(element(by.className('swal2-confirm toggle-button red')));
+	// var confirmButton = element.all(by.className('swal2-confirm toggle-button red'));
+	// confirmButton.click();
+	// browser.sleep(500);
 
-	waitForElement(element(by.className('current-page-number')));
-	browser.sleep(1000);
-  });
+	// waitForElement(element(by.className('current-page-number')));
+	// browser.sleep(1000);
+  // });
 
   it('Try to make a transition without required metadata', function() {
 	browser.get('https://repekadev.fslab.agh.edu.pl/admin/resources/books?currentPageNumber=1&resourcesPerPage=1000');
