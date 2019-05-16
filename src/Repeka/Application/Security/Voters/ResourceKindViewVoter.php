@@ -2,6 +2,7 @@
 namespace Repeka\Application\Security\Voters;
 
 use Repeka\Domain\Constants\SystemMetadata;
+use Repeka\Domain\Constants\SystemRole;
 use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Entity\User;
 use Repeka\Domain\Repository\ResourceRepository;
@@ -37,6 +38,9 @@ class ResourceKindViewVoter extends Voter {
         $user = $token->getUser();
         if (!$user || !($user instanceof User)) {
             $user = $this->unauthenticatedUserPermissionHelper->getUnauthenticatedUser();
+        }
+        if ($user->hasRole(SystemRole::ADMIN()->roleName())) {
+            return true;
         }
         return $this->userCanSeeAnyResourcesOfKind($resourceKind, $user);
     }
