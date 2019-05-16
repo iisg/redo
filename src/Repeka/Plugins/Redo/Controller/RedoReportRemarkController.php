@@ -35,7 +35,7 @@ class RedoReportRemarkController extends Controller {
     /**
      * @Route("/report", name="report")
      * @Template("redo/report/report-form.twig")
-     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
+     * @Security("is_authenticated()")
      */
     public function reportRemarkAction(Request $request) {
         if ($request->isMethod(Request::METHOD_POST)) {

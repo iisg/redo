@@ -62,6 +62,7 @@ class RedoDepositController extends Controller {
     /**
      * @Route("/deposit", name="deposit")
      * @Template("redo/deposit/choose-resource-kind.twig")
+     * @Security("is_authenticated()")
      */
     public function chooseResourceKindAction(Request $request) {
         if ($request->isMethod(Request::METHOD_POST)) {
@@ -192,6 +193,7 @@ class RedoDepositController extends Controller {
     /**
      * @Route("/mine", name="myResources")
      * @Template("redo/deposit/deposit-list.twig")
+     * @Security("is_authenticated()")
      */
     public function myResourcesAction() {
         $query = ResourceListQuery::builder()
