@@ -5,7 +5,7 @@ describe('Transition Tests', function() {
 			return locator.isPresent()
 	   }, 10000);
   }
-  
+ 
   beforeEach(function() {
 	browser.get('https://repekadev.fslab.agh.edu.pl/admin/resources/books?currentPageNumber=1&resourcesPerPage=1000');
 	browser.driver.manage().window().setSize(1536, 864);
@@ -72,12 +72,8 @@ describe('Transition Tests', function() {
 	var editButton = element(by.buttonText('Zapisz'));
 	editButton.click();
 
-	waitForElement(element(by.cssContainingText('span', 'przejście')));
-	var transitionButton = element(by.cssContainingText('span', 'przejście'));
-	transitionButton.click();
-
+	waitForElement(element(by.className('toggle-button disabled')));
 	browser.sleep(3000);
-	expect(element(by.buttonText('Edytuj')).isPresent()).toBe(true);
 
 	browser.get('https://repekadev.fslab.agh.edu.pl/admin/resources/books?currentPageNumber=1&resourcesPerPage=1000');
 	waitForElement(element(by.className('current-page-number')));
