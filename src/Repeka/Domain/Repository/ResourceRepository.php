@@ -3,7 +3,6 @@ namespace Repeka\Domain\Repository;
 
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\ResourceKind;
-use Repeka\Domain\Entity\User;
 use Repeka\Domain\Exception\EntityNotFoundException;
 use Repeka\Domain\UseCase\PageResult;
 use Repeka\Domain\UseCase\Resource\ResourceListQuery;
@@ -29,9 +28,6 @@ interface ResourceRepository {
     public function count(array $criteria);
 
     public function countByResourceKind(ResourceKind $resourceKind): int;
-
-    /** @return ResourceEntity[] */
-    public function findAssignedTo(User $user): array;
 
     /** @return PageResult|ResourceEntity[] */
     public function findByQuery(ResourceListQuery $query): PageResult;

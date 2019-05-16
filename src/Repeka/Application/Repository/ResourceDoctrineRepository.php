@@ -7,13 +7,10 @@ use Repeka\Domain\Constants\SystemMetadata;
 use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\ResourceKind;
-use Repeka\Domain\Entity\User;
 use Repeka\Domain\Exception\EntityNotFoundException;
 use Repeka\Domain\Factory\ResourceListQuerySqlFactory;
 use Repeka\Domain\Factory\ResourceTreeQuerySqlFactory;
-use Repeka\Domain\Factory\TasksQuerySqlFactory;
 use Repeka\Domain\Repository\ResourceRepository;
-use Repeka\Domain\Repository\ResourceWorkflowRepository;
 use Repeka\Domain\Repository\UserRepository;
 use Repeka\Domain\Service\ResourceDisplayStrategyDependencyMap;
 use Repeka\Domain\UseCase\PageResult;
@@ -29,17 +26,10 @@ use Repeka\Domain\Utils\EntityUtils;
 class ResourceDoctrineRepository extends EntityRepository implements ResourceRepository {
     /** @var UserRepository */
     private $userRepository;
-    /** @var ResourceWorkflowRepository */
-    private $workflowRepository;
 
     /** @required */
     public function setUserRepository(UserRepository $userRepository) {
         $this->userRepository = $userRepository;
-    }
-
-    /** @required */
-    public function setWorkflowRepository(ResourceWorkflowRepository $workflowRepository) {
-        $this->workflowRepository = $workflowRepository;
     }
 
     public function save(ResourceEntity $resource): ResourceEntity {
@@ -164,14 +154,6 @@ class ResourceDoctrineRepository extends EntityRepository implements ResourceRep
             ->setParameter('kind', $resourceKind)
             ->getQuery();
         return $query->getSingleScalarResult();
-    }
-
-    public function findAssignedTo(User $user): array {
-        $query = (new TasksQuerySqlFactory($user, $this->workflowRepository))->getSelectQuery();
-        $em = $this->getEntityManager();
-        $resultSetMapping = ResultSetMappings::resourceEntity($em);
-        $query = $em->createNativeQuery($query, $resultSetMapping);
-        return $query->getResult();
     }
 
     /** @return ResourceEntity[] */

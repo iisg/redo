@@ -1,5 +1,5 @@
 <?php
-namespace Repeka\Domain\UseCase\Assignment;
+namespace Repeka\Domain\UseCase\Task;
 
 use Repeka\Domain\Constants\TaskStatus;
 use Repeka\Domain\UseCase\PageResult;

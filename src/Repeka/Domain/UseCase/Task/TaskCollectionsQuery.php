@@ -1,9 +1,8 @@
 <?php
-namespace Repeka\Domain\UseCase\Assignment;
+namespace Repeka\Domain\UseCase\Task;
 
 use Repeka\Domain\Cqrs\AbstractCommand;
 use Repeka\Domain\Cqrs\AdjustableCommand;
-use Repeka\Domain\Cqrs\NonValidatedCommand;
 use Repeka\Domain\Cqrs\RequireNoRoles;
 use Repeka\Domain\Entity\User;
 use Repeka\Domain\UseCase\Resource\ResourceListQuery;

@@ -1,7 +1,7 @@
 <?php
 namespace Repeka\Application\Serialization;
 
-use Repeka\Domain\UseCase\Assignment\TaskCollection;
+use Repeka\Domain\UseCase\Task\TaskCollection;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 

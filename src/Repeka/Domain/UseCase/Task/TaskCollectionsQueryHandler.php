@@ -1,12 +1,10 @@
 <?php
-namespace Repeka\Domain\UseCase\Assignment;
+namespace Repeka\Domain\UseCase\Task;
 
 use Repeka\Domain\Constants\TaskStatus;
 use Repeka\Domain\Repository\ResourceRepository;
-use Repeka\Domain\UseCase\PageResult;
 use Repeka\Domain\UseCase\Resource\ResourceListQuery;
 use Repeka\Domain\Utils\ArrayUtils;
-use Repeka\Domain\Utils\EntityUtils;
 
 class TaskCollectionsQueryHandler {
     /** @var ResourceRepository */
@@ -20,16 +18,15 @@ class TaskCollectionsQueryHandler {
     }
 
     public function handle(TaskCollectionsQuery $query) {
-        $groupedTasks = $this->tasksFinder->getAllTasks($query->getUser());
+        $groupedTasksIds = $this->tasksFinder->getAllTasks($query->getUser());
         $filteredGroups = [];
         foreach ($query->getSingleCollectionQueries() as $resourceClass => $tasksByStatus) {
             $filteredGroups[$resourceClass] = [];
             /** @var ResourceListQuery $singleCollectionQuery */
             foreach ($tasksByStatus as $taskStatus => $singleCollectionQuery) {
-                if (!empty($groupedTasks[$resourceClass][$taskStatus])) {
-                    $resources = $groupedTasks[$resourceClass][$taskStatus];
-                    $ids = EntityUtils::mapToIds($resources);
-                    $singleCollectionQuery = $singleCollectionQuery->extend()->filterByIds($ids)->build();
+                if (!empty($groupedTasksIds[$resourceClass][$taskStatus])) {
+                    $resourceIds = $groupedTasksIds[$resourceClass][$taskStatus];
+                    $singleCollectionQuery = $singleCollectionQuery->extend()->filterByIds($resourceIds)->build();
                     $resources = $this->resourceRepository->findByQuery($singleCollectionQuery);
                     $filteredGroups[$resourceClass][$taskStatus] = new TaskCollection(
                         $resourceClass,
@@ -40,10 +37,11 @@ class TaskCollectionsQueryHandler {
             }
         }
         if (!$query->onlyQueriedCollections()) {
-            foreach ($groupedTasks as $resourceClass => $tasksByStatus) {
-                foreach ($tasksByStatus as $taskStatus => $resources) {
-                    if (!ArrayUtils::keyPathExists([$resourceClass, $taskStatus], $filteredGroups)) {
-                        $resources = new PageResult($resources, count($resources));
+            foreach ($groupedTasksIds as $resourceClass => $tasksByStatus) {
+                foreach ($tasksByStatus as $taskStatus => $resourceIds) {
+                    if ($resourceIds && !ArrayUtils::keyPathExists([$resourceClass, $taskStatus], $filteredGroups)) {
+                        $query = ResourceListQuery::builder()->filterByIds($resourceIds)->build();
+                        $resources = $this->resourceRepository->findByQuery($query);
                         $filteredGroups[$resourceClass][$taskStatus] = new TaskCollection(
                             $resourceClass,
                             new TaskStatus($taskStatus),

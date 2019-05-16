@@ -1,5 +1,5 @@
 <?php
-namespace Repeka\Domain\UseCase\Assignment;
+namespace Repeka\Domain\UseCase\Task;
 
 use Repeka\Domain\Cqrs\Command;
 use Repeka\Domain\Cqrs\CommandAdjuster;

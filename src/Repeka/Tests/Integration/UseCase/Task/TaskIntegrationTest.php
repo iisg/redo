@@ -1,5 +1,5 @@
 <?php
-namespace Repeka\Tests\Integration;
+namespace Repeka\Tests\Integration\UseCase\Task;
 
 use Repeka\Domain\Constants\SystemMetadata;
 use Repeka\Domain\Constants\SystemResourceKind;
@@ -92,12 +92,16 @@ class TaskIntegrationTest extends IntegrationTestCase {
     }
 
     public function testFetchingTasksReturnsPossibleTasks() {
-        $adminId = $this->getAdminUser()->getUserData()->getId();
+        $groupId = 123;
+        $admin = $this->getAdminUser()->getUserData();
+        $newContents = $admin->getContents()->withMergedValues(SystemMetadata::GROUP_MEMBER, 123);
+        $admin->updateContents($newContents);
+        $this->getResourceRepository()->save($admin);
         $groupResource = $this->createResource(
             $this->resourceKind,
             [
                 $this->metadata1->getId() => ['Test value 2'],
-                $this->metadata2->getId() => [$adminId, 5],
+                $this->metadata2->getId() => [$groupId, 5],
             ]
         );
         $client = self::createAdminClient();

@@ -2,9 +2,9 @@
 namespace Repeka\Application\Controller\Api;
 
 use Assert\Assertion;
-use Repeka\Domain\UseCase\Assignment\TaskCollectionsQuery;
 use Repeka\Domain\UseCase\Resource\ResourceListQuery;
 use Repeka\Domain\UseCase\Resource\ResourceListQueryBuilder;
+use Repeka\Domain\UseCase\Task\TaskCollectionsQuery;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
