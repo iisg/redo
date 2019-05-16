@@ -209,7 +209,7 @@ input {
   }
   &:-webkit-autofill {
     &, &:hover, &:focus, &:active {
-      -webkit-box-shadow: inset 0 0 0 calc(#{$default-line-height * 1em} / 2 + #{$default-gap-size / 4})
+      -webkit-box-shadow: inset 0 0 0 calc(#{$default-line-height * 1em} / 2 + #{$default-gap-size})
         $primary-background-color !important; // Based on: https://stackoverflow.com/a/14205976.
     }
   }
