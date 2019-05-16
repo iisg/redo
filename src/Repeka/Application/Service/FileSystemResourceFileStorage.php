@@ -1,6 +1,7 @@
 <?php
 namespace Repeka\Application\Service;
 
+use Assert\Assertion;
 use Exception;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Exception\DomainException;
@@ -13,6 +14,8 @@ use Symfony\Component\HttpFoundation\Response;
 class FileSystemResourceFileStorage implements ResourceFileStorage {
     /** @var array */
     private $uploadDirs;
+    /** @var array */
+    private $mergedUploadDirs;
     /** @var ResourceDisplayStrategyEvaluator */
     private $displayStrategyEvaluator;
     /** @var FileSystemDriver */
@@ -33,10 +36,9 @@ class FileSystemResourceFileStorage implements ResourceFileStorage {
         preg_match('#/?(.+?)/(.+)#', $resourcePath, $matches);
         if ($matches) {
             list(, $uploadDirId, $filepath) = $matches;
-            foreach ($uploadDirs as $uploadDir) {
-                if ($uploadDir['id'] == $uploadDirId) {
-                    return StringUtils::joinPaths($uploadDir['path'], $filepath);
-                }
+            $uploadDir = $uploadDirs[$uploadDirId] ?? null;
+            if ($uploadDir) {
+                return StringUtils::joinPaths($uploadDir['path'], $filepath);
             }
         }
         throw new DomainException('invalidFileSpec', Response::HTTP_INTERNAL_SERVER_ERROR);
@@ -53,23 +55,19 @@ class FileSystemResourceFileStorage implements ResourceFileStorage {
     }
 
     public function uploadDirsForResource(ResourceEntity $resource): array {
-        $uploadDirs = [];
-        foreach ($this->uploadDirs as $uploadDir) {
-            $id = $uploadDir['id'];
-            if (!isset($uploadDirs[$id])) {
-                $uploadDirs[$id] = [];
-            }
-            $uploadDirs[$id] = array_replace($uploadDirs[$id], $uploadDir);
-            $uploadDirs[$id]['path'] = $this->displayStrategyEvaluator->render($resource, $uploadDirs[$id]['path']);
-        }
+        $uploadDirs = $this->getMergedUploadDirs();
         foreach ($uploadDirs as &$uploadDir) {
-            if ($uploadDir['condition']) {
-                $conditionMet = trim($this->displayStrategyEvaluator->render($resource, $uploadDir['condition']));
-                if (!$conditionMet) {
-                    $uploadDir['path'] = null;
-                }
-            }
+            Assertion::notEmptyKey($uploadDir, 'label', 'label is required for resource upload dir: ' . $uploadDir['id']);
+            Assertion::notEmptyKey($uploadDir, 'path', 'path is required for resource upload dir: ' . $uploadDir['id']);
+            $uploadDir['path'] = $this->displayStrategyEvaluator->render($resource, $uploadDir['path']);
             if ($uploadDir['path']) {
+                if ($uploadDir['condition'] ?? false) {
+                    $conditionMet = trim($this->displayStrategyEvaluator->render($resource, $uploadDir['condition']));
+                    if (!$conditionMet) {
+                        $uploadDir['path'] = null;
+                        continue;
+                    }
+                }
                 if (!file_exists($uploadDir['path'])) {
                     try {
                         $this->fileSystemDriver->mkdirRecursive($uploadDir['path']);
@@ -79,13 +77,11 @@ class FileSystemResourceFileStorage implements ResourceFileStorage {
                 $uploadDir['path'] = StringUtils::unixSlashes(realpath($uploadDir['path']));
             }
         }
-        return array_values(
-            array_filter(
-                $uploadDirs,
-                function (array $config) {
-                    return $config['path'];
-                }
-            )
+        return array_filter(
+            $uploadDirs,
+            function (array $config) {
+                return $config['path'];
+            }
         );
     }
 
@@ -104,5 +100,19 @@ class FileSystemResourceFileStorage implements ResourceFileStorage {
             },
             $this->fileSystemDriver->listDirectory($fullPath)
         );
+    }
+
+    private function getMergedUploadDirs(): array {
+        if (!$this->mergedUploadDirs) {
+            $this->mergedUploadDirs = [];
+            $defaults = ['condition' => null, 'canBeUsedInResources' => true];
+            foreach ($this->uploadDirs as $uploadDir) {
+                $id = $uploadDir['id'];
+                $this->mergedUploadDirs[$id] = isset($this->mergedUploadDirs[$id])
+                    ? array_replace($this->mergedUploadDirs[$id], array_filter($uploadDir))
+                    : array_replace($defaults, $uploadDir);
+            }
+        }
+        return $this->mergedUploadDirs;
     }
 }

@@ -46,14 +46,35 @@ class FileSystemResourceFileStorageTest extends PHPUnit_Framework_TestCase {
             [
                 ['id' => 'here', 'path' => __DIR__, 'label' => 'This directory', 'condition' => null],
                 ['id' => 'there', 'path' => __DIR__, 'label' => 'This directory', 'condition' => null],
-                ['id' => 'here', 'label' => 'New directory', 'condition' => 'a'],
+                ['id' => 'here', 'path' => null, 'label' => 'New directory', 'condition' => 'a'],
             ],
             $this->displayStrategyEvaluator,
             $this->createMock(FileSystemDriver::class)
         );
         $uploadDirs = $this->storage->uploadDirsForResource($this->createResourceMock(1));
         $this->assertCount(2, $uploadDirs);
-        $this->assertEquals('New directory', $uploadDirs[0]['label']);
-        $this->assertEquals('a', $uploadDirs[0]['condition']);
+        $this->assertEquals('New directory', $uploadDirs['here']['label']);
+        $this->assertEquals('a', $uploadDirs['here']['condition']);
+    }
+
+    public function testCantCreateUploadDirWithoutLabel() {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->storage = new FileSystemResourceFileStorage(
+            [['id' => 'here', 'path' => __DIR__]],
+            $this->displayStrategyEvaluator,
+            $this->createMock(FileSystemDriver::class)
+        );
+        $this->storage->uploadDirsForResource($this->createResourceMock(1));
+    }
+
+    public function testSetsDefaultValuesIfOmitted() {
+        $this->storage = new FileSystemResourceFileStorage(
+            [['id' => 'here', 'path' => __DIR__, 'label' => 'This directory']],
+            $this->displayStrategyEvaluator,
+            $this->createMock(FileSystemDriver::class)
+        );
+        $uploadDir = $this->storage->uploadDirsForResource($this->createResourceMock(1))['here'];
+        $this->assertArrayHasKey('condition', $uploadDir);
+        $this->assertArrayHasKey('canBeUsedInResources', $uploadDir);
     }
 }
