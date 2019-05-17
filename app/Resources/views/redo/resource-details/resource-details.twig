@@ -81,16 +81,28 @@
                         <div class="download-options">
                             <span class="download-options-icon">{{ icon('book', 1.5) }}</span>
                             <fieldset>
-                                <div class="formats in-one-line">
+                                <div class="formats in-column">
+                                    {% set browsableAttachmentsFilesDir = resource | m('plik_zalacznik_strona_po_stronie') %}
                                     <a href="/resources/{{ resource.id }}/browse"
                                         title="{{ 'Browse resource' | trans }}">
-                                        {{ 'Browse' | trans }}
+                                        {{ (browsableAttachmentsFilesDir is not empty ? 'Browse resource' : 'Browse') | trans }}
                                     </a>
+                                    {% if browsableAttachmentsFilesDir is not empty %}
+                                        <a href="/resources/{{ resource.id }}/browse?attachment=1"
+                                            title="{{ 'Browse attachment' | trans }}">
+                                            {{ 'Browse attachment' | trans }}
+                                        </a>
+                                    {% endif %}
                                 </div>
                             </fieldset>
                         </div>
                     {% endif %}
                     {% include 'redo/resource-details/available-formats.twig' %}
+                    {% include 'redo/resource-details/available-formats.twig' with {
+                        pdfFilePath: resource | metadata('plik_zalacznik') | first,
+                        mobiFilePath: resource | metadata('plik_mobi_zalacznik') | first,
+                        legendText: 'Download attachment'
+                    } %}
                     {% set masterFilesDir = resource | m('katalog_plikow_master') %}
                     {% if masterFilesDir is not empty %}
                         <div class="download-options">
@@ -100,16 +112,25 @@
                                     id="archive-legend">
                                     <span title="{{ 'Download archives' | trans }}">{{ 'Download archives' | trans }}</span>
                                 </legend>
-                                <div class="formats in-one-line">
+                                <div class="formats in-column">
                                     <a href="/redo/resources/{{ resource.id }}/archive/{{ masterFilesDir|first.value }}"
                                         title="{{ 'Full resolution scans' | trans }}"
                                         aria-labelledby="archive-legend archive-tiff">
                                         <span id="archive-tiff">{{ 'Full resolution scans' | trans }}</span>
                                     </a>
+                                    {% set masterAttachmentsFilesDir = resource | m('zalacznik_katalog_plikow_master') %}
+                                    {% if masterAttachmentsFilesDir is not empty %}
+                                        <a href="/redo/resources/{{ resource.id }}/archive/{{ masterAttachmentsFilesDir|first.value }}"
+                                            title="{{ 'Full resolution attachment' | trans }}"
+                                            aria-labelledby="archive-legend archive-tiff">
+                                            <span id="archive-tiff">{{ 'Full resolution attachment' | trans }}</span>
+                                        </a>
+                                    {% endif %}
                                 </div>
                             </fieldset>
                         </div>
                     {% endif %}
+
                 {% else %}
                     <div class="download-options">
                         <span class="download-options-icon">{{ icon('resource-2', 1.5) }}</span>

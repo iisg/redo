@@ -93,9 +93,11 @@ Report an issue with the resource: Zgłoś problem z zasobem
 Share on Facebook: Udostępnij na Facebooku
 See in admin panel: Zobacz w panelu administracyjnym
 Browse resource: Przeglądaj zasób
+Browse attachment: Przeglądaj załącznik
 Download resource: Pobierz zasób
-Download resource in PDF format: Pobierz zasób w formacie PDF
-Download resource in EPUB format: Pobierz zasób w formacie EPUB
+Download attachment: Pobierz załącznik
+Download in PDF format: Pobierz w formacie PDF
+Download in EPUB format: Pobierz w formacie EPUB
 Download resource in MOBI format: Pobierz zasób w formacie MOBI
 Download resource data in BibTeX format: Pobierz informacje o zasobie w formacie BibTeX
 Download resource data in EndNote format: Pobierz informacje o zasobie w formacie EndNote
@@ -145,6 +147,7 @@ Report: Zgłoś
 Congratulations! Your remark has been reported.: Gratulacje! Twoja uwaga została zgłoszona.
 Save: Zapisz
 Full resolution scans: Skany w pełnej rozdzielczości
+Full resolution attachment: Załącznik w pełnej rozdzielczości
 Download archives: Pobierz archiwa
 
 title: tytuł

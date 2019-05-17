@@ -1,22 +1,26 @@
 {% set browsingAvailable = browsingAvailable is defined and browsingAvailable %}
-{% set pdfFilePath = resource | metadata('plik_pdf_podstawowy') | first %}
-{% if not pdfFilePath %}
-    {% set pdfFilePath = resource | metadata('zasob_plik') | first %}
+{% if pdfFilePath is not defined %}
+    {% set pdfFilePath = resource | metadata('plik_pdf_podstawowy') | first %}
+    {% if not pdfFilePath %}
+        {% set pdfFilePath = resource | metadata('zasob_plik') | first %}
+    {% endif %}
 {% endif %}
-{% set mobiFilePath = resource | metadata('plik_mobi') | first %}
+{% if mobiFilePath is not defined %}
+    {% set mobiFilePath = resource | metadata('plik_mobi') | first %}
+{% endif %}
 
 {% if browsingAvailable or pdfFilePath or mobiFilePath %}
     {% set downloadFormats = [
         {
             url: '/redo/resources/' ~ resource.id ~ '/file/' ~ pdfFilePath,
             name: 'PDF',
-            title: 'Download resource in PDF format' | trans,
+            title: 'Download in PDF format' | trans,
             fileAvailable: pdfFilePath is not empty
         },
         {
             url: '/redo/resources/' ~ resource.id ~ '/file/' ~ mobiFilePath,
             name: 'EPUB',
-            title: 'Download resource in EPUB format' | trans,
+            title: 'Download in EPUB format' | trans,
             fileAvailable: mobiFilePath is not empty
         }
     ] %}
@@ -25,7 +29,7 @@
         <fieldset>
             {% if hideGroupName is not defined or not hideGroupName %}
                 <legend align="left">
-                    <span>{{ 'Download resource' | trans }}</span>
+                    <span>{{ (legendText is defined ? legendText: 'Download resource') | trans }}</span>
                 </legend>
             {% endif %}
             <div class="formats {{ browsingAvailable ? 'in-column' }} ">

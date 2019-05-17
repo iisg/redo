@@ -1,4 +1,5 @@
-{% set imageData = resource | metadataImageFiles('pliki_strona_po_stronie') %}
+{% set browsableMetadataName = app.request.get('attachment') ? 'plik_zalacznik_strona_po_stronie' : 'pliki_strona_po_stronie' %}
+{% set imageData = resource | metadataImageFiles(browsableMetadataName) %}
 {% set canBrowse = resource.resourceClass == 'books' and canView(resource) and imageData is not empty %}
 {% extends 'redo/layout.twig' %}
 
