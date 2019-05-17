@@ -40,3 +40,20 @@
     padding: $default-gap-size / 2;
   }
 }
+
+.home-page-carousel {
+  .item {
+    height: 300px;
+    background-size: 1000px;
+    background-repeat: repeat;
+    .carousel-caption-title {
+      display: block;
+      padding: 5px 15px;
+      background: rgba(black, .3);
+      font-size: 1.3em;
+      margin-bottom: 5px;
+      color: white;
+      text-decoration: none;
+    }
+  }
+}
