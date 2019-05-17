@@ -113,11 +113,17 @@
                                     <span title="{{ 'Download archives' | trans }}">{{ 'Download archives' | trans }}</span>
                                 </legend>
                                 <div class="formats in-column">
-                                    <a href="/redo/resources/{{ resource.id }}/archive/{{ masterFilesDir|first.value }}"
-                                        title="{{ 'Full resolution scans' | trans }}"
-                                        aria-labelledby="archive-legend archive-tiff">
-                                        <span id="archive-tiff">{{ 'Full resolution scans' | trans }}</span>
-                                    </a>
+                                    <form action="/redo/resources/{{ resource.id }}/archive/{{ masterFilesDir|first.value }}"
+                                        id="download-master-form"
+                                        method="post">
+                                        <button class="g-recaptcha"
+                                            title="{{ 'Full resolution scans' | trans }}"
+                                            data-sitekey="{{ getFrontendConfig().captcha_key }}"
+                                            data-callback='onSubmit'
+                                            aria-labelledby="archive-legend archive-tiff">
+                                            <span id="archive-tiff">{{ 'Full resolution scans' | trans }}</span>
+                                        </button>
+                                    </form>
                                     {% set masterAttachmentsFilesDir = resource | m('zalacznik_katalog_plikow_master') %}
                                     {% if masterAttachmentsFilesDir is not empty %}
                                         <a href="/redo/resources/{{ resource.id }}/archive/{{ masterAttachmentsFilesDir|first.value }}"
@@ -232,5 +238,12 @@
             </div>
         {% endif %}
     </div>
+    <script src="https://www.google.com/recaptcha/api.js"></script>
+    <script>
+      function onSubmit(token) {
+        document.getElementById("download-master-form").submit();
+        grecaptcha.reset();
+      }
+    </script>
     {% include "redo/footer.twig" %}
 {% endblock %}

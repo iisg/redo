@@ -30,6 +30,10 @@ class Configuration implements ConfigurationInterface {
                     ->arrayNode('searchable_resource_classes')->prototype('scalar')->defaultValue([])->end()->end()
                     ->arrayNode('facets')->prototype('scalar')->defaultValue([])->end()->end()
                 ->end()->end()
+                ->arrayNode('captcha')->addDefaultsIfNotSet()->children()
+                    ->scalarNode('public_key')->defaultValue('')->end()
+                    ->scalarNode('private_key')->defaultValue('')->end()
+                ->end()
             ->end();
         // @formatter:on
         // @codingStandardsIgnoreEnd

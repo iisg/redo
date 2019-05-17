@@ -133,6 +133,9 @@ services:
     arguments:
       $exposedEndpoints: '%repeka.exposed_endpoints%'
 
+  Repeka\Application\Twig\FrontendConfig:
+    $frontendConfigs: !tagged repeka.frontend_config_provider
+
   Repeka\Application\Twig\ResourcesTwigLoader:
     arguments:
       $templatesResourceClass: '%repeka.templates_resource_class%'

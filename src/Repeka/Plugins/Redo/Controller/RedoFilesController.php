@@ -1,6 +1,8 @@
 <?php
 namespace Repeka\Plugins\Redo\Controller;
 
+use ReCaptcha\ReCaptcha;
+use Repeka\Application\Controller\Api\ResourcesFilesController;
 use Repeka\Application\Cqrs\CommandBusAware;
 use Repeka\Application\Repository\Transactional;
 use Repeka\Domain\Entity\ResourceEntity;
@@ -36,10 +38,7 @@ class RedoFilesController extends Controller {
      * @Security("is_granted('METADATA_VISIBILITY', resource)")
      */
     public function fileAction(Request $request, ResourceEntity $resource, string $filepath) {
-        $response = $this->forward(
-            'Repeka\Application\Controller\Api\ResourcesFilesController::fileAction',
-            ['resource' => $resource, 'filepath' => $filepath]
-        );
+        $response = $this->forward(ResourcesFilesController::class . '::fileAction', ['resource' => $resource, 'filepath' => $filepath]);
         if ($response->isSuccessful()) {
             $this->logEndpointUsage($resource, $request);
         }
@@ -52,7 +51,7 @@ class RedoFilesController extends Controller {
      */
     public function browseAction(Request $request, ResourceEntity $resource) {
         $response = $this->forward(
-            'Repeka\Application\Controller\Site\ResourcesExposureController::exposeResourceTemplateAction',
+            ResourcesFilesController::class . '::exposeResourceTemplateAction',
             [
                 'request' => $request,
                 'resourceId' => $resource,
@@ -68,21 +67,30 @@ class RedoFilesController extends Controller {
     }
 
     /**
-     * @Route("/redo/resources/{resource}/archive/{path}", requirements={"path"=".*"})
-     * @Method("GET")
+     * @Route("/redo/resources/{resource}/archive/{path}", requirements={"path"=".*"}, methods={"POST"})
      * @Security("is_granted('METADATA_VISIBILITY', resource)")
      */
     public function streamCompressedFileAction(Request $request, ResourceEntity $resource, string $path) {
         $this->denyAccessUnlessGranted('FILE_DOWNLOAD', ['resource' => $resource, 'filepath' => $path]);
-        ini_set('max_execution_time', 120);
-        $response = new StreamedResponse(
-            function () use ($path, $resource) {
-                $outputName = substr($path, strpos($path, '/') + 1) . '.zip';
-                $this->createZipFile($this->resourceFileStorage->getFileSystemPath($resource, $path), $outputName);
-            }
-        );
-        $this->logEndpointUsage($resource, $request);
-        return $response;
+        if ($this->captchaVerified($request)) {
+            ini_set('max_execution_time', 120);
+            $response = new StreamedResponse(
+                function () use ($path, $resource) {
+                    $outputName = substr($path, strpos($path, '/') + 1) . '.zip';
+                    $this->createZipFile($this->resourceFileStorage->getFileSystemPath($resource, $path), $outputName);
+                }
+            );
+            $this->logEndpointUsage($resource, $request);
+            return $response;
+        }
+        return $this->redirect('/resources/' . $resource->getId());
+    }
+
+    private function captchaVerified(Request $request): bool {
+        $recaptcha = new ReCaptcha($this->getParameter('redo.captcha_private_key'));
+        $captchaParams = $request->request->get('g-recaptcha-response');
+        $response = $recaptcha->verify($captchaParams, $request->getClientIp());
+        return $response->isSuccess();
     }
 
     public function createZipFile(string $path, string $outputName) {

@@ -41,19 +41,23 @@ class FrontendConfig extends \Twig_Extension {
     private $locale;
     /** @var ResourceNormalizer */
     private $resourceNormalizer;
+    /** @var iterable|FrontendConfigProvider[] */
+    private $frontendConfigs;
 
     public function __construct(
         FrontendLocaleProvider $frontendLocaleProvider,
         MetadataConstraintManager $metadataConstraintManager,
         ContainerInterface $container,
         RequestStack $requestStack,
-        ResourceNormalizer $resourceNormalizer
+        ResourceNormalizer $resourceNormalizer,
+        iterable $frontendConfigs
     ) {
         $this->frontendLocaleProvider = $frontendLocaleProvider;
         $this->metadataConstraintManager = $metadataConstraintManager;
         $this->container = $container;
         $this->locale = $requestStack->getCurrentRequest() ? $requestStack->getCurrentRequest()->getLocale() : '';
         $this->resourceNormalizer = $resourceNormalizer;
+        $this->frontendConfigs = $frontendConfigs;
     }
 
     public function getFunctions() {
@@ -65,7 +69,7 @@ class FrontendConfig extends \Twig_Extension {
 
     public function getConfig(): array {
         $parameters = array_map([$this->container, 'getParameter'], self::PUBLIC_PARAMETERS);
-        return array_merge(
+        $config = array_merge(
             $parameters,
             [
                 'control_constraints' => $this->getConfigurableMetadataConstraints(),
@@ -75,6 +79,10 @@ class FrontendConfig extends \Twig_Extension {
                 'userIp' => $this->getClientIp(),
             ]
         );
+        foreach ($this->frontendConfigs as $frontendConfig) {
+            $config = array_merge($config, $frontendConfig->getConfig());
+        }
+        return $config;
     }
 
     public function getBundles(): array {

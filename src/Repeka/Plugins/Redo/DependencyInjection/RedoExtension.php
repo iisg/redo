@@ -16,5 +16,7 @@ class RedoExtension extends ConfigurableExtension {
         $container->setParameter('redo.koha_url', $mergedConfig['koha_url']);
         $container->setParameter('redo.user_data_mapping', $mergedConfig['user_data_mapping']);
         $container->setParameter('redo.fts_config', $mergedConfig['fts']);
+        $container->setParameter('redo.captcha_public_key', $mergedConfig['captcha']['public_key']);
+        $container->setParameter('redo.captcha_private_key', $mergedConfig['captcha']['private_key']);
     }
 }

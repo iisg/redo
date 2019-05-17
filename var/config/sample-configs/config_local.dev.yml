@@ -109,6 +109,9 @@ redo:
     filterable_metadata_ids: [tytul, opis, parent_path, wydzial, skanista, nadzorujacy]
     searchable_resource_classes: [books]
     facets: [kindId, skanista]
+  captcha:
+    public_key: 6LepBqQUAAAAAL6-5hTmjGGawPjeR7UEx8YUcaSg
+    private_key: 6LepBqQUAAAAADU-EQhUQ6EIj1q59f7Q-1cjJSNq
 
 # Downlad wkhtmltopdf archive for your OS from https://github.com/wkhtmltopdf/wkhtmltopdf/releases/latest
 # and extract it to var directory in the project root; ensure the path below is ok

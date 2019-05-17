@@ -4,6 +4,7 @@ namespace Repeka\Application;
 use Repeka\Application\Authentication\TokenAuthenticator;
 use Repeka\Application\Command\Cyclic\CyclicCommand;
 use Repeka\Application\Security\Voters\FileDownloadVoter;
+use Repeka\Application\Twig\FrontendConfigProvider;
 use Repeka\Domain\Cqrs\Event\CommandEventsListener;
 use Repeka\Domain\Metadata\MetadataValueAdjuster\MetadataValueAdjuster;
 use Repeka\Domain\Validation\MetadataConstraints\AbstractMetadataConstraint;
@@ -20,5 +21,6 @@ class RepekaBundle extends Bundle {
         $container->registerForAutoconfiguration(AbstractMetadataConstraint::class)->addTag('repeka.metadata_constraint');
         $container->registerForAutoconfiguration(MetadataValueAdjuster::class)->addTag('repeka.metadata_value_adjuster');
         $container->registerForAutoconfiguration(FileDownloadVoter::class)->addTag('repeka.file_download_voter');
+        $container->registerForAutoconfiguration(FrontendConfigProvider::class)->addTag('repeka.frontend_config_provider');
     }
 }
