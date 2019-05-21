@@ -3,6 +3,7 @@ namespace Repeka\Plugins\Redo\Controller;
 
 use ReCaptcha\ReCaptcha;
 use Repeka\Application\Controller\Api\ResourcesFilesController;
+use Repeka\Application\Controller\Site\ResourcesExposureController;
 use Repeka\Application\Cqrs\CommandBusAware;
 use Repeka\Application\Repository\Transactional;
 use Repeka\Domain\Entity\ResourceEntity;
@@ -51,7 +52,7 @@ class RedoFilesController extends Controller {
      */
     public function browseAction(Request $request, ResourceEntity $resource) {
         $response = $this->forward(
-            ResourcesFilesController::class . '::exposeResourceTemplateAction',
+            ResourcesExposureController::class . '::exposeResourceTemplateAction',
             [
                 'request' => $request,
                 'resourceId' => $resource,
