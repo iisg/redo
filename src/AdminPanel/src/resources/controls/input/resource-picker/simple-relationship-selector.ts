@@ -83,8 +83,10 @@ export class SimpleRelationshipSelector implements ComponentAttached {
       });
   }
 
-  private prepareQuery(): ResourceListQuery {
-    const query = this.resourceRepository.getTeaserListQuery();
+  private prepareQuery(itemsPerPage: number = 30, page: number = 1): ResourceListQuery {
+    const query = this.resourceRepository.getTeaserListQuery()
+      .setCurrentPageNumber(page)
+      .setResultsPerPage(itemsPerPage);
     if (this.resourceClass) {
       query.filterByResourceClasses(this.resourceClass);
     }
@@ -102,10 +104,8 @@ export class SimpleRelationshipSelector implements ComponentAttached {
     let labelFilter = {};
     labelFilter[SystemMetadata.RESOURCE_LABEL.id] = term != '' ? '^' + term.replace(/\s+/g, '.+') : '';
     this.contentsFilter = {...this.contentsFilter, ...labelFilter};
-    return this.prepareQuery()
+    return this.prepareQuery(itemsPerPage, page)
       .sortByMetadataIds([new ResourceSort('id')])
-      .setResultsPerPage(itemsPerPage)
-      .setCurrentPageNumber(page)
       .get().then(pageResult => ({
         results: pageResult,
         pagination: {more: itemsPerPage < pageResult.total, itemsPerPage: itemsPerPage}
