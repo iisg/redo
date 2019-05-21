@@ -3,6 +3,7 @@ namespace Repeka\Tests\Application\Elasticsearch\Model;
 
 use Elastica\Document;
 use Elastica\Type;
+use Psr\Log\LoggerInterface;
 use Repeka\Application\Elasticsearch\Mapping\FtsConstants;
 use Repeka\Application\Elasticsearch\Model\ElasticSearch;
 use Repeka\Application\Elasticsearch\Model\ElasticSearchContext;
@@ -54,7 +55,7 @@ class ESResourceTest extends ElasticsearchTest {
         $elasticSearchQueryCreatorComposite = $this->createMock(ElasticSearchQueryCreatorComposite::class);
         $container = $this->createMock(ContainerInterface::class);
         $container->method('get')->willReturn($this->createMock(ResourceFileStorage::class));
-        $esContentsAdjuster = new ESContentsAdjuster($metadataRepository, $container);
+        $esContentsAdjuster = new ESContentsAdjuster($metadataRepository, $container, $this->createMock(LoggerInterface::class));
         $this->indexMock->method('getType')->with(FtsConstants::ES_DOCUMENT_TYPE)->willReturn($typeMock);
         $res = new ElasticSearch(
             $this->clientMock,

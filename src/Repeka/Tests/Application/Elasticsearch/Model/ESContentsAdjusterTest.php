@@ -1,7 +1,7 @@
 <?php
 namespace Repeka\Tests\Application\Elasticsearch\Model;
 
-use Repeka\Application\Elasticsearch\Mapping\FtsConstants;
+use Psr\Log\LoggerInterface;
 use Repeka\Application\Elasticsearch\Model\ESContentsAdjuster;
 use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Entity\ResourceEntity;
@@ -33,7 +33,7 @@ class ESContentsAdjusterTest extends \PHPUnit_Framework_TestCase {
         $resourceFileStorage->method('getFileContents')->willReturn('mocked content');
         $resourceFileStorage->method('getDirectoryContents')->willReturn(['file.txt', __DIR__, 'file2.txt', 'file.pdf']);
         $container->method('get')->willReturn($resourceFileStorage);
-        $this->esContentsAdjuster = new ESContentsAdjuster($metadataRepository, $container);
+        $this->esContentsAdjuster = new ESContentsAdjuster($metadataRepository, $container, $this->createMock(LoggerInterface::class));
     }
 
     public function testAdjustEmptyContents() {

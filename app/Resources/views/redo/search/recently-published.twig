@@ -1,0 +1,47 @@
+{% extends "redo/layout.twig" %}
+
+{% block content %}
+    {% include "redo/title-bar.twig" %}
+    {% include "redo/menu.twig" %}
+
+    {% set days = app.request.query.get('days') ?? 10 %}
+    {% set totalCount = results.totalHits %}
+    <div class="recently-published-container">
+        <h1 class="title">{{ "Recently published resources" | trans }}</h1>
+        <div class="recently-published-information">
+            <div class="recently-published-comment">{{ '%resourcesCount% resources were published in the last %days% days.' | trans({'%days%': days, '%resourcesCount%': totalCount}) }}</div>
+            <form
+                class="change-days-form"
+                action=""
+                method="get">
+                <label for="days">{{ "Change number of days:" | trans }}</label>
+                <input
+                    type="number"
+                    name="days"
+                    value="{{ days }}">
+                <button class="default">{{ "Show" | trans }}</button>
+            </form>
+        </div>
+        <div class="recently-published-results"
+            role="main">
+            {% if results | length == 0 %}
+                <h1 class="no-margin-top">{{ 'No results' | trans }}.</h1>
+            {% else %}
+                {% include 'redo/search/pagination.twig' with {'route_params': {'days': days}} %}
+                {% set resources = [] %}
+                <div>
+                    {% for searchResult in results %}
+                        {% set resource = resource(searchResult.id) %}
+                        {% include "redo/resources-list-element.twig" %}
+                        {% if not loop.last %}
+                            <hr>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            {% endif %}
+            {% include 'redo/search/pagination.twig' with {'route_params': {'days': days}} %}
+        </div>
+    </div>
+
+    {% include "redo/footer.twig" %}
+{% endblock %}

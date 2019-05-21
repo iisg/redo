@@ -1,0 +1,31 @@
+$download-options-flex-grow: 1;
+
+.recently-published-container {
+  .recently-published-information {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    .recently-published-comment {
+      display: flex;
+      flex-grow: 10000;
+      flex-wrap: wrap;
+    }
+    .change-days-form {
+      margin-left: auto;
+      max-width: 100%;
+      flex-grow: 1;
+
+    }
+  }
+  .recently-published-results {
+    max-width: 100%;
+    margin-top: $default-gap-size * 3 / 4;
+    margin-bottom: $default-gap-size * 3 / 4;
+    padding-left: $default-gap-size * 5 / 4;
+    padding-right: $default-gap-size * 5 / 4;
+  }
+
+  .recently-published-results {
+
+  }
+}

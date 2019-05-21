@@ -2,6 +2,7 @@
 namespace Repeka\Plugins\Redo\Controller;
 
 use Assert\Assertion;
+use DateTime;
 use Elastica\ResultSet;
 use Repeka\Application\Cqrs\CommandBusAware;
 use Repeka\Application\Elasticsearch\Mapping\FtsConstants;
@@ -68,6 +69,30 @@ class RedoFtsSearchController extends Controller {
             'filterableMetadataList' => $this->findFilterableMetadata(),
             'searchableResourceClasses' => $this->ftsConfig['searchable_resource_classes'] ?? [],
         ];
+    }
+
+    /**
+     * @Route("/recently-published")
+     * @Template("/redo/search/recently-published.twig")
+     */
+    public function recentlyPublishedAction(Request $request) {
+        $days = intval($request->query->get('days', 10)) ?: 10;
+        $sinceDate = new DateTime("now -$days day");
+        $sinceDate = $sinceDate->format(DATE_ATOM);
+        $responseData = [
+            'searchableResourceClasses' => $this->ftsConfig['searchable_resource_classes'] ?? [],
+        ];
+        $metadataFilters = ['data_utworzenia_rekordu' => ['from' => $sinceDate]];
+        $page = intval($request->get('page', 1));
+        if ($page < 1) {
+            $page = 1;
+        }
+        $results = $this->fetchSearchResults($request, $metadataFilters, null, $page);
+        $responseData['results'] = $results;
+        $pagination = $this->paginator->paginate($page, $this->resultsPerPage, $results->getTotalHits());
+        $responseData['pagination'] = $pagination;
+        return $responseData;
+        return [];
     }
 
     /**

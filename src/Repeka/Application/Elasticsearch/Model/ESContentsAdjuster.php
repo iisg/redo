@@ -2,6 +2,7 @@
 namespace Repeka\Application\Elasticsearch\Model;
 
 use Psr\Container\ContainerInterface;
+use Psr\Log\LoggerInterface;
 use Repeka\Application\Elasticsearch\Mapping\FtsConstants;
 use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Entity\ResourceEntity;
@@ -16,18 +17,16 @@ class ESContentsAdjuster {
 
     /** @var MetadataRepository */
     private $metadataRepository;
+    /** @var LoggerInterface */
+    private $logger;
 
-    public function __construct(
-        MetadataRepository $metadataRepository,
-        ContainerInterface $container
-    ) {
+    public function __construct(MetadataRepository $metadataRepository, ContainerInterface $container, LoggerInterface $logger) {
         $this->metadataRepository = $metadataRepository;
         $this->container = $container;
+        $this->logger = $logger;
     }
 
-    /**
-     * @SuppressWarnings("PHPMD.CyclomaticComplexity")
-     */
+    /** @SuppressWarnings("PHPMD.CyclomaticComplexity") */
     public function adjustContents(ResourceEntity $resource, $contents): array {
         $resourceFileStorage = $this->container->get(ResourceFileStorage::class);
         $adjustedContents = [];
@@ -63,17 +62,17 @@ class ESContentsAdjuster {
         return $adjustedContents;
     }
 
-    private function adjustMetadataValuesToMappings(
-        string $control,
-        $value,
-        ResourceEntity $resource,
-        ResourceFileStorage $storage
-    ) {
-        if ($control == MetadataControl::FILE) {
-            return $this->adjustSingleFile($resource, $value, $storage);
-        }
-        if ($control == MetadataControl::DIRECTORY) {
-            return $this->adjustDirectory($resource, $value, $storage);
+    private function adjustMetadataValuesToMappings(string $control, $value, ResourceEntity $resource, ResourceFileStorage $storage) {
+        try {
+            if ($control == MetadataControl::FILE) {
+                return $this->adjustSingleFile($resource, $value, $storage);
+            }
+            if ($control == MetadataControl::DIRECTORY) {
+                return $this->adjustDirectory($resource, $value, $storage);
+            }
+        } catch (DomainException $e) {
+            $this->logger->warning('Error when indexing files form resource #' . $resource->getId(), ['message' => $e->getMessage()]);
+            return '';
         }
         return $value;
     }
@@ -91,12 +90,9 @@ class ESContentsAdjuster {
 
     private function adjustSingleFile(ResourceEntity $resource, string $path, ResourceFileStorage $storage): string {
         if ($this->formatSupportedByEs($path)) {
-            try {
-                $fileContents = $storage->getFileContents($resource, $path);
-                if (mb_detect_encoding($fileContents, FtsConstants::SUPPORTED_ENCODING_TYPES, true)) {
-                    return $fileContents;
-                }
-            } catch (DomainException $e) {
+            $fileContents = $storage->getFileContents($resource, $path);
+            if (mb_detect_encoding($fileContents, FtsConstants::SUPPORTED_ENCODING_TYPES, true)) {
+                return $fileContents;
             }
         }
         return '';
