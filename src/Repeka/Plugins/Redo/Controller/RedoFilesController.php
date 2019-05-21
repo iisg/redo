@@ -40,7 +40,28 @@ class RedoFilesController extends Controller {
             'Repeka\Application\Controller\Api\ResourcesFilesController::fileAction',
             ['resource' => $resource, 'filepath' => $filepath]
         );
-        if ($response->getStatusCode() == 200) {
+        if ($response->isSuccessful()) {
+            $this->logEndpointUsage($resource, $request);
+        }
+        return $response;
+    }
+
+    /**
+     * @Route("/resources/{resource}/browse")
+     * @Method("GET")
+     */
+    public function browseAction(Request $request, ResourceEntity $resource) {
+        $response = $this->forward(
+            'Repeka\Application\Controller\Site\ResourcesExposureController::exposeResourceTemplateAction',
+            [
+                'request' => $request,
+                'resourceId' => $resource,
+                'headers' => [],
+                'template' => 'redo/resource-details/image-reader.twig',
+                'endpointUsageTrackingKey' => 'resourceBrowse',
+            ]
+        );
+        if ($response->isSuccessful()) {
             $this->logEndpointUsage($resource, $request);
         }
         return $response;

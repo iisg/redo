@@ -98,9 +98,6 @@ repeka:
       endpointUsageTrackingKey: rss
       headers:
         Content-Type: 'application/rss+xml'
-    /resources/{resourceId}/browse:
-      template: redo/resource-details/image-reader.twig
-      endpointUsageTrackingKey: resourceBrowse
 m6_statsd:
   servers:
     default:
