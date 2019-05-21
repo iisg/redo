@@ -1,7 +1,6 @@
 <?php
 namespace Repeka\Application\Command\FullTextSearch;
 
-use Repeka\Application\Cqrs\Middleware\FirewallMiddleware;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\StringInput;
@@ -16,9 +15,9 @@ class FtsInitializeCommand extends Command {
 
     /** @inheritdoc */
     protected function execute(InputInterface $input, OutputInterface $output) {
-        ini_set('memory_limit', '1G');
+        ini_set('memory_limit', '2G');
         $this->getApplication()->setAutoExit(false);
         $this->getApplication()->run(new StringInput('repeka:elasticsearch:create-index --delete-if-exists'), $output);
-        $this->getApplication()->run(new StringInput('repeka:fts:index-database'), $output);
+        $this->getApplication()->run(new StringInput('repeka:fts:index-resources'), $output);
     }
 }

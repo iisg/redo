@@ -21,7 +21,7 @@ class FtsIndexResourcesFromDatabaseCommandIntegrationTest extends IntegrationTes
     public function testMappingDatabaseToElasticsearchIndexWhenDoesNotExist() {
         $this->executeCommand('repeka:elasticsearch:delete-index');
         $this->assertFalse($this->esIndexManager->exists());
-        $output = $this->executeCommand('repeka:fts:index-database');
+        $output = $this->executeCommand('repeka:fts:index-resources');
         $this->assertContains('Index ' . $this->esIndexManager->getIndex() . 'does not exist', $output);
         $this->assertFalse($this->esIndexManager->exists());
     }
@@ -29,7 +29,7 @@ class FtsIndexResourcesFromDatabaseCommandIntegrationTest extends IntegrationTes
     public function testMappingDatabaseToElasticsearchIndexWhenExists() {
         $this->executeCommand('repeka:elasticsearch:create-index' . ' --delete-if-exists');
         $this->assertTrue($this->esIndexManager->exists());
-        $output = $this->executeCommand('repeka:fts:index-database');
-        $this->assertContains('All resources from the database have been inserted', $output);
+        $output = $this->executeCommand('repeka:fts:index-resources');
+        $this->assertContains('have been indexed', $output);
     }
 }
