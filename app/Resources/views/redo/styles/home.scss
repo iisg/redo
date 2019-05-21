@@ -23,14 +23,10 @@
       .input-with-button {
         input {
           border-right: none;
-          border-top-color: transparent;
-          border-bottom-color: transparent;
-          border-left-color: transparent;
-          &:focus {
-            border-top-color: $main-theme-color;
-            border-bottom-color: $main-theme-color;
-            border-left-color: $main-theme-color;
-          }
+          border-top-color: $main-theme-color;
+          border-bottom-color: $main-theme-color;
+          border-left-color: $main-theme-color;
+
         }
       }
     }
@@ -42,10 +38,12 @@
 }
 
 .home-page-carousel {
-  .item {
+  margin-top: $default-gap-size;
+  .carousel-inner > .item {
     height: 300px;
     background-size: 1000px;
     background-repeat: repeat;
+    transition: transform 1.2s ease-in-out !important;
     .carousel-caption-title {
       display: block;
       padding: 5px 15px;

@@ -1,16 +1,16 @@
 {% set carouselResource = resources({resultsPerPage:1, contentsFilter: {cms_config_id: '^home-images$'}, resourceClass: 'cms'}) %}
 {% if carouselResource|length %}
+    {% set carouselInterval = 16000 %}
     {% set carouselResource = carouselResource[0] %}
     {% set images = carouselResource|m('obrazek_do_karuzeli') %}
     {% if images|length %}
         <div class="home-page-carousel">
-            <div id="carousel-example-generic"
+            <div id="redo-home-carousel"
                 class="carousel slide"
-                data-ride="carousel"
-                data-interval="8000">
+                data-interval="{{ carouselInterval }}">
                 <ol class="carousel-indicators">
                     {% for image in images %}
-                        <li data-target="#carousel-example-generic"
+                        <li data-target="#redo-home-carousel"
                             data-slide-to="{{ loop.index }}"
                             class="{% if loop.first %}active{% endif %}"></li>
                     {% endfor %}
@@ -34,7 +34,7 @@
 
                 <!-- Controls -->
                 <a class="left carousel-control"
-                    href="#carousel-example-generic"
+                    href="#redo-home-carousel"
                     role="button"
                     data-slide="prev">
                     <span class="glyphicon glyphicon-chevron-left"
@@ -42,7 +42,7 @@
                     <span class="sr-only">Previous</span>
                 </a>
                 <a class="right carousel-control"
-                    href="#carousel-example-generic"
+                    href="#redo-home-carousel"
                     role="button"
                     data-slide="next">
                     <span class="glyphicon glyphicon-chevron-right"
@@ -53,17 +53,29 @@
         </div>
         <script>
           document.addEventListener('DOMContentLoaded', function () {
-            function animateCarouselItemBackground(item) {
-              var newX = parseInt($(item).css('backgroundPositionX')) + (Math.random() * 120 * (Math.random() > .5 ? 1 : -1));
-              var newY = parseInt($(item).css('backgroundPositionY')) + (Math.random() * 120 * (Math.random() > .5 ? 1 : -1));
-              var newBS = parseInt($(item).css('backgroundSize')) + (Math.random() * 50 * (Math.random() > .5 ? 1 : -1));
-              $(item).animate({backgroundPositionX: newX, backgroundPositionY: newY, backgroundSize: newBS}, 10000, 'linear');
-            }
+            (function initCarousel() {
+              if ($.fn.carousel) {
+                jQuery.fn.carousel.Constructor.TRANSITION_DURATION = 1200;
+                $('#redo-home-carousel').carousel();
+                $("#redo-home-carousel .item").each(animateCarouselItemBackground);
+              } else {
+                setTimeout(initCarousel, 100);
+              }
+            })();
 
-            $('#carousel-example-generic').on('slid.bs.carousel', function (event) {
-              animateCarouselItemBackground(event.relatedTarget);
-            });
-            animateCarouselItemBackground($("#carousel-example-generic .item")[0]);
+            function animateCarouselItemBackground() {
+              var item = this;
+              $(item).stop(true);
+              var newX = parseInt($(item).css('backgroundPositionX')) + (Math.random() * 150 * (Math.random() > .5 ? 1 : -1));
+              var newY = parseInt($(item).css('backgroundPositionY')) + (Math.random() * 150 * (Math.random() > .5 ? 1 : -1));
+              var newBS = parseInt($(item).css('backgroundSize')) + (Math.random() * 50 * (Math.random() > .5 ? 1 : -1));
+              $(item).animate(
+                {backgroundPositionX: newX, backgroundPositionY: newY, backgroundSize: newBS},
+                  {{ carouselInterval }},
+                'linear',
+                animateCarouselItemBackground.bind(this)
+              );
+            }
           });
         </script>
     {% endif %}

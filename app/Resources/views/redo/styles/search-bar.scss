@@ -80,5 +80,4 @@ $advanced-options-column-border-width: 1px;
 :not(.title-with-search-bar) > .search-bar {
   flex-shrink: 0; // Required by Chromium.
   padding: $default-gap-size / 2;
-  @extend .top-panel;
 }
