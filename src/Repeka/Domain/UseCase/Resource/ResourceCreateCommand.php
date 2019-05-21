@@ -3,6 +3,7 @@ namespace Repeka\Domain\UseCase\Resource;
 
 use Repeka\Domain\Constants\SystemMetadata;
 use Repeka\Domain\Constants\SystemRole;
+use Repeka\Domain\Cqrs\AdjustableCommand;
 use Repeka\Domain\Cqrs\AuditedCommand;
 use Repeka\Domain\Cqrs\FirewalledCommand;
 use Repeka\Domain\Cqrs\ResourceClassAwareCommand;
@@ -10,7 +11,7 @@ use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Entity\User;
 
-class ResourceCreateCommand extends ResourceClassAwareCommand implements AuditedCommand, FirewalledCommand {
+class ResourceCreateCommand extends ResourceClassAwareCommand implements AuditedCommand, FirewalledCommand, AdjustableCommand {
     private $kind;
     private $contents;
 

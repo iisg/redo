@@ -73,6 +73,10 @@ class EmailMessage {
         }
     }
 
+    public function toSwiftMessage(): \Swift_Message {
+        return $this->message;
+    }
+
     private function getValidEmailAddresses(string $emails): array {
         return array_values(
             array_unique(

@@ -33,6 +33,10 @@ repeka:
       icon: mail
       admins:
         - Username: admin
+    - name: features
+      icon: publish
+      admins:
+        - Username: admin
   metadata_groups:
     - id: basic
       label:

@@ -13,4 +13,10 @@ interface UserRepository {
     public function findByUserData(ResourceEntity $resource): User;
 
     public function save(User $user): User;
+
+    /**
+     * @param string $username
+     * @return ?User
+     */
+    public function loadUserByUsername($username);
 }

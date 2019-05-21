@@ -32,6 +32,8 @@ class TestContainerPass implements CompilerPassInterface {
         \Repeka\Domain\Service\ResourceFileStorage::class,
         \Repeka\Domain\Validation\Rules\ResourceContentsCorrectStructureRule::class,
         \Repeka\Plugins\Cmi\Model\CmiFlowHelper::class,
+        \Repeka\Plugins\Cmi\Model\EmailQueue::class,
+        \Repeka\Plugins\EmailSender\Model\EmailSender::class,
         \Repeka\Plugins\MetadataValueSetter\Model\RepekaMetadataValueSetterResourceWorkflowPlugin::class,
         \Repeka\Plugins\MetadataValueRemover\Model\RepekaMetadataValueRemoverResourceWorkflowPlugin::class,
         \Repeka\Plugins\OcrAbbyy\Model\RepekaOcrAbbyyResourceWorkflowPlugin::class,
