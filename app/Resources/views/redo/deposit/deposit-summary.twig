@@ -27,7 +27,9 @@
         <hr>
         <h5 class="deposit-metadata-summary-title">
             {{ 'Resource data' | trans }}
-            <a href="{{ path('depositTransition', {resource: resource.id, transition: depositPath.transitions[0].id}) }}">{{ 'change' | trans }}</a>
+            <a href="{{ path('depositTransition', {resource: resource.id, transition: depositPath.transitions[0].id}) }}">
+                <span class="deposit-metadata-change-value">{{ 'change' | trans }}</span>
+            </a>
         </h5>
         <div class="deposit-metadata-summary">
             <dl>

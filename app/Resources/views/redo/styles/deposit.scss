@@ -75,6 +75,9 @@ $breadcrumb-mark-z-index: 4;
       .deposit-metadata-summary-title {
         margin-top: 0;
         margin-bottom: 0;
+        .deposit-metadata-change-value {
+          font-weight: bold;
+        }
       }
       dl {
         margin-bottom: 0;
