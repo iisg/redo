@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-  "content-hash": "152a73b104cf1524b5a81be448b97a4d",
+    "content-hash": "7e3d872cd6704a925feda6f71da9c81a",
     "packages": [
         {
             "name": "beberlei/assert",
@@ -1327,53 +1327,53 @@
             "time": "2016-10-17T18:31:11+00:00"
         },
         {
-          "name": "google/recaptcha",
-          "version": "1.2.1",
-          "source": {
-            "type": "git",
-            "url": "https://github.com/google/recaptcha.git",
-            "reference": "e7add3be59211482ecdb942288f52da64a35f61a"
-          },
-          "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/google/recaptcha/zipball/e7add3be59211482ecdb942288f52da64a35f61a",
-            "reference": "e7add3be59211482ecdb942288f52da64a35f61a",
-            "shasum": ""
-          },
-          "require": {
-            "php": ">=5.5"
-          },
-          "require-dev": {
-            "friendsofphp/php-cs-fixer": "^2.2.20|^2.12",
-            "php-coveralls/php-coveralls": "^2.1",
-            "phpunit/phpunit": "^4.8.36|^5.7.27|^6.59|^7"
-          },
-          "type": "library",
-          "extra": {
-            "branch-alias": {
-              "dev-master": "1.2.x-dev"
-            }
-          },
-          "autoload": {
-            "psr-4": {
-              "ReCaptcha\\": "src/ReCaptcha"
-            }
-          },
-          "notification-url": "https://packagist.org/downloads/",
-          "license": [
-            "BSD-3-Clause"
-          ],
-          "description": "Client library for reCAPTCHA, a free service that protects websites from spam and abuse.",
-          "homepage": "https://www.google.com/recaptcha/",
-          "keywords": [
-            "Abuse",
-            "captcha",
-            "recaptcha",
-            "spam"
-          ],
-          "time": "2018-08-05T09:31:53+00:00"
+            "name": "google/recaptcha",
+            "version": "1.2.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/google/recaptcha.git",
+                "reference": "e7add3be59211482ecdb942288f52da64a35f61a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/google/recaptcha/zipball/e7add3be59211482ecdb942288f52da64a35f61a",
+                "reference": "e7add3be59211482ecdb942288f52da64a35f61a",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.5"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^2.2.20|^2.12",
+                "php-coveralls/php-coveralls": "^2.1",
+                "phpunit/phpunit": "^4.8.36|^5.7.27|^6.59|^7"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.2.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "ReCaptcha\\": "src/ReCaptcha"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "description": "Client library for reCAPTCHA, a free service that protects websites from spam and abuse.",
+            "homepage": "https://www.google.com/recaptcha/",
+            "keywords": [
+                "Abuse",
+                "captcha",
+                "recaptcha",
+                "spam"
+            ],
+            "time": "2018-08-05T09:31:53+00:00"
         },
-      {
+        {
             "name": "guzzlehttp/guzzle",
             "version": "6.3.3",
             "source": {
@@ -3205,30 +3205,30 @@
         },
         {
             "name": "symfony/monolog-bundle",
-          "version": "v3.3.1",
+            "version": "v3.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/monolog-bundle.git",
-              "reference": "572e143afc03419a75ab002c80a2fd99299195ff"
+                "reference": "572e143afc03419a75ab002c80a2fd99299195ff"
             },
             "dist": {
                 "type": "zip",
-              "url": "https://api.github.com/repos/symfony/monolog-bundle/zipball/572e143afc03419a75ab002c80a2fd99299195ff",
-              "reference": "572e143afc03419a75ab002c80a2fd99299195ff",
+                "url": "https://api.github.com/repos/symfony/monolog-bundle/zipball/572e143afc03419a75ab002c80a2fd99299195ff",
+                "reference": "572e143afc03419a75ab002c80a2fd99299195ff",
                 "shasum": ""
             },
             "require": {
                 "monolog/monolog": "~1.22",
-              "php": ">=5.6",
-              "symfony/config": "~2.7|~3.3|~4.0",
-              "symfony/dependency-injection": "~2.7|~3.4.10|^4.0.10",
-              "symfony/http-kernel": "~2.7|~3.3|~4.0",
-              "symfony/monolog-bridge": "~2.7|~3.3|~4.0"
+                "php": ">=5.6",
+                "symfony/config": "~2.7|~3.3|~4.0",
+                "symfony/dependency-injection": "~2.7|~3.4.10|^4.0.10",
+                "symfony/http-kernel": "~2.7|~3.3|~4.0",
+                "symfony/monolog-bridge": "~2.7|~3.3|~4.0"
             },
             "require-dev": {
-              "symfony/console": "~2.7|~3.3|~4.0",
+                "symfony/console": "~2.7|~3.3|~4.0",
                 "symfony/phpunit-bridge": "^3.3|^4.0",
-              "symfony/yaml": "~2.7|~3.3|~4.0"
+                "symfony/yaml": "~2.7|~3.3|~4.0"
             },
             "type": "symfony-bundle",
             "extra": {
@@ -3264,7 +3264,7 @@
                 "log",
                 "logging"
             ],
-          "time": "2018-11-04T09:58:13+00:00"
+            "time": "2018-11-04T09:58:13+00:00"
         },
         {
             "name": "symfony/polyfill-apcu",

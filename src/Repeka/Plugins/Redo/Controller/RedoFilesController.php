@@ -74,7 +74,7 @@ class RedoFilesController extends Controller {
     public function streamCompressedFileAction(Request $request, ResourceEntity $resource, string $path) {
         $this->denyAccessUnlessGranted('FILE_DOWNLOAD', ['resource' => $resource, 'filepath' => $path]);
         if ($this->captchaVerified($request)) {
-            ini_set('max_execution_time', 300);
+            ini_set('max_execution_time', 2000); // 2000 allows to passthru approx 200GB archive
             $response = new StreamedResponse(
                 function () use ($path, $resource) {
                     $outputName = substr($path, strpos($path, '/') + 1) . '.zip';
@@ -96,25 +96,14 @@ class RedoFilesController extends Controller {
 
     public function createZipFile(string $path, string $outputName) {
         header("Content-Type: application/zip");
-        header("Content-Length: " . $this->getDirContentsSize($path));
         header("Content-disposition: attachment; filename=$outputName");
-        $fp = popen("zip -1jr - $path", "r");
-        $chunkSize = 8192;
+        $fp = popen("zip -0jr - $path", "r");
+        $chunkSize = 81920;
         while (!feof($fp)) {
             $buff = fread($fp, $chunkSize);
             echo $buff;
         }
         pclose($fp);
-    }
-
-    private function getDirContentsSize($path): int {
-        $bytes = 0;
-        $files = scandir($path);
-        foreach ($files as $file) {
-            $bytes += filesize("$path/$file");
-        }
-        unset($files);
-        return $bytes;
     }
 
     private function logEndpointUsage(ResourceEntity $resource, Request $request) {
