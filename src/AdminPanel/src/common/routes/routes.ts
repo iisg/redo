@@ -55,8 +55,7 @@ export const routes: AbstractRoute[] = new RouteGroup('admin', '', '', '', [
     .withMenuItem('Audit', NavRole.BOTTOM, 'scan-2')
     .requireRole('ADMIN'),
 
-  new Route('about', 'about', 'about/about')
-    .withMenuItem('About', NavRole.BOTTOM, 'information'),
+  new Route('about', 'about', 'about/about'),
 ]).toArray();
 
 // Used in contexts where DI is available for better testability.

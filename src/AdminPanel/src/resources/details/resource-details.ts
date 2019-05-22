@@ -24,6 +24,7 @@ import {safeJsonParse} from "../../common/utils/object-utils";
 import {MetadataRepository} from "../../resources-config/metadata/metadata-repository";
 import {MetadataControl} from "../../resources-config/metadata/metadata-control";
 import {CurrentUserIsReproductorValueConverter} from "../list/current-user-is-reproductor";
+import {SystemResourceClass} from "../../resources-config/system-resource-class";
 
 @autoinject
 export class ResourceDetails implements RoutableComponentActivate {
@@ -145,10 +146,10 @@ export class ResourceDetails implements RoutableComponentActivate {
         this.resourceDetailsTabs.addTab('workflow', this.resourceClassTranslation.toView('Workflow', this.resource.resourceClass));
       }
     }
-    if (this.resource.resourceClass == 'users') {
+    if (this.resource.resourceClass == SystemResourceClass.USERS) {
       const isUserResourceKind = this.resource.kind.metadataList.filter(m => m.id == SystemMetadata.GROUP_MEMBER.id).length > 0;
       if (isUserResourceKind) {
-        if (this.hasRole.toView('ADMIN', 'users')) {
+        if (this.hasRole.toView('ADMIN', SystemResourceClass.USERS)) {
           this.resourceDetailsTabs.addTab('user-roles', this.i18n.tr('Roles'));
         }
       }

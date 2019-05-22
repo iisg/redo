@@ -14,20 +14,15 @@
             </div>
         </div>
         <div class="options">
-            <a route-href="about">
-                <icon name="help"></icon>
-            </a>
-            <a>
-                <icon name="settings-2"></icon>
-            </a>
-            <a>
-                <icon name="chat-2"></icon>
-            </a>
             <a route-href="tasks">
-                <icon name="mail"></icon>
+                <icon name="tasks"></icon>
             </a>
-            <a route-href="route: resources; params.bind: {resourceClass: 'users'}">
-                <icon name="user-2"></icon>
+            <a if.bind="'OPERATOR' | hasRole:'users'"
+                route-href="route: resources/details; params.bind: {id: currentUser.userData.id}">
+                <icon name="user-3"></icon>
+            </a>
+            <a route-href="about">
+                <icon name="information"></icon>
             </a>
             <div class="user-data">
                 <div>
@@ -59,9 +54,6 @@
     <div class="second-row">
         <top-bar-search></top-bar-search>
         <div>
-            <a>
-                <icon name="print"></icon>
-            </a>
             <gui-language-switcher></gui-language-switcher>
         </div>
     </div>
