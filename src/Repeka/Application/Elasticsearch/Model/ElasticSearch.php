@@ -1,6 +1,7 @@
 <?php
 namespace Repeka\Application\Elasticsearch\Model;
 
+use Assert\Assertion;
 use Elastica\Document;
 use Elastica\Index;
 use Elastica\ResultSet;
@@ -8,14 +9,16 @@ use Elastica\Search;
 use Elastica\Type;
 use Repeka\Application\Elasticsearch\ESClient;
 use Repeka\Application\Elasticsearch\Mapping\FtsConstants;
-use Repeka\Application\Elasticsearch\Model\ElasticSearchContext;
 use Repeka\Application\Elasticsearch\Model\ElasticSearchQueryCreator\ElasticSearchQueryCreatorComposite;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Repository\ResourceFtsProvider;
 use Repeka\Domain\UseCase\Resource\ResourceListFtsQuery;
+use Symfony\Component\Console\Helper\ProgressBar;
 
 /** @SuppressWarnings(PHPMD.CouplingBetweenObjects) */
 class ElasticSearch implements ResourceFtsProvider {
+    private const MAX_BULK_SIZE_IN_BYTES = 15728640; // 15 MB
+
     /** @var ESClient */
     private $client;
 
@@ -70,13 +73,31 @@ class ElasticSearch implements ResourceFtsProvider {
     }
 
     /** @param ResourceEntity[] $resources */
-    public function insertDocuments(iterable $resources) {
+    public function insertDocuments(iterable $resources, ProgressBar $progressBar = null) {
         $documents = [];
+        $bulkSize = 0;
         foreach ($resources as $resource) {
-            $documents[] = $this->createDocument($resource);
+            $document = $this->createDocument($resource);
+            $bulkSize += mb_strlen(serialize((array)$document->getData()), '8bit');
+            $documents[] = $document;
+            if ($bulkSize > self::MAX_BULK_SIZE_IN_BYTES) {
+                $this->bulkInsertDocumentsToIndex($documents);
+                $documents = [];
+                $bulkSize = 0;
+            }
+            if ($progressBar) {
+                $progressBar->advance();
+            }
         }
-        $this->type->addDocuments($documents);
+        if ($documents) {
+            $this->bulkInsertDocumentsToIndex($documents);
+        }
         $this->type->getIndex()->refresh();
+    }
+
+    private function bulkInsertDocumentsToIndex(array $documents) {
+        $response = $this->type->addDocuments($documents);
+        Assertion::count($response->getBulkResponses(), count($documents), 'Bulk request failed - nothing has been indexed from this part');
     }
 
     /** @return ResultSet */

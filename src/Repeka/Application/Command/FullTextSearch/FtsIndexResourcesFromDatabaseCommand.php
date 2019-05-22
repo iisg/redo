@@ -59,11 +59,10 @@ class FtsIndexResourcesFromDatabaseCommand extends Command {
                 }
                 $resourcesToIndex = $this->resourceRepository->findByQuery($query->build());
                 try {
-                    $this->elasticSearch->insertDocuments($resourcesToIndex);
+                    $this->elasticSearch->insertDocuments($resourcesToIndex, $progress);
                 } catch (\Exception $e) {
                     $output->writeln("ERROR\n" . $e->getMessage());
                 }
-                $progress->advance($step);
             }
             $output->writeln(PHP_EOL . 'Resources from the database have been indexed.');
         } else {
