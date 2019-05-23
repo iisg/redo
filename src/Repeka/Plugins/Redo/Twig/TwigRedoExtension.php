@@ -3,7 +3,6 @@ namespace Repeka\Plugins\Redo\Twig;
 
 use Repeka\Application\Cqrs\Middleware\FirewallMiddleware;
 use Repeka\Application\Security\SecurityOracle;
-use Repeka\Application\Security\Voters\CompositeFileDownloadVoter;
 use Repeka\Application\Security\Voters\FileDownloadVoter;
 use Repeka\Application\Service\CurrentUserAware;
 use Repeka\Domain\Entity\MetadataValue;
@@ -80,7 +79,7 @@ class TwigRedoExtension extends \Twig_Extension {
         preg_match_all('#<em>(.+?)</em>#', $highlight, $matches);
         $phrases = $matches[1];
         foreach ($phrases as $phrase) {
-            $value = preg_replace('#(^|\s)' . preg_quote($phrase, '#') . '($|\s)#', '$1<em>' . $phrase . '</em>$2', $value);
+            $value = preg_replace('#(^|\b|\s)' . preg_quote($phrase, '#') . '($|\b|\s)#u', '$1<em>' . $phrase . '</em>$2', $value);
         }
         return $value;
     }

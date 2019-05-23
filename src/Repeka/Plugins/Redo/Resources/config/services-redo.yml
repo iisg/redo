@@ -37,14 +37,11 @@ services:
   Repeka\Plugins\Redo\Service\KohaXmlResourceDownloader:
     - '%redo.koha_url%'
 
+  Repeka\Plugins\Redo\Service\PhraseTranslator\TranslateFtsQueryListener:
+    $ftsConfig: '%redo.fts_config%'
+
   Repeka\Plugins\Redo\Twig\:
     resource: '../../Twig'
 
   Repeka\Plugins\Redo\Security\Voters\FileVoters\:
     resource: '../../Security/Voters/FileVoters'
-
-  Repeka\Plugins\Redo\EventListener\:
-    resource: '../../EventListener'
-
-  Repeka\Plugins\Redo\EventListener\ResourceListFtsQueryListener:
-    $ftsConfig: '%redo.fts_config%'

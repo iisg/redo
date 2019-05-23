@@ -1,7 +1,5 @@
 <?php
-namespace Repeka\Plugins\Redo\Service;
-
-use Repeka\Plugins\Redo\EventListener\PhraseTranslator;
+namespace Repeka\Plugins\Redo\Service\PhraseTranslator;
 
 class RedoFtsSearchPhraseTranslator {
     private const TARGET_LANGUAGES = ['en', 'pl', 'de'];

@@ -4,17 +4,23 @@ namespace Repeka\Application\Elasticsearch\Model;
 use Elastica\Query;
 
 class ElasticSearchTextQueryCreator {
+    const RAW_PHRASES = 'rawPhrases';
 
     public function createTextQuery(array $fields, array $phrases, array $stopWords): array {
         $metadataFilters = [];
+        if (isset($phrases[self::RAW_PHRASES])) {
+            foreach ($phrases[self::RAW_PHRASES] as $rawPhrase) {
+                $metadataFilter = $this->createSimpleQueryString($fields, $rawPhrase);
+                $metadataFilter->setParam('boost', 1);
+                $metadataFilters[] = $metadataFilter;
+            }
+            unset($phrases[self::RAW_PHRASES]);
+        }
         foreach ($phrases as $phrase) {
             $metadataFilter = $this->createSimpleQueryString($fields, $phrase);
             $metadataFilter->setParam('boost', 100);
             $metadataFilters[] = $metadataFilter;
-            $phrase = $this->simpleSearchQueryPhraseAdjuster(
-                $phrase,
-                $stopWords
-            );
+            $phrase = $this->simpleSearchQueryPhraseAdjuster($phrase, $stopWords);
             $metadataFilters[] = $this->createSimpleQueryString($fields, $phrase);
         }
         return $metadataFilters;

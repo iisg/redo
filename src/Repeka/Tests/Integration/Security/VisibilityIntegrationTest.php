@@ -134,7 +134,7 @@ class VisibilityIntegrationTest extends IntegrationTestCase {
 
     public function testUnauthenticatedUserSeesOnlyPublicResourcesInESResults() {
         $query = ResourceListFtsQuery::builder()
-            ->addPhrase('visible')
+            ->setPhrase('visible')
             ->setPage(1)
             ->setResultsPerPage(5)
             ->setSearchableMetadata([$this->titleMetadata->getId()])
@@ -159,7 +159,7 @@ class VisibilityIntegrationTest extends IntegrationTestCase {
 
     public function testBudynekUserSeesResourcesVisibleForHisGroupInESResults() {
         $query = ResourceListFtsQuery::builder()
-            ->addPhrase('visible')
+            ->setPhrase('visible')
             ->setPage(1)
             ->setResultsPerPage(5)
             ->setSearchableMetadata([$this->titleMetadata->getId()])
@@ -196,7 +196,7 @@ class VisibilityIntegrationTest extends IntegrationTestCase {
 
     public function testNoOneSeesInvisibleResourceInESResults() {
         $query = ResourceListFtsQuery::builder()
-            ->addPhrase('visible')
+            ->setPhrase('visible')
             ->setPage(1)
             ->setResultsPerPage(5)
             ->setSearchableMetadata([$this->titleMetadata->getId()])

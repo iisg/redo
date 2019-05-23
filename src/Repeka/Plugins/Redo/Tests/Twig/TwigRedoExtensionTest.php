@@ -57,6 +57,10 @@ class TwigRedoExtensionTest extends \PHPUnit_Framework_TestCase {
             ['ala ma kota i ma psa', '<em>ma</em> <em>kota</em>', 'ala <em>ma</em> <em>kota</em> i <em>ma</em> psa'],
             ['ala ma kota i chomika', '<em>kota</em> <em>i</em>', 'ala ma <em>kota</em> <em>i</em> chomika'],
             ['ala ma kota i chomika', 'ma <em>kota</em> <em>i</em> <em>chomika</em>', 'ala ma <em>kota</em> <em>i</em> <em>chomika</em>'],
+            ['ala ma kota! i chomika', 'ma <em>kota</em>!', 'ala ma <em>kota</em>! i chomika'],
+            ['ala ma kota: i chomika', 'ma <em>kota</em>', 'ala ma <em>kota</em>: i chomika'],
+            ['ala ma kotkę i chomika', 'ma <em>kotkę</em>', 'ala ma <em>kotkę</em> i chomika'],
+            ['ala ma kotk kotkę i chomika', 'ma <em>kotk</em>', 'ala ma <em>kotk</em> kotkę i chomika'],
         ];
     }
 }

@@ -45,6 +45,11 @@ class ResourceListFtsQueryBuilder extends AbstractListQueryBuilder {
         return $this;
     }
 
+    public function setPhrase(string $phrase): self {
+        $this->phrases = [$phrase];
+        return $this;
+    }
+
     public function setSearchableMetadata(array $searchableMetadata): self {
         $this->searchableMetadata = $searchableMetadata;
         return $this;

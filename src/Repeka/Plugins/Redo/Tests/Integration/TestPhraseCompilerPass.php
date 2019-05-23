@@ -1,10 +1,9 @@
 <?php
 namespace Repeka\Plugins\Redo\Tests\Integration;
 
+use Repeka\Plugins\Redo\Service\PhraseTranslator\PhraseTranslator;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Repeka\Plugins\Redo\Tests\Integration\TestPhraseTranslator;
-use Repeka\Plugins\Redo\EventListener\PhraseTranslator;
 
 class TestPhraseCompilerPass implements CompilerPassInterface {
     public function process(ContainerBuilder $container) {

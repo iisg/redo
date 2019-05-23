@@ -1,5 +1,5 @@
 <?php
-namespace Repeka\Plugins\Redo\EventListener;
+namespace Repeka\Plugins\Redo\Service\PhraseTranslator;
 
 class TranslatedPhrase {
     private $phrase;

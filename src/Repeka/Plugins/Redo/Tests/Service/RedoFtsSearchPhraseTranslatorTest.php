@@ -2,9 +2,9 @@
 namespace Repeka\Plugins\Redo\Tests\Service;
 
 use PHPUnit_Framework_TestCase;
-use Repeka\Plugins\Redo\EventListener\PhraseTranslator;
-use Repeka\Plugins\Redo\EventListener\TranslatedPhrase;
-use Repeka\Plugins\Redo\Service\RedoFtsSearchPhraseTranslator;
+use Repeka\Plugins\Redo\Service\PhraseTranslator\PhraseTranslator;
+use Repeka\Plugins\Redo\Service\PhraseTranslator\RedoFtsSearchPhraseTranslator;
+use Repeka\Plugins\Redo\Service\PhraseTranslator\TranslatedPhrase;
 
 class RedoFtsSearchPhraseTranslatorTest extends PHPUnit_Framework_TestCase {
     /** @var RedoFtsSearchPhraseTranslator */

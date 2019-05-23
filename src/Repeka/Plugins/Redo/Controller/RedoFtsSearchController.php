@@ -13,7 +13,7 @@ use Repeka\Domain\UseCase\EndpointUsageLog\EndpointUsageLogCreateCommand;
 use Repeka\Domain\UseCase\Resource\ResourceListFtsQuery;
 use Repeka\Domain\UseCase\Resource\ResourceListQuery;
 use Repeka\Domain\Utils\EntityUtils;
-use Repeka\Plugins\Redo\Service\RedoFtsSearchPhraseTranslator;
+use Repeka\Plugins\Redo\Service\PhraseTranslator\RedoFtsSearchPhraseTranslator;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -78,13 +78,13 @@ class RedoFtsSearchController extends Controller {
         $phrase = $request->query->get('phrase', '');
         $filterableMetadata = $this->findFilterableMetadata();
         $translatedPhrases = $translations = $this->ftsConfig['phrase_translation'] ?? false
-                ? $this->redoFtsSearchPhraseTranslator->translatePhrase($phrase)
+                ? array_unique($this->redoFtsSearchPhraseTranslator->translatePhrase($phrase))
                 : [];
         $responseData = [
             'phrase' => $phrase,
             'filterableMetadataList' => $filterableMetadata,
             'searchableResourceClasses' => $this->ftsConfig['searchable_resource_classes'] ?? [],
-            'phraseTranslation' => $translations,
+            'phraseTranslation' => array_values(array_diff($translations, [$phrase])),
             'translatedPhrases' => implode(", ", $translatedPhrases),
         ];
         if ($metadataFilters = array_filter($request->get('metadataFilters', []))) {
@@ -118,7 +118,7 @@ class RedoFtsSearchController extends Controller {
         }
         $metadataFilters = $this->adjustDateMetadataFilters($metadataFilters);
         $query = ResourceListFtsQuery::builder()
-            ->addPhrase($phrase ?: '')
+            ->setPhrase($phrase ?: '')
             ->setSearchableMetadata($searchableMetadata)
             ->setResourceClasses($this->ftsConfig['searchable_resource_classes'] ?? [])
             ->setResourceKindFacet(in_array(FtsConstants::KIND_ID, $facets))

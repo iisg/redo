@@ -17,7 +17,6 @@ class TextElasticSearchQueryCreator implements ElasticSearchQueryCreator {
         $metadataFilter = new Query\BoolQuery();
         $path = ElasticSearchQuery::getMetadataPath($metadata);
         $elasticSearchTextQueryCreator = new ElasticSearchTextQueryCreator();
-
         $metadataFilter->addShould(
             $elasticSearchTextQueryCreator->createTextQuery([$path], $filter, $elasticSearchContext->getStopWords())
         );
