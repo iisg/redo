@@ -1,0 +1,10 @@
+<template class="validation-message-container">
+    <require from="common/components/restore-from-original-button/restore-from-original-button"></require>
+
+    <input class="form-control"
+        type="text"
+        placeholder="txt, pdf"
+        value.bind="allowedExtensionsValue">
+    <restore-from-original-button if.bind="hasBase && wasModified"
+        click.delegate="resetToOriginalValues()"></restore-from-original-button>
+</template>

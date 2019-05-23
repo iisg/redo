@@ -1,5 +1,6 @@
 <template>
     <input type="file"
+        accept.bind="allowedExtensions"
         files.bind="selectedFiles"
         value.bind="inputValue"
         change.delegate="uploadFiles()"

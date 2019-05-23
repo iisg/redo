@@ -42,13 +42,6 @@
             metadataId: {{ metadata.id }},
             files: urls
           }, '*');
-          instance.toast({
-            msg: 'Wybrane {{ metadata.control == 'directory' ? 'katalogi' : 'pliki' }} dodano do metadanej {{ metadata.name }}.',
-            hideDuration: 500,
-            showDuration: 800,
-            timeOut: 1000,
-            mode: 'info'
-          });
         };
         this.getstate = function () {
           //return 0 to enable, -1 to disable icon access
@@ -58,7 +51,6 @@
           return selectedFilesCount > 0 && selectedFilesCount == allowedFilesCount ? 0 : -1;
         };
       };
-
       elFinder.prototype._options.commands.push('addFilesAsMetadata');
       elFinder.prototype._options.contextmenu.files.unshift('addFilesAsMetadata');
       elFinder.prototype._options.uiOptions.toolbar.unshift(['addFilesAsMetadata']);
@@ -79,7 +71,26 @@
 <div id="elfinder"></div>
 
 <script>
+  var toastMessage, mode;
   instance = $('#elfinder').elfinder(elFinderConfig).elfinder('instance');
+  window.addEventListener("message", function (event) {
+    if (event.data.command === 'showToast') {
+      if (event.data.result === 'success') {
+        toastMessage = 'Wybrane {{ metadata.control == 'directory' ? 'katalogi' : 'pliki' }} dodano do metadanej {{ metadata.name }}.';
+        mode = 'info';
+      } else {
+        toastMessage = event.data.message;
+        mode = 'error';
+      }
+      instance.toast({
+        msg: toastMessage,
+        hideDuration: 500,
+        showDuration: 800,
+        timeOut: 1000,
+        mode: mode
+      });
+    }
+  });
 </script>
 
 </body>

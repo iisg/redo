@@ -1,0 +1,7 @@
+<template>
+    <require from="../allowed-file-extensions/allowed-file-extensions-editor"></require>
+
+    <allowed-file-extensions-editor allowed-extensions.bind="metadata.constraints.allowedFileExtensions"
+        original-allowed-extensions.bind="originalMetadata.constraints.allowedFileExtensions"
+        has-base.bind="!!originalMetadata"></allowed-file-extensions-editor>
+</template>

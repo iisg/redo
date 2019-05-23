@@ -12,6 +12,7 @@ labels:
   resourceKind: Required resource kind
   relatedResourceMetadataFilter: Additional resources filter
   minMaxValue: Minimal and maximal value
+  allowedFileExtensions: Allowed file extensions
   displayStrategy: Template
   doublePrecision: Double precision for display purposes
   uniqueInResourceClass: Unique in resource class

@@ -4,6 +4,7 @@
 "Value must be between {{minMaxValue.min}} and {{minMaxValue.max}}": "Wartość musi zawierać się w zakresie od {{minMaxValue.min}} do {{minMaxValue.max}}"
 "Value must be at most {{minMaxValue.max}}": "Wartość nie może być większa niż {{minMaxValue.max}}"
 "Value must be at least {{minMaxValue.min}}": "Wartość nie może być mniejsza niż {{minMaxValue.min}}"
+"File must have on of these extensions: {{allowedExtensions}}": "Plik musi mieć jedno z następujących rozszerzeń: {{allowedExtensions}}"
 Tree must be closed after selecting: Po wybraniu wartości należy zamknąć drzewo
 regex_failed: "Wartość musi pasować do wyrażenia regularnego: {{metadata.constraints.regex}}"
 uniqueInResourceClass_failed: "{{metadata.label.PL}} o podanej wartości już istnieje"
@@ -20,6 +21,7 @@ labels:
   resourceKind: Wymagany rodzaj zasobu
   relatedResourceMetadataFilter: Dodatkowy filtr zasobów
   minMaxValue: Minimalna i maksymalna wartość
+  allowedFileExtensions: Dozwolone rozszerzenia pliku
   displayStrategy: Szablon
   doublePrecision: Liczba miejsc po przecinku przy wyświetlaniu
   uniqueInResourceClass: Unikatowość w klasie zasobów

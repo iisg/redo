@@ -3,11 +3,13 @@ import {MaxCountConstraintValidator} from "./constraints/max-count-constraint-va
 import {autoinject, Container} from "aurelia-dependency-injection";
 import {MinCountConstraintValidator} from "./constraints/min-count-constraint-validator";
 import {MinMaxValueConstraintValidator} from "./constraints/min-max-value-constraint-validator";
+import {AllowedFileExtensionsConstraintValidator} from "./constraints/allowed-file-extensions-constraint-validator";
 
 @autoinject
 export class MetadataConstraintValidators {
   private readonly singleValueValidatorClasses: any[] = [
     MinMaxValueConstraintValidator,
+    AllowedFileExtensionsConstraintValidator,
   ];
 
   private readonly metadataArrayValidatorClasses: any[] = [
