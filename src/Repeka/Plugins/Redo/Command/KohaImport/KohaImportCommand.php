@@ -23,6 +23,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.CyclomaticComplexity)
  */
 class KohaImportCommand extends ContainerAwareCommand {
     use CommandBusAware;
@@ -61,6 +62,8 @@ class KohaImportCommand extends ContainerAwareCommand {
             ->addOption('config', 'c', InputOption::VALUE_OPTIONAL)
             ->addOption('barcodeMetadataId', 'm', InputOption::VALUE_OPTIONAL)
             ->addOption('barcode', 'b', InputOption::VALUE_OPTIONAL)
+            ->addOption('offset', 'o', InputOption::VALUE_REQUIRED, '', 0)
+            ->addOption('limit', 'l', InputOption::VALUE_REQUIRED, '', 50)
             ->setDescription('Imports data from Koha.');
     }
 
@@ -81,6 +84,8 @@ class KohaImportCommand extends ContainerAwareCommand {
         ];
         $config = $input->getOption('config') ?? __DIR__ . '/../../Tests/Integration/MetadataImport/dumps/marc-import-config.yml';
         $barcodeMetadata = $this->metadataRepository->findByNameOrId($input->getOption('barcodeMetadataId') ?? 'barkod');
+        $offset = $input->getOption('offset');
+        $limit = $input->getOption('limit');
         $builder = new ResourceListQueryBuilder();
         if ($resourceKindNameOrId = $input->getOption('resourceKindId')) {
             $resourceKind = $this->resourceKindRepository->findByNameOrId($resourceKindNameOrId);
@@ -91,6 +96,12 @@ class KohaImportCommand extends ContainerAwareCommand {
         }
         if ($barcode = $input->getOption('barcode')) {
             $builder = $builder->filterByContents([$barcodeMetadata->getId() => $barcode]);
+        }
+        if ($barcode = $input->getOption('limit')) {
+            $builder = $builder->setResultsPerPage($limit);
+        }
+        if ($barcode = $input->getOption('offset')) {
+            $builder = $builder->setPage(($offset / $limit) + 1);
         }
         $query = $builder->build();
         $resources = $this->resourceRepository->findByQuery($query);
@@ -106,7 +117,7 @@ class KohaImportCommand extends ContainerAwareCommand {
                     $stats[$error]++;
                     $resourceIdStats[$cannotImportFromBarcode][] = $resource->getId();
                 } else {
-                    $output->writeln(sprintf("Loading barcode %s ...", $barcode));
+                    $output->writeln(sprintf("\nLoading barcode %s ...", $barcode));
                     FirewallMiddleware::bypass(
                         function () use (
                             $input,
