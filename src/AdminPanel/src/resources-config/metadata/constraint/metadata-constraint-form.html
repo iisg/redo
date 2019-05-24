@@ -15,9 +15,11 @@
             validation-controller.bind="validationController"></metadata-constraint-editor>
     </template>
 
-    <span>${'metadata_constraints::labels//noConfigurationConstraints' | t}</span>
-    <no-configuration-constraint-dropdown constraint-names.bind="supportedConstraintsNamesWithoutConfiguration"
-        metadata.bind="metadata"
-        original-metadata.bind="originalMetadata"
-        validation-controller.bind="validationController"></no-configuration-constraint-dropdown>
+    <template if.bind="supportedConstraintsNamesWithoutConfiguration.length > 0">
+        <span>${'metadata_constraints::labels//noConfigurationConstraints' | t}</span>
+        <no-configuration-constraint-dropdown constraint-names.bind="supportedConstraintsNamesWithoutConfiguration"
+            metadata.bind="metadata"
+            original-metadata.bind="originalMetadata"
+            validation-controller.bind="validationController"></no-configuration-constraint-dropdown>
+    </template>
 </template>
