@@ -65,7 +65,8 @@
                 </div>
             </aup-tab-pane>
             <aup-tab-pane tab="resources">
-                <resources-list resource-kind.bind="resourceKind"
+                <resources-list if.bind="resourceKindDetailsTabs.activeTabId === 'resources'"
+                    resource-kind.bind="resourceKind"
                     resource-class.bind="resourceKind.resourceClass"
                     hide-add-button.bind="true">
                 </resources-list>

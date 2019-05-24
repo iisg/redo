@@ -10,6 +10,7 @@ import {groupMetadata} from "../../../common/utils/metadata-utils";
 import {DetailsViewTabs} from "../../metadata/details/details-view-tabs";
 import {GroupMetadataList} from "../../metadata/metadata";
 import {MetadataGroupRepository} from "../../metadata/metadata-group-repository";
+import {ResourceRepository} from "../../../resources/resource-repository";
 
 @autoinject
 export class ResourceKindDetails implements RoutableComponentActivate {
@@ -23,6 +24,7 @@ export class ResourceKindDetails implements RoutableComponentActivate {
   private resourceChildrenListener: Subscription;
 
   constructor(private resourceKindRepository: ResourceKindRepository,
+              private resourceRepository: ResourceRepository,
               private router: Router,
               private eventAggregator: EventAggregator,
               private i18n: I18N,
@@ -59,6 +61,11 @@ export class ResourceKindDetails implements RoutableComponentActivate {
     const displayedMetadata = this.resourceKind.metadataList.filter(metadata => !!metadata.resourceClass);
     this.metadataGroups = groupMetadata(displayedMetadata, this.metadataGroupRepository.getIds());
     this.activateTabs(params.tab);
+    if (params.tab != 'resources') {
+      this.resourceRepository.getListQuery().filterByResourceKindIds(this.resourceKind.id).setResultsPerPage(1).get().then(resources => {
+        this.eventAggregator.publish('resourceChildrenAmount', resources.total);
+      });
+    }
     this.contextResourceClass.setCurrent(this.resourceKind.resourceClass);
   }
 
@@ -68,7 +75,7 @@ export class ResourceKindDetails implements RoutableComponentActivate {
     this.resourceKindDetailsTabs.addTab(
       'resources',
       () => this.i18n.tr('resource_classes::' + this.resourceKind.resourceClass + '//resources')
-      + (this.numberOfResources === undefined ? '' : ` (${this.numberOfResources})`)
+        + (this.numberOfResources === undefined ? '' : ` (${this.numberOfResources})`)
     );
     if (this.resourceKind.workflow) {
       this.resourceKindDetailsTabs.addTab('workflow', this.i18n.tr('Workflow'));
