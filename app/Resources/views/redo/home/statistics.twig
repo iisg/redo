@@ -3,7 +3,7 @@
     resultsPerPage: 3,
     resourceClass: 'books',
     contentsFilter: {data_utworzenia_rekordu: '.+'},
-    sortBy: {columnId: m('data_utworzenia_rekordu'), direction: 'DESC', language: 'PL'}
+    sortBy: {columnId: m('data_utworzenia_rekordu'), direction: 'DESC'}
 }) %}
 {% set lastMonthCount = resources({
     page: 1,
@@ -26,7 +26,7 @@
 <div class="statistics">
     <div>
         <h4>{{ 'Recently added' | trans | upper }}</h4>
-        {% for resource in recentResources.results %}
+        {% for resource in recentResources %}
             <a class="list-element"
                 href="/resources/{{ resource.id }}">
                 <span>{{ resource | resourceLabel }}</span>
