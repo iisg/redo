@@ -4,6 +4,7 @@
 
 $admin-content-z-index-when-sidebar-is-collapsed: 0;
 $floating-form-and-sticky-table-header-z-index: $admin-content-z-index-when-sidebar-is-collapsed + 1;
+$name-with-buttons-and-tabs-z-index: $floating-form-and-sticky-table-header-z-index;
 $top-bar-z-index: $floating-form-and-sticky-table-header-z-index + 1;
 $sticky-button-z-index: $top-bar-z-index;
 $collapsed-sidebar-elements-z-index-on-hover: $top-bar-z-index + 1;
@@ -74,7 +75,7 @@ html {
     display: flex;
     flex-direction: column;
     .name-with-buttons-and-tabs {
-      z-index: $top-bar-z-index;
+      z-index: $name-with-buttons-and-tabs-z-index;
       display: flex;
       flex-shrink: 0;
       align-items: center;
