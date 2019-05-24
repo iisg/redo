@@ -4,7 +4,7 @@ namespace Repeka\Domain\UseCase\Audit;
 use Assert\Assertion;
 
 abstract class AbstractListQueryBuilder {
-    private const REASONABLE_DEFAULT_QUERY_LIMIT = 1003;
+    private const REASONABLE_DEFAULT_QUERY_LIMIT = 99;
     protected $page = 1;
     protected $resultsPerPage = self::REASONABLE_DEFAULT_QUERY_LIMIT;
 
