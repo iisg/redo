@@ -41,9 +41,6 @@
   margin-top: $default-gap-size;
   .carousel-inner > .item {
     height: 300px;
-    background-size: 1000px;
-    background-repeat: repeat;
-    transition: transform 1.2s ease-in-out !important;
     .carousel-caption-title {
       display: block;
       padding: 5px 15px;
@@ -53,5 +50,35 @@
       color: white;
       text-decoration: none;
     }
+    .carousel-image {
+      img {
+        position: absolute;
+        width: 1400px;
+      }
+    }
   }
 }
+
+$xMax: -100px;
+$xMin: -300px;
+$yMax: -50px;
+$yMin: -350px;
+
+@mixin carousel-animation($name, $xMax, $yMax, $xMin, $yMin) {
+  .home-page-carousel .item .carousel-image.carousel-image-slide-#{$name} {
+    animation: carousel-#{$name} 120s infinite linear;
+  }
+  // smooth animation that works in Firefox, see: https://stackoverflow.com/a/27898708/878514
+  // @formatter:off
+  @keyframes carousel-#{$name} {
+    0% {transform: translateX($xMax) translateY($yMax);}
+    50% {transform: translateX($xMin) translateY($yMin) rotate(0.02deg);}
+    100% {transform: translateX($xMax) translateY($yMax) rotate(0);}
+  }
+  // @formatter: on
+}
+
+@include carousel-animation(trbl, $xMax, $yMax, $xMin, $yMin);
+@include carousel-animation(tlbr, $xMin, $yMax, $xMax, $yMin);
+@include carousel-animation(bltr, $xMin, $yMin, $xMax, $yMax);
+@include carousel-animation(brtl, $xMax, $yMin, $xMin, $yMax);

@@ -21,11 +21,17 @@
                     role="listbox">
                     {% for image in images %}
                         <div class="item {% if loop.first %}active{% endif %}"
-                            style="background-image: url('/api/resources/{{ carouselResource.id }}/file/{{ image }}'); background-position: {{ random(1000) }}px {{ random(1000) }}px">
+                            style="">
+                            <div class="carousel-image carousel-image-slide-{{ random(['trbl', 'tlbr', 'bltr', 'brtl']) }}">
+                                <img src="/api/resources/{{ carouselResource.id }}/file/{{ image }}"
+                                    alt="{% if image|sub('obrazek_do_karuzeli_zasob')|length %}{{ image|sub('obrazek_do_karuzeli_zasob')|resourceLabel }}{% endif %}">
+                            </div>
                             <div class="carousel-caption">
                                 {% if image|sub('obrazek_do_karuzeli_zasob')|length %}
                                     <a class="carousel-caption-title"
-                                        href="/resources/{{ image|sub('obrazek_do_karuzeli_zasob')|first.value }}">{{ image|sub('obrazek_do_karuzeli_zasob')|resourceLabel }}</a>
+                                        href="/resources/{{ image|sub('obrazek_do_karuzeli_zasob')|first.value }}">
+                                        {{ image|sub('obrazek_do_karuzeli_zasob')|resourceLabel }}
+                                    </a>
                                 {% endif %}
                             </div>
                         </div>
@@ -57,24 +63,21 @@
               if ($.fn.carousel) {
                 jQuery.fn.carousel.Constructor.TRANSITION_DURATION = 1200;
                 $('#redo-home-carousel').carousel();
-                $("#redo-home-carousel .item").each(animateCarouselItemBackground);
+                $('#redo-home-carousel').on('slid.bs.carousel', function (event) {
+                  setRandomAnimationForNextItem(event.relatedTarget);
+                });
               } else {
                 setTimeout(initCarousel, 100);
               }
             })();
 
-            function animateCarouselItemBackground() {
-              var item = this;
-              $(item).stop(true);
-              var newX = parseInt($(item).css('backgroundPositionX')) + (Math.random() * 150 * (Math.random() > .5 ? 1 : -1));
-              var newY = parseInt($(item).css('backgroundPositionY')) + (Math.random() * 150 * (Math.random() > .5 ? 1 : -1));
-              var newBS = parseInt($(item).css('backgroundSize')) + (Math.random() * 50 * (Math.random() > .5 ? 1 : -1));
-              $(item).animate(
-                {backgroundPositionX: newX, backgroundPositionY: newY, backgroundSize: newBS},
-                  {{ carouselInterval }},
-                'linear',
-                animateCarouselItemBackground.bind(this)
-              );
+            function setRandomAnimationForNextItem(item) {
+              var animations = ['tlbr', 'trbl', 'bltr', 'brtl'];
+              var image = $(item).next().find('.carousel-image');
+              animations.forEach(function (animation) {
+                image.removeClass('carousel-image-slide-' + animation);
+              });
+              image.addClass('carousel-image-slide-' + animations[Math.floor(Math.random() * animations.length)]);
             }
           });
         </script>
