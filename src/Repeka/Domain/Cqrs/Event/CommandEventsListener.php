@@ -3,6 +3,9 @@ namespace Repeka\Domain\Cqrs\Event;
 
 use Repeka\Domain\UseCase\Resource\ResourceTransitionCommand;
 
+/**
+ * @SuppressWarnings(PHPMD.NumberOfChildren)
+ */
 abstract class CommandEventsListener {
     /** @inheritdoc */
     public function onBeforeCommandHandling(BeforeCommandHandlingEvent $event): void {

@@ -41,7 +41,7 @@ class FileSystemResourceFileStorage implements ResourceFileStorage {
                 return StringUtils::joinPaths($uploadDir['path'], $filepath);
             }
         }
-        throw new DomainException('invalidFileSpec', Response::HTTP_INTERNAL_SERVER_ERROR);
+        throw new DomainException("invalidFileSpec $resourcePath", Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
     public function getResourcePath(ResourceEntity $resource, string $fileSystemPath): string {

@@ -35,3 +35,8 @@ repeka:
         PL: Podstawowe metadane
   templating:
     theme: redo
+  upload_dirs:
+    - id: grant_files
+      label: Pliki wniosku
+      condition: '{{resource|mnr_formularza|length == 1 ? 1 : 0}}'
+      path: '%kernel.root_dir%/../var/grant_files/{{resource|mnr_formularza}}'
