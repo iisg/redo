@@ -5,6 +5,7 @@
     <require from="common/components/buttons/sort-button"></require>
     <require from="./resource-list-filters/resource-list-metadata-filter/resource-list-metadata-filter"></require>
     <require from="./resource-list-filters/resource-list-place-filter/resource-list-place-filter"></require>
+    <require from="./resource-list-filters/resource-list-kind-filter/resource-list-kind-filter"></require>
     <require from="./display-strategies-dirty-icon.html"></require>
 
     <table>
@@ -21,6 +22,10 @@
                 <sort-button column-id.bind="'kindId'"
                     sort-by.bind="sortBy"
                     event-target.bind="eventTarget"></sort-button>
+                <resource-list-kind-filter if.bind="resourceKinds.length > 1"
+                    initial-value.bind="kindFilter"
+                    resource-kind-list.bind="resourceKinds"
+                    event-target.bind="eventTarget"></resource-list-kind-filter>
             </th>
             <th repeat.for="metadata of briefMetadata">
                 ${metadata | metadataLabel}

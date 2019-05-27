@@ -3,7 +3,7 @@
 $input-box-minimum-width: 150px;
 $search-button-icon-width: 1em;
 
-resource-list-place-filter {
+.resource-list-dropdown-filter {
   white-space: nowrap;
   display: inline-flex; // Otherwise the search button icon may be not fully visible or not visible at all for longer phrases.
   align-items: center;
@@ -11,7 +11,7 @@ resource-list-place-filter {
     display: inline-flex;
     align-items: center;
     padding-left: $expected-space-between-inline-block-elements-width;
-    workflow-place-chooser {
+    .select2 {
       min-width: $input-box-minimum-width;
       max-width: calc(100% - #{$search-button-icon-width} - #{$expected-space-between-inline-block-elements-width});
       color: $default-text-color;

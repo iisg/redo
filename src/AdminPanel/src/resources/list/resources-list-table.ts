@@ -19,6 +19,7 @@ export class ResourcesListTable {
   @bindable(oneTime) extraColumnViews: string[] = [];
   @bindable(twoWay) contentsFilter: NumberMap<string>;
   @bindable placesFilter: string[];
+  @bindable kindFilter: number[];
   @bindable sortBy: ResourceSort[];
   @bindable resourceKinds: ResourceKind[];
   @bindable eventTarget: any;

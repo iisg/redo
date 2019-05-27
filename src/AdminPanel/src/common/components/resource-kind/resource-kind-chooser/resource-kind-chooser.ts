@@ -16,19 +16,21 @@ export class ResourceKindChooser implements ComponentAttached {
   @bindable filter: (resourceKind: ResourceKind) => boolean = () => true;
   @bindable @booleanAttribute setFirstAsDefault: boolean;
   @bindable @booleanAttribute useComputedWidth: boolean;
-  resourceKinds: ResourceKind[];
+  @bindable resourceKinds: ResourceKind[];
 
   constructor(private resourceKindRepository: ResourceKindRepository) {
   }
 
   attached() {
-    const query = this.resourceKindRepository.getListQuery();
-    if (this.resourceClass) {
-      query.filterByResourceClasses(this.resourceClass);
+    if (!this.resourceKinds) {
+      const query = this.resourceKindRepository.getListQuery();
+      if (this.resourceClass) {
+        query.filterByResourceClasses(this.resourceClass);
+      }
+      if (this.workflowId) {
+        query.filterByWorkflowId(this.workflowId);
+      }
+      query.get().then(resourceKinds => this.resourceKinds = resourceKinds.filter(this.filter));
     }
-    if (this.workflowId) {
-      query.filterByWorkflowId(this.workflowId);
-    }
-    query.get().then(resourceKinds => this.resourceKinds = resourceKinds.filter(this.filter));
   }
 }

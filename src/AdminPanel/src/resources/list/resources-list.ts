@@ -26,6 +26,7 @@ import {CurrentUserIsReproductorValueConverter} from "./current-user-is-reproduc
 import {FilterChangedEvent} from "resources/list/resources-list-filters";
 import {MetadataFilterChange} from "resources/list/resource-list-filters/resource-list-metadata-filter/resource-list-metadata-filter";
 import {PlacesFilterChange} from "resources/list/resource-list-filters/resource-list-place-filter/resource-list-place-filter";
+import {KindsFilterChange} from "./resource-list-filters/resource-list-kind-filter/resource-list-kind-filter";
 
 @autoinject()
 export class ResourcesList {
@@ -65,6 +66,7 @@ export class ResourcesList {
   private placesFilterValueChangeEventSubscription: Subscription;
   private resourceKindIdsAllowedByParent: number[];
   private sortByKey: string;
+  private kindFilter: number[];
 
   constructor(private alert: Alert,
               private i18n: I18N,
@@ -105,6 +107,11 @@ export class ResourcesList {
     this.placesFilterValueChangeEventSubscription = this.eventAggregator.subscribe('placeFilterValueChanged',
       ({value}: FilterChangedEvent<PlacesFilterChange>) => {
         this.placeFilterValueChanged(value);
+      }
+    );
+    this.placesFilterValueChangeEventSubscription = this.eventAggregator.subscribe('kindFilterValueChanged',
+      ({value}: FilterChangedEvent<KindsFilterChange>) => {
+        this.kindFilterValueChanged(value);
       }
     );
     if (this.resourceKind) {
@@ -161,6 +168,15 @@ export class ResourcesList {
     this.fetchResources();
   }
 
+  private kindFilterValueChanged(resourceKinds: number[]) {
+    if (!this.kindFilter) {
+      this.kindFilter = [];
+    }
+    this.kindFilter = resourceKinds;
+    this.updateURL(true);
+    this.fetchResources();
+  }
+
   activate(parameters: any) {
     this.newResourceKind = undefined;
     this.prepareBeforeFetchingResources(parameters.resourceClass || this.getResourceClass());
@@ -173,6 +189,7 @@ export class ResourcesList {
     this.contentsFilter = safeJsonParse(parameters['contentsFilter']) || {};
     this.idsFilter = parameters['ids'];
     this.placesFilter = safeJsonParse(parameters['placesFilter']);
+    this.kindFilter = safeJsonParse(parameters['kindFilter']);
     let sortBy = safeJsonParse(parameters['sortBy']);
     this.sortBy = sortBy ? sortBy : this.getSorting();
     this.displayAllLevels = !!parameters['allLevels'] || !!this.resourceKind;
@@ -244,6 +261,8 @@ export class ResourcesList {
     }
     if (this.resourceKind) {
       query = query.filterByResourceKindIds(this.resourceKind.id);
+    } else if (!this.resourceKind && this.kindFilter && this.kindFilter.length) {
+      query = query.filterByResourceKindIds(this.kindFilter);
     }
     if (this.contentsFilter && Object.values(this.contentsFilter).find(value => value != undefined)) {
       query = query.filterByContents(this.contentsFilter)
@@ -289,25 +308,28 @@ export class ResourcesList {
   }
 
   fetchPossibleResourceKinds() {
-    let query = this.resourceKindRepository.getListQuery();
-    if (this.allowedResourceKinds) {
-      (this.allowedResourceKinds as Array<ResourceKind | number>).forEach(resourceKindOrId => {
-        return resourceKindOrId instanceof ResourceKind
-          ? resourceKindOrId.id
-          : resourceKindOrId;
+    if (this.resourceKind) {
+      this.resourceKinds = [this.resourceKind];
+    } else {
+      let query = this.resourceKindRepository.getListQuery();
+      if (this.allowedResourceKinds) {
+        (this.allowedResourceKinds as Array<ResourceKind | number>).forEach(resourceKindOrId => {
+          return resourceKindOrId instanceof ResourceKind
+            ? resourceKindOrId.id
+            : resourceKindOrId;
+        });
+      }
+      if (this.allowedResourceKinds && this.allowedResourceKinds.length) {
+        query.filterByIds(this.allowedResourceKinds as number[]);
+      } else if (this.resourceClass) {
+        query.filterByResourceClasses(this.resourceClass);
+      }
+      query.get().then(resourceKinds => {
+        // this.resourceKinds should stay the same instance. Reassigning causes no detection of list changes in resource-list-places-filter
+        this.resourceKinds.splice(0, this.resourceKinds.length);
+        this.resourceKinds.push(...resourceKinds);
       });
     }
-    if (this.allowedResourceKinds && this.allowedResourceKinds.length) {
-      query.filterByIds(this.allowedResourceKinds as number[]);
-    }
-    if (this.resourceClass) {
-      query.filterByResourceClasses(this.resourceClass);
-    }
-    query.get().then(resourceKinds => {
-      // this.resourceKinds should stay the same instance. Reassigning causes no detection of list changes in resource-list-places-filter
-      this.resourceKinds.splice(0, this.resourceKinds.length);
-      this.resourceKinds.push(...resourceKinds);
-    });
   }
 
   resourceClassChanged() {
@@ -373,6 +395,9 @@ export class ResourcesList {
     }
     if (this.placesFilter && this.placesFilter.length) {
       parameters['placesFilter'] = JSON.stringify(this.placesFilter);
+    }
+    if (this.kindFilter && this.kindFilter.length) {
+      parameters['kindFilter'] = JSON.stringify(this.kindFilter);
     }
     parameters['sortBy'] = JSON.stringify(this.sortBy);
     if (!queryParameters['tab'] || queryParameters['tab'] == 'children') {

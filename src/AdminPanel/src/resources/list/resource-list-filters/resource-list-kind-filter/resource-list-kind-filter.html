@@ -1,13 +1,15 @@
 <template class="resource-list-dropdown-filter">
-    <require from="common/components/workflow/workflow-place-chooser/workflow-place-chooser"></require>
+    <require from="common/components/resource-kind/resource-kind-chooser/resource-kind-chooser"></require>
 
     <button mousedown.delegate="toggleInputBoxVisibility()">
         <icon name="filter"></icon>
     </button>
     <form if.bind="inputBoxVisible"
         submit.delegate="publishValue()">
-        <workflow-place-chooser workflow-places.bind="placesList"
-            value.bind="places"></workflow-place-chooser>
+        <resource-kind-chooser
+            resource-kinds.bind="resourceKindList"
+            value.bind="resourceKinds"
+            multi-select.one-time="true"></resource-kind-chooser>
         <button mousedown.delegate="publishValue()">
             <icon name="search"></icon>
         </button>
