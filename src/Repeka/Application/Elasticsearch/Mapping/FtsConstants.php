@@ -28,6 +28,11 @@ final class FtsConstants {
         'UTF-8',
     ];
 
+    const NOT_RETURNED_TYPES = [
+        '*.value_file',
+        '*.value_directory',
+    ];
+
     const NUMERIC_DETECTION_PARAM = 'numeric_detection';
 
     private function __construct() {

@@ -63,6 +63,7 @@ class ElasticSearchQuery {
             $finalQuery->setSize($this->query->getResultsPerPage());
             $finalQuery->setFrom($this->query->getOffset());
         }
+        $finalQuery->setSource(['excludes' => FtsConstants::NOT_RETURNED_TYPES]);
         return $finalQuery;
     }
 
