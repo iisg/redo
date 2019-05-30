@@ -23,7 +23,6 @@ export abstract class ConstraintValidator {
     const customMessage = this.i18n.tr('metadata_constraints::customMessages//' + FrontendConfig.get('theme')
       + '//' + customMessageIdentifier, {metadata, resource});
     if (customMessage.indexOf(customMessageIdentifier) > 0) {
-      // console.log(customMessageIdentifier);
       return this.getErrorMessage(metadata, resource);
     } else {
       return customMessage;

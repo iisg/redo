@@ -2,7 +2,7 @@ import {bindable} from "aurelia-templating";
 import {autoinject} from "aurelia-dependency-injection";
 import {Resource} from "resources/resource";
 import {Metadata} from "resources-config/metadata/metadata";
-import {times, random} from 'lodash';
+import {random, times} from 'lodash';
 import {computedFrom} from "aurelia-binding";
 import {FileUploaderType} from "resources-config/metadata/constraint/file-uploader-type/file-uploader-type-editor";
 
