@@ -22,9 +22,10 @@ class NotBlankInAllLanguagesRule extends AbstractRule {
             $availableLanguages
         );
         $requiredLanguagesCount = count($availableLanguages);
-        return Validator::allOf(
+        $v = Validator::allOf(
             Validator::arrayType()->length($requiredLanguagesCount, $requiredLanguagesCount),
             $requiredLanguagesChecks
         )->validate($input);
+        return $v;
     }
 }

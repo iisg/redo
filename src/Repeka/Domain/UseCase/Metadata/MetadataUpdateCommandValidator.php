@@ -4,6 +4,7 @@ namespace Repeka\Domain\UseCase\Metadata;
 use Repeka\Domain\Cqrs\Command;
 use Repeka\Domain\Validation\CommandAttributesValidator;
 use Repeka\Domain\Validation\Rules\ConstraintArgumentsAreValidRule;
+use Repeka\Domain\Validation\Rules\NotBlankInAllLanguagesRule;
 use Repeka\Domain\Validation\Rules\ResourceDisplayStrategySyntaxValidRule;
 use Repeka\Domain\Validation\Rules\ResourceKindConstraintIsUserIfMetadataDeterminesAssigneeRule;
 use Respect\Validation\Validatable;
@@ -16,21 +17,25 @@ class MetadataUpdateCommandValidator extends CommandAttributesValidator {
     private $rkConstraintIsUserIfNecessaryRule;
     /** @var ResourceDisplayStrategySyntaxValidRule */
     private $displayStrategySyntaxValidRule;
+    /** @var NotBlankInAllLanguagesRule */
+    private $notBlankInAllLanguagesRule;
 
     public function __construct(
         ConstraintArgumentsAreValidRule $constraintArgumentsAreValidRule,
         ResourceKindConstraintIsUserIfMetadataDeterminesAssigneeRule $rkConstraintIsUserIfNecessaryRule,
-        ResourceDisplayStrategySyntaxValidRule $displayStrategySyntaxValidRule
+        ResourceDisplayStrategySyntaxValidRule $displayStrategySyntaxValidRule,
+        NotBlankInAllLanguagesRule $notBlankInAllLanguagesRule
     ) {
         $this->constraintArgumentsAreValidRule = $constraintArgumentsAreValidRule;
         $this->rkConstraintIsUserIfNecessaryRule = $rkConstraintIsUserIfNecessaryRule;
         $this->displayStrategySyntaxValidRule = $displayStrategySyntaxValidRule;
+        $this->notBlankInAllLanguagesRule = $notBlankInAllLanguagesRule;
     }
 
     /** @param MetadataUpdateCommand $command */
     public function getValidator(Command $command): Validatable {
         return Validator
-            ::attribute('newLabel', Validator::arrayType())
+            ::attribute('newLabel', $this->notBlankInAllLanguagesRule)
             ->attribute('newPlaceholder', Validator::arrayType())
             ->attribute('newDescription', Validator::arrayType())
             ->attribute('newShownInBrief', Validator::boolType())

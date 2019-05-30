@@ -17,7 +17,7 @@ class NonExistingMetadataStripper {
     }
 
     /**
-     * @param array $workflowPlaces
+     * @param ResourceWorkflowPlace[] $workflowPlaces
      * @param string $resourceClass
      * @return ResourceWorkflowPlace[]
      */
@@ -29,10 +29,8 @@ class NonExistingMetadataStripper {
         $metadata = $this->metadataRepository->findByQuery($metadataListQuery);
         $metadataIds = EntityUtils::mapToIds($metadata);
         return array_map(
-            function ($workflowPlace) use ($metadataIds) {
-                $workflowPlace = $workflowPlace instanceof ResourceWorkflowPlace
-                    ? $workflowPlace->toArray()
-                    : ResourceWorkflowPlace::fromArray($workflowPlace)->toArray();  // ensure we have all keys
+            function (ResourceWorkflowPlace $workflowPlace) use ($metadataIds) {
+                $workflowPlace = $workflowPlace->toArray();
                 return new ResourceWorkflowPlace(
                     $workflowPlace['label'],
                     $workflowPlace['id'],

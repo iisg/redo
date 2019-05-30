@@ -123,7 +123,6 @@ export class MetadataDetails implements RoutableComponentActivate {
   }
 
   saveEditedMetadata(metadata: Metadata, changedMetadata: Metadata): Promise<any> {
-    const originalMetadata: Metadata = this.entitySerializer.clone(metadata);
     this.entitySerializer.hydrateClone(changedMetadata, metadata);
     metadata.pendingRequest = true;
     return this.metadataRepository.update(changedMetadata)
@@ -133,7 +132,6 @@ export class MetadataDetails implements RoutableComponentActivate {
         this.updateUrl();
         this.metadataDetailsTabs.setDisabled(this.editing);
       })
-      .catch(() => this.entitySerializer.hydrateClone(originalMetadata, metadata))
       .finally(() => metadata.pendingRequest = false);
   }
 }

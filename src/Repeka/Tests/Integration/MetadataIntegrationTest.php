@@ -211,18 +211,35 @@ class MetadataIntegrationTest extends IntegrationTestCase {
         self::assertEquals($metadata->getName(), $updatedMetadata->getName());
     }
 
+    public function testEditingMetadataKindFailsWhenNoLabel() {
+        $this->createLanguage('EN', 'EN', 'Test English');
+        $this->createLanguage('PL', 'PL', 'Test Polish');
+        $metadata = $this->createMetadata(
+            'Metadata',
+            ['EN' => 'A metadata', 'PL' => '-'],
+            ['EN' => 'Placeholder', 'PL' => '-'],
+            ['EN' => 'Description', 'PL' => '-'],
+            'integer'
+        );
+        $client = self::createAdminClient();
+        $update = [];
+        $client->apiRequest('PATCH', self::ENDPOINT . '/' . $metadata->getId(), $update);
+        self::assertStatusCode(400, $client->getResponse());
+    }
+
     public function testChangingMetadataKindNameIsImpossible() {
         $this->createLanguage('EN', 'EN', 'Test English');
         $metadata = $this->createMetadata(
             'Metadata',
-            ['EN' => 'A metadata'],
-            ['EN' => 'Placeholder'],
-            ['EN' => 'Description'],
+            ['EN' => 'A metadata', 'PL' => '-'],
+            ['EN' => 'Placeholder', 'PL' => '-'],
+            ['EN' => 'Description', 'PL' => '-'],
             'integer'
         );
         $client = self::createAdminClient();
         $update = [
             'name' => 'Altered',
+            'label' => ['EN' => 'A metadata', 'PL' => '-'],
             'constraints' => [],
         ];
         $client->apiRequest('PATCH', self::ENDPOINT . '/' . $metadata->getId(), $update);

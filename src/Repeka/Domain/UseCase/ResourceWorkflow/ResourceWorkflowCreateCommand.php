@@ -1,9 +1,10 @@
 <?php
 namespace Repeka\Domain\UseCase\ResourceWorkflow;
 
+use Repeka\Domain\Cqrs\AdjustableCommand;
 use Repeka\Domain\Cqrs\ResourceClassAwareCommand;
 
-class ResourceWorkflowCreateCommand extends ResourceClassAwareCommand {
+class ResourceWorkflowCreateCommand extends ResourceClassAwareCommand implements AdjustableCommand {
     private $name;
     private $places;
     private $transitions;

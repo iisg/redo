@@ -251,7 +251,7 @@ class ResourcesSchemaLoader {
         /** @var ResourceWorkflow[] $workflows */
         $workflows = $this->commandBus->handle(new ResourceWorkflowListQuery($resourceClass));
         foreach ($workflows as $w) {
-            if ($w->getName() == $label) {
+            if ($w->getName()['PL'] == $label['PL']) {
                 $workflow = $w;
                 break;
             }

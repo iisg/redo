@@ -9,6 +9,7 @@ use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Metadata\MetadataImport\Config\ImportConfigFactory;
 use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Domain\Repository\ResourceKindRepository;
+use Repeka\Domain\UseCase\Language\LanguageDeleteCommand;
 use Repeka\Domain\UseCase\MetadataImport\MarcxmlExtractQuery;
 use Repeka\Domain\UseCase\MetadataImport\MetadataImportQuery;
 use Repeka\Tests\Integration\Migrations\DatabaseMigrationTestCase;
@@ -33,6 +34,7 @@ class ConfigurationForOldSystemImportIntegrationTest extends DatabaseMigrationTe
         $this->getEntityManager()->getConnection()->exec(file_get_contents(__DIR__ . '/dumps/only_language_resources_pgdump.sql'));
         $this->getEntityManager()->getConnection()->exec(file_get_contents(__DIR__ . '/dumps/only_language_resources_fix_metadata.sql'));
         $this->executeCommand('doctrine:migrations:migrate');
+        $this->handleCommandBypassingFirewall(new LanguageDeleteCommand('GB'));
         $this->resourceKindRepository = $this->container->get(ResourceKindRepository::class);
         $this->metadataRepository = $this->container->get(MetadataRepository::class);
         $metadata = [];
@@ -42,7 +44,7 @@ class ConfigurationForOldSystemImportIntegrationTest extends DatabaseMigrationTe
         }
         $this->testResourceKind = $this->createResourceKind(
             'testResourceKind',
-            ['PL' => 'testResourceKind', 'GB' => 'testResourceKind'],
+            ['PL' => 'testResourceKind'],
             $metadata
         );
         $this->configPath = __DIR__ . '/dumps/marc-import-config.yml';

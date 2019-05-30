@@ -5,6 +5,7 @@ use Repeka\Domain\Exception\InvalidCommandException;
 use Repeka\Domain\UseCase\Metadata\MetadataUpdateCommand;
 use Repeka\Domain\UseCase\Metadata\MetadataUpdateCommandValidator;
 use Repeka\Domain\Validation\Rules\ConstraintArgumentsAreValidRule;
+use Repeka\Domain\Validation\Rules\NotBlankInAllLanguagesRule;
 use Repeka\Domain\Validation\Rules\ResourceDisplayStrategySyntaxValidRule;
 use Repeka\Domain\Validation\Rules\ResourceKindConstraintIsUserIfMetadataDeterminesAssigneeRule;
 use Repeka\Tests\Traits\StubsTrait;
@@ -18,6 +19,8 @@ class MetadataUpdateCommandValidatorTest extends \PHPUnit_Framework_TestCase {
     private $rkConstraintRule;
     /** @var ResourceDisplayStrategySyntaxValidRule|\PHPUnit_Framework_MockObject_MockObject */
     private $displayStrategySyntaxValidRule;
+    /** @var NotBlankInAllLanguagesRule | \PHPUnit_Framework_MockObject_MockObject */
+    private $notBlankInAllLanguagesRule;
 
     /** @var MetadataUpdateCommand */
     private $command;
@@ -34,6 +37,7 @@ class MetadataUpdateCommandValidatorTest extends \PHPUnit_Framework_TestCase {
         $this->constraintArgumentsRule = $this->createRuleMock(ConstraintArgumentsAreValidRule::class, true);
         $this->rkConstraintRule = $this->resourceKindConstraintIsUser(true);
         $this->displayStrategySyntaxValidRule = $this->createRuleMock(ResourceDisplayStrategySyntaxValidRule::class, true);
+        $this->notBlankInAllLanguagesRule = $this->createRuleMock(NotBlankInAllLanguagesRule::class, true);
         $this->command = new MetadataUpdateCommand(
             $this->createMetadataMock(),
             ['PL' => 'Test'],
@@ -51,7 +55,8 @@ class MetadataUpdateCommandValidatorTest extends \PHPUnit_Framework_TestCase {
         $validator = new MetadataUpdateCommandValidator(
             $this->constraintArgumentsRule,
             $this->rkConstraintRule,
-            $this->displayStrategySyntaxValidRule
+            $this->displayStrategySyntaxValidRule,
+            $this->notBlankInAllLanguagesRule
         );
         $validator->validate($this->command);
     }
@@ -61,7 +66,8 @@ class MetadataUpdateCommandValidatorTest extends \PHPUnit_Framework_TestCase {
         $validator = new MetadataUpdateCommandValidator(
             $this->createRuleMock(ConstraintArgumentsAreValidRule::class, false),
             $this->rkConstraintRule,
-            $this->displayStrategySyntaxValidRule
+            $this->displayStrategySyntaxValidRule,
+            $this->notBlankInAllLanguagesRule
         );
         $validator->validate($this->command);
     }
@@ -71,7 +77,8 @@ class MetadataUpdateCommandValidatorTest extends \PHPUnit_Framework_TestCase {
         $validator = new MetadataUpdateCommandValidator(
             $this->constraintArgumentsRule,
             $this->resourceKindConstraintIsUser(false),
-            $this->displayStrategySyntaxValidRule
+            $this->displayStrategySyntaxValidRule,
+            $this->notBlankInAllLanguagesRule
         );
         $validator->validate($this->command);
     }
@@ -81,7 +88,8 @@ class MetadataUpdateCommandValidatorTest extends \PHPUnit_Framework_TestCase {
         $validator = new MetadataUpdateCommandValidator(
             $this->constraintArgumentsRule,
             $this->rkConstraintRule,
-            $this->createRuleMock(ResourceDisplayStrategySyntaxValidRule::class, false)
+            $this->createRuleMock(ResourceDisplayStrategySyntaxValidRule::class, false),
+            $this->notBlankInAllLanguagesRule
         );
         $validator->validate($this->command);
     }
