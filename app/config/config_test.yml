@@ -64,7 +64,9 @@ services:
       - '@test.client.cookiejar'
   Repeka\Plugins\Redo\EventListener\PhraseTranslator:
     class: Repeka\Plugins\Redo\Tests\Integration\TestPhraseTranslator
-    public: true 
+    public: true
+  Repeka\Domain\Service\TimeProvider:
+    class: Repeka\Tests\Integration\Traits\TestTimeProvider
 
 redo:
   pk_auth:

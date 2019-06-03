@@ -1,12 +1,14 @@
 <?php
 namespace Repeka\Domain\Entity\MetadataDateControl;
 
+use Assert\Assertion;
 use DateTime;
+use Repeka\Domain\Entity\MetadataValue;
 
 final class MetadataDateControlConverterUtil {
 
     private const FLEXIBLE_DATE_FORMAT = 'Y-m-d\TH:i:s';
-    private const TIMESTAMP_DATE_FORMAT = \DateTime::ATOM;
+    private const TIMESTAMP_DATE_FORMAT = DateTime::ATOM;
 
     private function __construct() {
     }
@@ -78,8 +80,8 @@ final class MetadataDateControlConverterUtil {
     }
 
     /**
-     * @var integer | string $date
      * @return string
+     * @var integer | string $date
      */
     private static function toFlexibleDateFormat($date) {
         return is_integer($date)
@@ -133,8 +135,20 @@ final class MetadataDateControlConverterUtil {
         }
     }
 
+    /**
+     * @param string|DateTime $value
+     * @return string
+     */
     public static function convertDateToAtomFormat($value): string {
-        $dateTime = new DateTime($value);
+        if ($value instanceof DateTime) {
+            $dateTime = $value;
+        } elseif ($value instanceof MetadataValue) {
+            $value = $value->getValue();
+        }
+        if (!isset($dateTime)) {
+            Assertion::string($value, 'Invalid date given:' . var_export($value, true));
+            $dateTime = new DateTime($value);
+        }
         $dateTime->setTimezone(new \DateTimeZone(date_default_timezone_get()));
         return $dateTime->format(DateTime::ATOM);
     }
