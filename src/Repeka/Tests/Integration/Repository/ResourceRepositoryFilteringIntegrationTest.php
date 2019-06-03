@@ -169,7 +169,7 @@ class ResourceRepositoryFilteringIntegrationTest extends IntegrationTestCase {
         $userResourceKind = $this->container->get(ResourceKindRepository::class)->findOne(SystemResourceKind::USER);
         $query = ResourceListQuery::builder()->filterByResourceKind($userResourceKind)->setPage(1)->setResultsPerPage(6)->build();
         $paginatedResources = $this->resourceRepository->findByQuery($query);
-        $this->assertCount(5, $paginatedResources->getResults());
+        $this->assertCount(6, $paginatedResources->getResults());
     }
 
     public function testFindTopLevel() {

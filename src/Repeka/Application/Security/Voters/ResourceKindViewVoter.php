@@ -39,21 +39,20 @@ class ResourceKindViewVoter extends Voter {
         if (!$user || !($user instanceof User)) {
             $user = $this->unauthenticatedUserPermissionHelper->getUnauthenticatedUser();
         }
-        if ($user->hasRole(SystemRole::ADMIN()->roleName())) {
+        if ($user->hasRole(SystemRole::OPERATOR()->roleName())) {
             return true;
         }
         return $this->userCanSeeAnyResourcesOfKind($resourceKind, $user);
     }
 
     private function userCanSeeAnyResourcesOfKind($resourceKind, $user): bool {
-        return $this->resourceRepository->findByQuery(
-            ResourceListQuery::builder()
-                ->filterByResourceKind($resourceKind)
-                ->setExecutor($user)
-                ->setPermissionMetadataId(SystemMetadata::VISIBILITY)
-                ->setPage(1)
-                ->setResultsPerPage(1)
-                ->build()
-        )->count();
+        $query = ResourceListQuery::builder()
+            ->filterByResourceKind($resourceKind)
+            ->setExecutor($user)
+            ->setPermissionMetadataId(SystemMetadata::VISIBILITY)
+            ->setPage(1)
+            ->setResultsPerPage(1)
+            ->build();
+        return $this->resourceRepository->findByQuery($query)->count() > 0;
     }
 }

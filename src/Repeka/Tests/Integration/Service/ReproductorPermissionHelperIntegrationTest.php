@@ -31,7 +31,7 @@ class ReproductorPermissionHelperIntegrationTest extends IntegrationTestCase {
     protected function initializeDatabaseForTests() {
         $this->loadAllFixtures();
         $this->helper = $this->container->get(ReproductorPermissionHelper::class);
-        $this->testerUser = $this->getUserByName('tester');
+        $this->testerUser = $this->getUserByUsername('tester');
         $this->ebooks = $this->findResourceByContents(['Nazwa kategorii' => 'E-booki']);
         $this->remark = $this->findResourceByContents(['Nazwa uwagi' => 'Uwagi']);
     }

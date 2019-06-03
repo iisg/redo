@@ -20,22 +20,15 @@ class ResourceGodUpdateCommand extends AbstractCommand implements AuditedCommand
     /** @var array */
     private $placesIds;
 
-    public static function builder(): ResourceGodUpdateCommandBuilder {
-        return new ResourceGodUpdateCommandBuilder();
+    public static function builder(?ResourceEntity $resource = null): ResourceGodUpdateCommandBuilder {
+        return new ResourceGodUpdateCommandBuilder($resource);
     }
 
-    public static function withParams(
-        ResourceEntity $resource,
-        ResourceContents $contents,
-        $resourceKind,
-        array $placesIds
-    ): ResourceGodUpdateCommand {
-        $command = new self();
-        $command->resource = $resource;
-        $command->contents = $contents;
-        $command->resourceKind = $resourceKind;
-        $command->placesIds = $placesIds;
-        return $command;
+    public function __construct(ResourceEntity $resource, ?ResourceContents $contents = null, $resourceKind = null, array $placesIds = []) {
+        $this->resource = $resource;
+        $this->contents = $contents;
+        $this->resourceKind = $resourceKind;
+        $this->placesIds = $placesIds;
     }
 
     public function getResource(): ResourceEntity {

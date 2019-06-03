@@ -51,9 +51,9 @@ class ResourceFilePermissionIntegrationTest extends IntegrationTestCase {
         $this->resourceFileStorage = $this->container->get(ResourceFileStorage::class);
         $this->oracle = $this->container->get(SecurityOracle::class);
         $this->executeCommand('repeka:create-user ziom ziom');
-        $this->ziomUser = $this->getUserByName('ziom');
+        $this->ziomUser = $this->getUserByUsername('ziom');
         $this->ziomUserToken = $this->simulateAuthentication($this->ziomUser);
-        $this->adminUser = $this->getUserByName('admin');
+        $this->adminUser = $this->getUserByUsername('admin');
         $this->adminUserToken = $this->simulateAuthentication($this->adminUser);
         $titleMetadata = $this->findMetadataByName('tytuł');
         $this->phpBook = $this->findResourceByContents([$titleMetadata->getId() => 'php i mysql']);

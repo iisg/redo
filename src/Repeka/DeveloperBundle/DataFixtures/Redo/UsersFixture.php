@@ -17,5 +17,6 @@ class UsersFixture extends RepekaFixture {
         $this->handleCommand(new UserCreateCommand('budynek', 'budynek'), self::REFERENCE_USER_BUDYNEK);
         $this->handleCommand(new UserCreateCommand('tester', 'tester'), self::REFERENCE_USER_TESTER);
         $this->handleCommand(new UserCreateCommand('skaner', 'skaner'), self::REFERENCE_USER_SCANNER);
+        $this->handleCommand(new UserCreateCommand('user', 'user'));
     }
 }

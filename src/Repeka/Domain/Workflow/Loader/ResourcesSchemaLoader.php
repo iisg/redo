@@ -39,6 +39,7 @@ use Repeka\Domain\Utils\StringUtils;
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
+ * @SuppressWarnings("PHPMD.CyclomaticComplexity")
  */
 class ResourcesSchemaLoader {
     use Transactional;
@@ -179,8 +180,19 @@ class ResourcesSchemaLoader {
                 $resourceContents = array_merge($commonMetadata, $resourceContents);
                 foreach ($relationshipMetadata as $referencableMetadata) {
                     $value = $resourceContents[$referencableMetadata->getName()] ?? null;
-                    if ($value && isset($references[$value])) {
-                        $resourceContents[$referencableMetadata->getName()] = $references[$value];
+                    if ($value && !is_array($value)) {
+                        $value = [$value];
+                    }
+                    if ($value) {
+                        $values = [];
+                        foreach ($value as $valueRef) {
+                            if ($valueRef && isset($references[$valueRef])) {
+                                $values[] = $references[$valueRef];
+                            } else {
+                                $values[] = $valueRef;
+                            }
+                        }
+                        $resourceContents[$referencableMetadata->getName()] = $values;
                     }
                 }
                 $resource = $this->createOrUpdateResource($resourceKind, $identifiableMetadata, $resourceContents);

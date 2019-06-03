@@ -66,12 +66,20 @@ class VisibilityIntegrationTest extends IntegrationTestCase {
         $this->addSupportForResourceKindToMetadata(SystemMetadata::TEASER_VISIBILITY, $this->resourceKind->getId());
         $this->addSupportForResourceKindToMetadata(SystemMetadata::VISIBILITY, $dictionaryResourceKind->getId());
         $this->addSupportForResourceKindToMetadata(SystemMetadata::TEASER_VISIBILITY, $dictionaryResourceKind->getId());
+        $adminId = $this->admin->getUserResourceId();
+        $administratorsGroupId = $this->findResourceByContents([SystemMetadata::USERNAME => 'Administratorzy'])->getId();
+        $scannersGroupId = $this->findResourceByContents([SystemMetadata::USERNAME => 'Skaniści'])->getId();
         $this->parentResource = $this->createResource(
             $this->resourceKind,
             [
                 $this->titleMetadata->getId() => ['Parent visible in teaser'],
                 SystemMetadata::VISIBILITY => [],
-                SystemMetadata::TEASER_VISIBILITY => [1, 5, 6, SystemResource::UNAUTHENTICATED_USER],
+                SystemMetadata::TEASER_VISIBILITY => [
+                    $adminId,
+                    $administratorsGroupId,
+                    $scannersGroupId,
+                    SystemResource::UNAUTHENTICATED_USER,
+                ],
             ]
         );
         $this->invisibleBook = $this->createResource(
@@ -97,15 +105,20 @@ class VisibilityIntegrationTest extends IntegrationTestCase {
                 $this->titleMetadata->getId() => ['Visible only in relationship'],
                 SystemMetadata::VISIBILITY => [],
                 SystemMetadata::PARENT => [$this->parentResource->getId()],
-                SystemMetadata::TEASER_VISIBILITY => [1, 5, 6, SystemResource::UNAUTHENTICATED_USER],
+                SystemMetadata::TEASER_VISIBILITY => [
+                    $adminId,
+                    $administratorsGroupId,
+                    $scannersGroupId,
+                    SystemResource::UNAUTHENTICATED_USER,
+                ],
             ]
         );
         $this->resourceVisibleBySkanerGroup = $this->createResource(
             $this->resourceKind,
             [
                 $this->titleMetadata->getId() => ['Visible only by skaner group'],
-                SystemMetadata::VISIBILITY => [6],
-                SystemMetadata::TEASER_VISIBILITY => [6],
+                SystemMetadata::VISIBILITY => [$scannersGroupId],
+                SystemMetadata::TEASER_VISIBILITY => [$scannersGroupId],
             ]
         );
         $this->resourceVisibleForEverybody = $this->createResource(
@@ -113,8 +126,13 @@ class VisibilityIntegrationTest extends IntegrationTestCase {
             [
                 $this->titleMetadata->getId() => ['Visible for everyone'],
                 SystemMetadata::PARENT => [$this->parentResource->getId()],
-                SystemMetadata::VISIBILITY => [1, 5, 6, SystemResource::UNAUTHENTICATED_USER],
-                SystemMetadata::TEASER_VISIBILITY => [1, 5, 6, SystemResource::UNAUTHENTICATED_USER],
+                SystemMetadata::VISIBILITY => [$adminId, $administratorsGroupId, $scannersGroupId, SystemResource::UNAUTHENTICATED_USER],
+                SystemMetadata::TEASER_VISIBILITY => [
+                    $adminId,
+                    $administratorsGroupId,
+                    $scannersGroupId,
+                    SystemResource::UNAUTHENTICATED_USER,
+                ],
             ]
         );
     }

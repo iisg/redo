@@ -23,7 +23,7 @@ class ResourceGodUpdateCommandAdjuster implements CommandAdjuster {
      * @return ResourceGodUpdateCommand
      */
     public function adjustCommand(Command $command): Command {
-        return ResourceGodUpdateCommand::withParams(
+        return new ResourceGodUpdateCommand(
             $command->getResource(),
             $this->resourceContentsAdjuster->adjust($command->getContents()),
             $this->convertResourceKindIdToResourceKind($command->getResourceKind()),

@@ -47,14 +47,14 @@ trait FixtureHelpers {
     }
 
     private function getBudynekUser(): UserEntity {
-        return $this->getUserByName('budynek');
+        return $this->getUserByUsername('budynek');
     }
 
     private function getSkanerUser(): UserEntity {
-        return $this->getUserByName('skaner');
+        return $this->getUserByUsername('skaner');
     }
 
-    private function getUserByName(string $name): UserEntity {
+    private function getUserByUsername(string $name): UserEntity {
         /** @var UserEntity[] $users */
         $users = $this->handleCommandBypassingFirewall(new UserListQuery());
         foreach ($users as $user) {

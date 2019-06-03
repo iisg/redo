@@ -63,11 +63,12 @@ class TwigFrontendExtensionIntegrationTest extends IntegrationTestCase {
     public function testFetchingResources() {
         $couldUseWebpackId = $this->findResourceByContents(['tytul' => 'Mogliśmy użyć Webpacka'])->getId();
         $phpBookId = $this->getPhpBookResource()->getId();
+        $ebooksId = $this->findResourceByContents(['nazwa_kategorii' => 'E-booki'])->getId();
         $testCases = [
-            ['{}', [18, 10, 17], [100]],
-            ['{parentId: null}', [17, 10, 18], [$couldUseWebpackId]],
+            ['{}', [$phpBookId, $ebooksId, $couldUseWebpackId], [100]],
+            ['{parentId: null}', [$ebooksId, $phpBookId], [$couldUseWebpackId]],
             ['{resourceClass: "books"}', [$phpBookId, $couldUseWebpackId], [1, 2]],
-            ["{resourceKindIds: [{$this->getPhpBookResource()->getKind()->getId()}]}", [$phpBookId, $couldUseWebpackId], [1, 2]],
+            ["{resourceKindIds: [{$this->getPhpBookResource()->getKind()->getId()}]}", [$phpBookId, $couldUseWebpackId], [1, 2, $ebooksId]],
         ];
         foreach ($testCases as $testCase) {
             list($filters, $expectedIds, $notExpectedIds) = $testCase;

@@ -12,7 +12,12 @@ class ResourceGodUpdateCommandBuilder {
     private $resourceKind;
     private $placesIds = [];
 
+    public function __construct(?ResourceEntity $resource = null) {
+        $this->resource = $resource;
+    }
+
     public function setResource(ResourceEntity $resource): ResourceGodUpdateCommandBuilder {
+        Assertion::null($this->resource, 'Resource has been already set');
         $this->resource = $resource;
         return $this;
     }
@@ -37,7 +42,7 @@ class ResourceGodUpdateCommandBuilder {
 
     public function build(): ResourceGodUpdateCommand {
         Assertion::notNull($this->resource, 'You must set the resource.');
-        return ResourceGodUpdateCommand::withParams(
+        return new ResourceGodUpdateCommand(
             $this->resource,
             $this->contents instanceof ResourceContents ? $this->contents : ResourceContents::fromArray($this->contents),
             $this->resourceKind,
