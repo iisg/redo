@@ -70,6 +70,75 @@ class ResourceListQuerySqlFactoryTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals('[{"value":40}]', $factory->getParams()['filter0']);
     }
 
+    public function testFilterByContentsConditionLessThan() {
+        $query = ResourceListQuery::builder()->filterByContents([1 => '< 40'])->build();
+        $factory = new ResourceListQuerySqlFactory($query);
+        $this->assertContains('filter0', $factory->getPageQuery());
+        $this->assertContains("r.contents->'1'", $factory->getPageQuery());
+        $this->assertContains("< :filter0", $factory->getPageQuery());
+        $this->assertNotContains("~*", $factory->getPageQuery());
+        $this->assertArrayHasKey('filter0', $factory->getParams());
+        $this->assertEquals(40, $factory->getParams()['filter0']);
+    }
+
+    public function testFilterByContentsConditionLessThanAndGreaterThan() {
+        $query = ResourceListQuery::builder()->filterByContents([1 => [['< 40', '> 50']]])->build();
+        $factory = new ResourceListQuerySqlFactory($query);
+        $this->assertContains('filter0', $factory->getPageQuery());
+        $this->assertContains("r.contents->'1'", $factory->getPageQuery());
+        $this->assertContains("< :filter0", $factory->getPageQuery());
+        $this->assertContains("> :filter1", $factory->getPageQuery());
+        $this->assertNotContains("~*", $factory->getPageQuery());
+        $this->assertArrayHasKey('filter0', $factory->getParams());
+        $this->assertArrayHasKey('filter1', $factory->getParams());
+        $this->assertEquals(40, $factory->getParams()['filter0']);
+        $this->assertEquals(50, $factory->getParams()['filter1']);
+    }
+
+    public function testFilterByContentsConditionGreaterThanOrEqual() {
+        $query = ResourceListQuery::builder()->filterByContents([1 => '>=50'])->build();
+        $factory = new ResourceListQuerySqlFactory($query);
+        $this->assertContains('filter0', $factory->getPageQuery());
+        $this->assertContains("r.contents->'1'", $factory->getPageQuery());
+        $this->assertContains(">= :filter0", $factory->getPageQuery());
+        $this->assertNotContains("~*", $factory->getPageQuery());
+        $this->assertArrayHasKey('filter0', $factory->getParams());
+        $this->assertEquals(50, $factory->getParams()['filter0']);
+    }
+
+    public function testFilterByDate() {
+        $query = ResourceListQuery::builder()->filterByContents([1 => '<= 2015-02-21'])->build();
+        $factory = new ResourceListQuerySqlFactory($query);
+        $this->assertContains('filter0', $factory->getPageQuery());
+        $this->assertContains("r.contents->'1'", $factory->getPageQuery());
+        $this->assertContains("<= :filter0", $factory->getPageQuery());
+        $this->assertNotContains("~*", $factory->getPageQuery());
+        $this->assertArrayHasKey('filter0', $factory->getParams());
+        $this->assertEquals('2015-02-21T00:00:00+00:00', $factory->getParams()['filter0']);
+    }
+
+    public function testFilterByDateAndTime() {
+        $query = ResourceListQuery::builder()->filterByContents([1 => '<= 2015-02-21 15:30:20'])->build();
+        $factory = new ResourceListQuerySqlFactory($query);
+        $this->assertContains('filter0', $factory->getPageQuery());
+        $this->assertContains("r.contents->'1'", $factory->getPageQuery());
+        $this->assertContains("<= :filter0", $factory->getPageQuery());
+        $this->assertNotContains("~*", $factory->getPageQuery());
+        $this->assertArrayHasKey('filter0', $factory->getParams());
+        $this->assertEquals('2015-02-21T15:30:20+00:00', $factory->getParams()['filter0']);
+    }
+
+    public function testFilterByDateAndTimeWithTimezone() {
+        $query = ResourceListQuery::builder()->filterByContents([1 => '<= 2015-02-21T15:30:20+02:00'])->build();
+        $factory = new ResourceListQuerySqlFactory($query);
+        $this->assertContains('filter0', $factory->getPageQuery());
+        $this->assertContains("r.contents->'1'", $factory->getPageQuery());
+        $this->assertContains("<= :filter0", $factory->getPageQuery());
+        $this->assertNotContains("~*", $factory->getPageQuery());
+        $this->assertArrayHasKey('filter0', $factory->getParams());
+        $this->assertEquals('2015-02-21T13:30:20+00:00', $factory->getParams()['filter0']);
+    }
+
     public function testFilterByAlternativeContents() {
         $query = ResourceListQuery::builder()
             ->filterByContents([5 => 'PHP'])

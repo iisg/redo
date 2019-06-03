@@ -270,7 +270,13 @@ class ResourceContents extends ImmutableIteratorAggregate implements \JsonSerial
     public static function fromArray(array $anyArray, callable $valueProducer = null): ResourceContents {
         if (!$valueProducer) {
             $valueProducer = function ($metadataValue) {
-                return is_array($metadataValue) ? ($metadataValue['value'] ?? null) : $metadataValue;
+                if ($metadataValue instanceof MetadataValue) {
+                    return $metadataValue->getValue();
+                }
+                if (is_array($metadataValue)) {
+                    return $metadataValue['value'] ?? (isset($metadataValue['submetadata']) ? null : ($metadataValue ?: null));
+                }
+                return $metadataValue;
             };
         }
         $normalized = array_map(

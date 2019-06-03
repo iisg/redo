@@ -3,7 +3,6 @@ namespace Repeka\Tests\Domain\Entity;
 
 use Repeka\Domain\Entity\MetadataValue;
 use Repeka\Domain\Entity\ResourceContents;
-use Repeka\Domain\Exception\EntityNotFoundException;
 use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Tests\Traits\StubsTrait;
 
@@ -287,6 +286,9 @@ class ResourceContentsTest extends \PHPUnit_Framework_TestCase {
                 ["12" => [["submetadata" => ["33" => []], "extraKey" => [], "value" => "A"]]],
                 [12 => [['value' => 'A', 'submetadata' => [33 => []]]]],
             ],
+            [[1 => [['a', 'b']]], [1 => [['value' => ['a', 'b']]]]],
+            [[1 => ['value' => ['a', 'b']]], [1 => [['value' => ['a', 'b']]]]],
+            [[1 => new MetadataValue(['a', 'b'])], [1 => [['value' => ['a', 'b']]]]],
         ];
     }
 

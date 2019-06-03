@@ -142,37 +142,55 @@ class ResourceListQuerySqlFactory {
 
     /**
      * Each call to filterByContents adds an alternative to search query.
+     * @SuppressWarnings("PHPMD.CyclomaticComplexity")
      */
-    protected function filterByContents(
-        ResourceContents $resourceContents,
-        $contentsPath = 'r.contents'
-    ): void {
+    protected function filterByContents(ResourceContents $resourceContents, $contentsPath = 'r.contents'): void {
         $nextFilterId = $this->getUnusedParamId();
         $contentWhere = [];
         $resourceContents->forEachValue(
             function (MetadataValue $value, int $metadataId) use ($contentsPath, &$contentWhere, &$nextFilterId, &$metadataInFrom) {
-                $paramName = 'filter' . $nextFilterId;
-                $value = $value->getValue();
-                if (is_int($value)) {
-                    $value = json_encode([['value' => $value]]);
-                    $whereClause = "$contentsPath->'$metadataId' @> :$paramName";
-                } elseif ($value == '.+') {
-                    $whereClause = "$contentsPath->>'$metadataId' IS NOT NULL";
-                    $paramName = null;
-                } else {
-                    $metadataFrom = $this->fromsMetadataMap[$contentsPath . $metadataId] ?? null;
-                    if (!$metadataFrom) {
-                        $metadataFrom = "m$nextFilterId";
-                        $this->froms[$metadataFrom] = $this->jsonbArrayElements("$contentsPath->'$metadataId'") . " m$nextFilterId";
-                        $this->fromsMetadataMap[$contentsPath . $metadataId] = $metadataFrom;
+                $filterValues = $value->getValue();
+                if (!is_array($filterValues)) {
+                    $filterValues = [$filterValues];
+                }
+                $whereClauses = [];
+                foreach ($filterValues as $filterValue) {
+                    $paramName = 'filter' . $nextFilterId;
+                    if (is_int($filterValue)) {
+                        $filterValue = json_encode([['value' => $filterValue]]);
+                        $whereClauses[] = "$contentsPath->'$metadataId' @> :$paramName";
+                    } elseif ($filterValue == '.+') {
+                        $whereClauses[] = "$contentsPath->>'$metadataId' IS NOT NULL";
+                        $paramName = null;
+                    } else {
+                        $metadataFrom = $this->fromsMetadataMap[$contentsPath . $metadataId] ?? null;
+                        if (!$metadataFrom) {
+                            $metadataFrom = "m$nextFilterId";
+                            $this->froms[$metadataFrom] = $this->jsonbArrayElements("$contentsPath->'$metadataId'") . " m$nextFilterId";
+                            $this->fromsMetadataMap[$contentsPath . $metadataId] = $metadataFrom;
+                        }
+                        $condition = '~*';
+                        if (preg_match('#^([<>]=?)([\s\d-:T\+]+)$#', $filterValue, $matches)) {
+                            list(, $conditionValue, $compareValue) = array_map('trim', $matches);
+                            if (!is_numeric($compareValue)) {
+                                $timestamp = strtotime($compareValue);
+                                if ($timestamp) {
+                                    $compareValue = (new \DateTime('@' . $timestamp))->format(\DateTime::ATOM);
+                                }
+                            }
+                            if ($compareValue !== false) {
+                                $filterValue = $compareValue;
+                                $condition = $conditionValue;
+                            }
+                        }
+                        $whereClauses[] = "$metadataFrom->>'value' $condition :$paramName";
                     }
-                    $whereClause = "$metadataFrom->>'value' ~* :$paramName";
+                    if ($paramName) {
+                        $this->params[$paramName] = $filterValue;
+                    }
+                    $nextFilterId++;
                 }
-                if ($paramName) {
-                    $this->params[$paramName] = $value;
-                }
-                $contentWhere[$metadataId][] = $whereClause;
-                $nextFilterId++;
+                $contentWhere[$metadataId][] = '(' . implode(') AND (', $whereClauses) . ')';
             }
         );
         if ($contentWhere) {
