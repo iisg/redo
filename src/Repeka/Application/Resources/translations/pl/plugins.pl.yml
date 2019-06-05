@@ -126,3 +126,7 @@ repekaEmailSender:
       label: 'Treść wiadomości'
       placeholder: ''
       description: ''
+    attachments:
+      label: 'Załączniki'
+      placeholder: 'resourceFiles/a.txt, resourceFiles/b.txt'
+      description: ''

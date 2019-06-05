@@ -10,6 +10,7 @@ class EmailMessage {
     private $emailSender;
     /** @var ResourceDisplayStrategyEvaluator */
     private $strategyEvaluator;
+    private $attachmentPaths = [];
 
     public function __construct(EmailSender $emailSender, ResourceDisplayStrategyEvaluator $strategyEvaluator) {
         $this->emailSender = $emailSender;
@@ -61,13 +62,24 @@ class EmailMessage {
         }
     }
 
+    public function addAttachment(string $path): self {
+        $this->attachmentPaths[] = $path;
+        $filename = basename($path);
+        $this->message->attach(\Swift_Attachment::fromPath($path)->setFilename($filename));
+        return $this;
+    }
+
+    public function getAttachments(): array {
+        return $this->attachmentPaths;
+    }
+
     public function send(): int {
-        return $this->emailSender->send($this->message);
+        return $this->emailSender->send($this);
     }
 
     public function sendSafe(): int {
         try {
-            return $this->emailSender->send($this->message);
+            return $this->emailSender->send($this);
         } catch (\Exception $e) {
             return 0;
         }

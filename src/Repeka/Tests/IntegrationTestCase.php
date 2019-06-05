@@ -129,7 +129,7 @@ abstract class IntegrationTestCase extends FunctionalTestCase {
                 $this->fail('Failed to execute command. ' . $output->fetch());
             }
         } catch (\Exception $e) {
-            $this->fail('Failed to execute command. ' . $e->getMessage());
+            $this->fail("Failed to execute command: $command - " . $e->getMessage());
         }
         return $output->fetch();
     }

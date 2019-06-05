@@ -58,7 +58,8 @@ class SmtpEmailSender implements EmailSender {
             ->setFrom([$this->fromEmail => $this->fromName]);
     }
 
-    public function send(\Swift_Message $message): int {
+    public function send(EmailMessage $emailMessage): int {
+        $message = $emailMessage->toSwiftMessage();
         try {
             $sent = $this->getMailer()->send($message);
             $this->auditEmailSentSuccess($message, $sent);

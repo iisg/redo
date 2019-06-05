@@ -20,8 +20,8 @@ class TestEmailSender implements EmailSender {
         return new EmailMessage($this, $this->displayStrategyEvaluator);
     }
 
-    public function send(\Swift_Message $message): int {
-        self::$sentMessages[] = $message;
-        return count($message->getTo());
+    public function send(EmailMessage $emailMessage): int {
+        self::$sentMessages[] = $emailMessage->toSwiftMessage();
+        return count($emailMessage->getTo());
     }
 }

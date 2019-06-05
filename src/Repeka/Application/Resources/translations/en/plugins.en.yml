@@ -122,4 +122,8 @@ repekaEmailSender:
       label: 'Message content'
       placeholder: ''
       description: ''
+    attachments:
+      label: 'Attachments'
+      placeholder: 'resourceFiles/a.txt, resourceFiles/b.txt'
+      description: ''
 
