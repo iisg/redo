@@ -5,6 +5,7 @@ use Repeka\Domain\Constants\SystemTransition;
 use Repeka\Domain\Cqrs\AbstractCommandAuditor;
 use Repeka\Domain\Cqrs\Command;
 use Repeka\Domain\Entity\ResourceEntity;
+use Repeka\Domain\Utils\StringUtils;
 
 class ResourceTransitionCommandAuditor extends AbstractCommandAuditor {
     /**
@@ -31,6 +32,18 @@ class ResourceTransitionCommandAuditor extends AbstractCommandAuditor {
                 'after' => $updatedResource->getAuditData(),
                 'transitionId' => $transition->getId(),
                 'transitionLabel' => $transition->getLabel(),
+            ]
+        );
+    }
+
+    public function afterError(Command $command, \Exception $exception, ?array $beforeHandlingResult): ?array {
+        $transition = $command->getTransition();
+        return array_merge(
+            $beforeHandlingResult,
+            [
+                'transitionId' => $transition->getId(),
+                'transitionLabel' => $transition->getLabel(),
+                'errorMessage' => StringUtils::fixUtf8($exception->getMessage()),
             ]
         );
     }

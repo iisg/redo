@@ -1,7 +1,8 @@
 <template>
     <require from="./audit-entry-details-resource"></require>
-    <audit-entry-details-resource entry.bind="entry"></audit-entry-details-resource>
+    <audit-entry-details-resource entry.one-time="entry"></audit-entry-details-resource>
     <icon name="workflow-2"></icon>
-    ${ 'Transition' | t}:
-    ${ (entry.data.transitionLabel || entry.data.transitionId) | inCurrentLanguage }
+    ${ 'Transition' | t & oneTime}:
+    ${ (entry.data.transitionLabel || entry.data.transitionId) | inCurrentLanguage & oneTime }
+    <span if.one-time="entry.data.errorMessage">${ 'Error' | t & oneTime }: <em>${ entry.data.errorMessage & oneTime }</em></span>
 </template>
