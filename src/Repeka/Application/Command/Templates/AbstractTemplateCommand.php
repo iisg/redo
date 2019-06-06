@@ -3,9 +3,7 @@ namespace Repeka\Application\Command\Templates;
 
 use Assert\Assertion;
 use Repeka\Application\Cqrs\CommandBusAware;
-use Repeka\Application\Cqrs\Middleware\FirewallMiddleware;
 use Repeka\Application\Twig\ResourcesTwigLoader;
-use Repeka\Domain\Cqrs\Command;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Repository\LanguageRepository;
@@ -36,14 +34,6 @@ abstract class AbstractTemplateCommand extends \Symfony\Component\Console\Comman
     /** @required */
     public function setLanguageRepository(LanguageRepository $languageRepository) {
         $this->languageRepository = $languageRepository;
-    }
-
-    protected function handleCommandBypassingFirewall(Command $command) {
-        return FirewallMiddleware::bypass(
-            function () use ($command) {
-                return $this->handleCommand($command);
-            }
-        );
     }
 
     protected function ensureTemplatesAreConfigured(): void {
