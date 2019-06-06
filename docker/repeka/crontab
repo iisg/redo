@@ -1,1 +1,1 @@
-* * * * * root su - www-data -s /bin/bash -c "/usr/local/bin/php /var/www/html/bin/console repeka:cyclic-tasks:dispatch" > /proc/1/fd/1 2>/proc/1/fd/2
+* * * * * root su - www-data -s /bin/bash -c "/usr/local/bin/php /var/www/html/bin/console repeka:cyclic-tasks:dispatch" >/var/log/cron.out 2>&1

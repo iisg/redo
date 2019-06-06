@@ -66,6 +66,7 @@ RUN apt-get update && apt-get install -y \
     && rm -r /var/lib/apt/lists/* \
     && apt-get clean
 
+RUN mkfifo /var/log/cron.out
 COPY crontab /etc/cron.d/repeka
 
 RUN { \
