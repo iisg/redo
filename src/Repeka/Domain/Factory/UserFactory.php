@@ -8,6 +8,7 @@ use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Entity\User;
 use Repeka\Domain\Repository\ResourceKindRepository;
 use Repeka\Domain\UseCase\Resource\ResourceCreateCommand;
+use Repeka\Domain\UseCase\Resource\ResourceEvaluateDisplayStrategiesCommand;
 
 abstract class UserFactory {
     /** @var ResourceKindRepository */
@@ -26,6 +27,7 @@ abstract class UserFactory {
         /** @var ResourceEntity $userData */
         $userData = $this->commandBus->handle($resourceCreateCommand);
         $user = $this->createApplicationUser($username, $plainPassword, $userData);
+        $this->commandBus->handle(new ResourceEvaluateDisplayStrategiesCommand($userData));
         return $user;
     }
 
