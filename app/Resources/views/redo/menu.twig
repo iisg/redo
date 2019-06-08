@@ -83,12 +83,12 @@
                 </ul>
             </div>
         {% else %}
-                <a href="/login"
-                    class="menu-item {{ urlMatches('/login') ? 'active' : '' }}"
-                    role="menuitem">
-                    {{ icon('user-2') }}
-                    <span>{{ 'Sign in' | trans }}</span>
-                </a>
+            <a href="/login"
+                class="menu-item {{ urlMatches('/login') ? 'active' : '' }}"
+                role="menuitem">
+                {{ icon('user-2') }}
+                <span>{{ 'Sign in' | trans }}</span>
+            </a>
         {% endif %}
     </div>
 </nav>

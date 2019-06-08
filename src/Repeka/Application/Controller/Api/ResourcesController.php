@@ -63,7 +63,7 @@ class ResourcesController extends ApiController {
         return $this->createPageResponse($resources, Response::HTTP_OK, [ResourceNormalizer::ALWAYS_RETURN_TEASER]);
     }
 
-    private function getResourceListQueryBuilder(Request $request): ResourceListQueryBuilder {
+    protected function getResourceListQueryBuilder(Request $request): ResourceListQueryBuilder {
         $resourceClasses = $request->get('resourceClasses', []);
         $resourceKindIds = $request->get('resourceKinds', []);
         $sortByIds = $request->query->get('sortByIds', []);
