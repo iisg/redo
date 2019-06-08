@@ -4,24 +4,28 @@ namespace Repeka\Domain\Validation\Rules;
 use Assert\Assertion;
 use Repeka\Domain\Entity\ResourceWorkflow;
 use Repeka\Domain\Entity\Workflow\ResourceWorkflowPlace;
+use Repeka\Domain\Repository\ResourceKindRepository;
 use Repeka\Domain\Repository\ResourceRepository;
 use Repeka\Domain\UseCase\Resource\ResourceListQuery;
+use Repeka\Domain\UseCase\ResourceKind\ResourceKindListQuery;
 use Respect\Validation\Rules\AbstractRule;
 
 class WorkflowPlacesForDeletionAreUnoccupiedRule extends AbstractRule {
-
     /** @var ResourceRepository */
     private $resourceRepository;
 
     /** @var ResourceWorkflow */
     private $workflow;
+    /** @var ResourceKindRepository */
+    private $resourceKindRepository;
 
-    public function __construct(ResourceRepository $resourceRepository) {
+    public function __construct(ResourceRepository $resourceRepository, ResourceKindRepository $resourceKindRepository) {
         $this->resourceRepository = $resourceRepository;
+        $this->resourceKindRepository = $resourceKindRepository;
     }
 
     public function forWorkflow(ResourceWorkflow $workflow): WorkflowPlacesForDeletionAreUnoccupiedRule {
-        $instance = new self($this->resourceRepository);
+        $instance = new self($this->resourceRepository, $this->resourceKindRepository);
         $instance->workflow = $workflow;
         return $instance;
     }
@@ -36,8 +40,11 @@ class WorkflowPlacesForDeletionAreUnoccupiedRule extends AbstractRule {
         if (empty($workflowPlacesForDeletionIds)) {
             return true;
         }
+        $rkQuery = ResourceKindListQuery::builder()->filterByWorkflowId($this->workflow->getId())->build();
+        $resourceKinds = $this->resourceKindRepository->findByQuery($rkQuery);
         $query = ResourceListQuery::builder()
             ->filterByWorkflowPlacesIds($workflowPlacesForDeletionIds)
+            ->filterByResourceKinds($resourceKinds)
             ->build();
         return $this->resourceRepository
                 ->findByQuery($query)

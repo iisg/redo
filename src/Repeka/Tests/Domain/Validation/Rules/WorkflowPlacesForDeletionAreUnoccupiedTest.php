@@ -3,6 +3,7 @@ namespace Repeka\Tests\Domain\Validation\Rules;
 
 use Repeka\Domain\Entity\ResourceWorkflow;
 use Repeka\Domain\Entity\Workflow\ResourceWorkflowPlace;
+use Repeka\Domain\Repository\ResourceKindRepository;
 use Repeka\Domain\Repository\ResourceRepository;
 use Repeka\Domain\UseCase\PageResult;
 use Repeka\Domain\Validation\Rules\WorkflowPlacesForDeletionAreUnoccupiedRule;
@@ -58,11 +59,14 @@ class WorkflowPlacesForDeletionAreUnoccupiedTest extends \PHPUnit_Framework_Test
             ],
             'id' => $this->idB,
         ];
-        $this->workflow = $this->createMock(ResourceWorkflow::class, 1);
+        $this->workflow = $this->createMockEntity(ResourceWorkflow::class, 1);
         $this->workflow->method('getPlaces')->willReturn([$this->placeA, $this->placeB]);
         $this->resource = $this->createResourceMock('1', null, [], [$this->idB => true]);
         $this->resourceRepository = $this->createRepositoryStub(ResourceRepository::class, [$this->resource]);
-        $this->rule = new WorkflowPlacesForDeletionAreUnoccupiedRule($this->resourceRepository);
+        $this->rule = new WorkflowPlacesForDeletionAreUnoccupiedRule(
+            $this->resourceRepository,
+            $this->createMock(ResourceKindRepository::class)
+        );
         $this->rule = $this->rule->forWorkflow($this->workflow);
     }
 
