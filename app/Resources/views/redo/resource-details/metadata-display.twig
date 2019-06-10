@@ -1,4 +1,12 @@
-{% if metadata.control == 'directory' %}
+{% set customDisplayStrategy = '' %}
+{% for customDisplayStrategyMetadata in cmsConfig('custom_resource_details_metadata_display_strategies') %}
+    {% if customDisplayStrategyMetadata.value == metadata.name %}
+        {% set customDisplayStrategy = customDisplayStrategyMetadata|sub('cms_config_value_additional') %}
+    {% endif %}
+{% endfor %}
+{% if customDisplayStrategy %}
+    {{ customDisplayStrategy | evaluate }}
+{% elseif metadata.control == 'directory' %}
     {{ metadataValue | basename }}
 {% elseif metadata.control == 'file' %}
     <a href="/api/resources/{{ resource.id }}/file/{{ metadataValue }}">{{ metadataValue | basename }}</a>

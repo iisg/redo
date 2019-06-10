@@ -47,6 +47,8 @@ class TwigFrontendExtension extends \Twig_Extension {
     /** @var FileSystemDriver */
     private $fileSystemDriver;
 
+    private $cmsConfigCache = [];
+
     public function __construct(
         RequestStack $requestStack,
         ResourceKindRepository $resourceKindRepository,
@@ -232,21 +234,28 @@ ICON;
         string $configKeyMetadata = 'cmsConfigId',
         string $configValueMetadata = 'cmsConfigValue'
     ): array {
-        $query = ResourceListQuery::builder()
-            ->filterByContents([$configKeyMetadata => '^' . $configKey . '$'])
-            ->setPage(1)
-            ->setResultsPerPage(1)
-            ->build();
-        $resources = FirewallMiddleware::bypass(
-            function () use ($query) {
-                return $this->handleCommand($query);
+        if (!isset($this->cmsConfigCache[$configKey])) {
+            $query = ResourceListQuery::builder()
+                ->filterByContents([$configKeyMetadata => '^' . $configKey . '$'])
+                ->setPage(1)
+                ->setResultsPerPage(1)
+                ->build();
+            $resources = FirewallMiddleware::bypass(
+                function () use ($query) {
+                    return $this->handleCommand($query);
+                }
+            );
+            if (count($resources)) {
+                /** @var ResourceEntity $resource */
+                $resource = $resources[0];
+                $metadata = $resource->getKind()->getMetadataByIdOrName($configValueMetadata);
+                $this->cmsConfigCache[$configKey] = $resource->getValues($metadata);
+            } else {
+                $this->cmsConfigCache[$configKey] = [];
             }
-        );
-        if (count($resources)) {
-            /** @var ResourceEntity $resource */
-            $resource = $resources[0];
-            $metadata = $resource->getKind()->getMetadataByIdOrName($configValueMetadata);
-            return $resource->getContents()->getValuesWithoutSubmetadata($metadata);
+        }
+        if ($this->cmsConfigCache[$configKey]) {
+            return $this->cmsConfigCache[$configKey];
         } else {
             return is_array($defaultValue) ? $defaultValue : [$defaultValue];
         }
