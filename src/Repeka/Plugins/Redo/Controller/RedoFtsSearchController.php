@@ -54,10 +54,10 @@ class RedoFtsSearchController extends Controller {
      * @Template("redo/home/home.twig")
      */
     public function homeAction(Request $request) {
-        if ($resourceId = $request->get('resourceId')) {
+        if ($resourceId = intval($request->get('resourceId'))) {
             return $this->redirect('/resources/' . $resourceId);
         }
-        if ($suwId = $request->get('suwId')) {
+        if ($suwId = intval($request->get('suwId'))) {
             $query = ResourceListQuery::builder()->filterByContents(['suw_id' => $suwId])->build();
             $resources = $this->handleCommand($query);
             if (count($resources)) {
