@@ -335,12 +335,9 @@ describe('Metadata Type Tests', function() {
 		waitForElement(element(by.cssContainingText('a', 'Konfiguracja')));
 		var submetadataLink = element(by.cssContainingText('a', 'Konfiguracja'));
 		submetadataLink.click();
-		browser.sleep(1000);
+		browser.sleep(3000);
 
-		waitForElement(element(by.className('tab-pane au-target active')));
-		var panel = element(by.className('tab-pane au-target active'));
-		browser.sleep(5000);
-		expect(panel.getText()).toContain('110');
+		waitForElement(element(by.cssContainingText('span', '110')));
   });
 
   it('Set regular expression', function() {
