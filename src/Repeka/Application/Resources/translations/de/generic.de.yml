@@ -248,6 +248,6 @@ yes: ja
 no: nein
 Determines assignees: Für Bestimmung der Aufgaben der Benutzer verwendet
 Display strategy playground: Tester der Anzeige-Strategie
-Enter a display strategy template you want to evaluate in context of the current resoruce: Strategieschablone eintragen, um sie im Kontext der aktuellen Ressourcen zu renderieren
+Enter a display strategy template you want to evaluate in context of the current resource: Strategieschablone eintragen, um sie im Kontext der aktuellen Ressourcen zu renderieren
 # [Missing] Search results
 # [Missing] Number of characters

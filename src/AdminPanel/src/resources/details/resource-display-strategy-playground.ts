@@ -25,4 +25,9 @@ export class ResourceDisplayStrategyPlayground {
       this.result = '';
     }
   }, 500);
+
+  async rerenderDisplayStrategies() {
+    await this.resourceRepository.get(this.resource.id, false, r => r.withHeader('EvaluateDisplayStrategies', 'true'));
+    window.location.assign(window.location.toString());
+  }
 }

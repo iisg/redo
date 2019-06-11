@@ -1,4 +1,4 @@
-import {HttpResponseMessage} from "aurelia-http-client";
+import {HttpResponseMessage, RequestBuilder} from "aurelia-http-client";
 import {suppressError as suppressErrorHeader} from "common/http-client/headers";
 import {EntitySerializer} from "common/dto/entity-serializer";
 import {EntityClass} from "../dto/contracts";
@@ -21,12 +21,14 @@ export abstract class ApiRepository<T> {
   }
 
   @cachedResponse(untilPromiseCompleted)
-  public get(id: number | string, suppressError: boolean = false): Promise<T> {
+  public get(id: number | string,
+             suppressError: boolean = false,
+             requestCustomizer: (r: RequestBuilder) => RequestBuilder = (r) => r): Promise<T> {
     const request = this.httpClient.createRequest(this.oneEntityEndpoint(id)).asGet();
     if (suppressError) {
       request.withHeader(suppressErrorHeader.name, suppressErrorHeader.value);
     }
-    return request.send().then(response => this.toEntity(response.content));
+    return requestCustomizer(request).send().then(response => this.toEntity(response.content));
   }
 
   public getList(): Promise<T[]> {

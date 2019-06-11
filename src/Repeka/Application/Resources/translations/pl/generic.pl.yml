@@ -251,7 +251,8 @@ yes: tak
 no: nie
 Determines assignees: Używana do określania zadań użytkowników
 Display strategy playground: Tester strategii wyświetlania
-Enter a display strategy template you want to evaluate in context of the current resoruce: Wpisz szablon strategii wyświetlania by wyrenderować ją w kontekście obecnego zasobu
+Enter a display strategy template you want to evaluate in context of the current resource: Wpisz szablon strategii wyświetlania by wyrenderować ją w kontekście obecnego zasobu
+Rerender all dynamic metadata in this resource: Przerenderuj wszystkie dynamiczne metadane w tym zasobie
 Search results: Wyniki wyszukiwania
 Number of characters: Liczba znaków
 Forbidden file extension: Niedozwolone rozszerzenie pliku

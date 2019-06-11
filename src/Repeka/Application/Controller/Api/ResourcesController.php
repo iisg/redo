@@ -136,8 +136,8 @@ class ResourcesController extends ApiController {
      * @Method("GET")
      * @Security("is_granted('METADATA_VISIBILITY', resource)")
      */
-    public function getAction(ResourceEntity $resource) {
-        if ($resource->isDisplayStrategiesDirty()) {
+    public function getAction(ResourceEntity $resource, Request $request) {
+        if ($resource->isDisplayStrategiesDirty() || $request->headers->has('EvaluateDisplayStrategies')) {
             $resource = $this->handleCommand(new ResourceEvaluateDisplayStrategiesCommand($resource));
         }
         return $this->createJsonResponse($resource);

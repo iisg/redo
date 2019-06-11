@@ -3,15 +3,23 @@
     <require from="resources/controls/input/autosize"></require>
 
     <div class="form-group">
-        <label>${'Enter a display strategy template you want to evaluate in context of the current resoruce'|t}</label>
+        <label>${'Enter a display strategy template you want to evaluate in context of the current resource'|t}</label>
         <textarea value.bind="template"
             autosize
             class="form-control"
             keyup.delegate="evaluate() && true"></textarea>
     </div>
     <loading-cover loading.bind="evaluating">
-        <div class="well"
-            if.bind="result"
-            innerhtml.bind="result"></div>
+        <div class="form-group"
+            if.bind="result">
+            <div class="well"
+                innerhtml.bind="result"></div>
+        </div>
     </loading-cover>
+    <div class="text-right">
+        <a click.delegate="rerenderDisplayStrategies()">
+            <icon name="add-workflow"></icon>
+            ${ 'Rerender all dynamic metadata in this resource' | t & oneTime }
+        </a>
+    </div>
 </template>
