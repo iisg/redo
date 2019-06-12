@@ -1,15 +1,15 @@
 <?php
 namespace Repeka\Application\Serialization;
 
-use Repeka\Domain\Entity\EndpointUsageLogEntry;
+use Repeka\Domain\Entity\EventLogEntry;
 use Symfony\Component\Serializer\Encoder\NormalizationAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 
-class EndpointUsageLogEntryNormalizer extends AbstractNormalizer implements NormalizationAwareInterface {
+class EventLogEntryNormalizer extends AbstractNormalizer implements NormalizationAwareInterface {
     use NormalizerAwareTrait;
 
     /**
-     * @param $entry EndpointUsageLogEntry
+     * @param $entry EventLogEntry
      * @inheritdoc
      */
     public function normalize($entry, $format = null, array $context = []) {
@@ -17,8 +17,8 @@ class EndpointUsageLogEntryNormalizer extends AbstractNormalizer implements Norm
             'id' => $entry->getId(),
             'url' => $entry->getUrl(),
             'clientIp' => $entry->getClientIp(),
-            'usageDateTime' => $entry->getUsageDateTime(),
-            'usageKey' => $entry->getUsageKey(),
+            'usageDateTime' => $entry->getEventDateTime(),
+            'usageKey' => $entry->getEventName(),
             'resourceId' => $entry->getResource()->getId(),
         ];
         return $normalized;
@@ -26,6 +26,6 @@ class EndpointUsageLogEntryNormalizer extends AbstractNormalizer implements Norm
 
     /** @inheritdoc */
     public function supportsNormalization($data, $format = null) {
-        return $data instanceof EndpointUsageLogEntry;
+        return $data instanceof EventLogEntry;
     }
 }

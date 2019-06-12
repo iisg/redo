@@ -1,13 +1,13 @@
 <?php
 namespace Repeka\Domain\Repository;
 
-use Repeka\Domain\Entity\EndpointUsageLogEntry;
+use Repeka\Domain\Entity\EventLogEntry;
 
-interface EndpointUsageLogRepository {
-    /** @return EndpointUsageLogEntry[] */
+interface EventLogRepository {
+    /** @return EventLogEntry[] */
     public function findAll();
 
-    public function save(EndpointUsageLogEntry $endpointUsageLogEntry): EndpointUsageLogEntry;
+    public function save(EventLogEntry $eventLogEntry): EventLogEntry;
 
     /** @return array [ ['stat_month' => string, 'usage_key' => string, 'monthly_sum' => integer] ] */
     public function getUsageStatistics(string $dateFrom, string $dateTo): array;

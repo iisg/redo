@@ -1,5 +1,5 @@
 <?php
-namespace Repeka\Domain\UseCase\EndpointUsageLog;
+namespace Repeka\Domain\UseCase\Stats;
 
 class StatisticEntry {
     private $statMonth;

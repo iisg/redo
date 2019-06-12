@@ -3,20 +3,20 @@ namespace Repeka\Domain\Entity;
 
 use Symfony\Component\HttpFoundation\Request;
 
-class EndpointUsageLogEntry implements Identifiable {
+class EventLogEntry implements Identifiable {
 
     private $id;
     private $url;
     private $clientIp;
-    private $usageDateTime;
-    private $usageKey;
+    private $eventDateTime;
+    private $eventName;
     private $resource;
 
-    public function __construct(Request $request, string $usageKey, ?ResourceEntity $resource = null) {
+    public function __construct(Request $request, string $eventName, ?ResourceEntity $resource = null) {
         $this->url = $request->getUri();
         $this->clientIp = $request->getClientIp();
-        $this->usageDateTime = new \DateTimeImmutable();
-        $this->usageKey = $usageKey;
+        $this->eventDateTime = new \DateTimeImmutable();
+        $this->eventName = $eventName;
         $this->resource = $resource;
     }
 
@@ -32,12 +32,12 @@ class EndpointUsageLogEntry implements Identifiable {
         return $this->clientIp;
     }
 
-    public function getUsageDateTime(): \DateTimeImmutable {
-        return $this->usageDateTime;
+    public function getEventDateTime(): \DateTimeImmutable {
+        return $this->eventDateTime;
     }
 
-    public function getUsageKey(): string {
-        return $this->usageKey;
+    public function getEventName(): string {
+        return $this->eventName;
     }
 
     public function getResource(): ?ResourceEntity {

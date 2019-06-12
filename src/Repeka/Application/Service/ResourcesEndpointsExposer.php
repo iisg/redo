@@ -21,7 +21,7 @@ class ResourcesEndpointsExposer {
                         $path,
                         $endpoint['metadata'] ?? null,
                         $endpoint['resourceId'],
-                        $endpoint['endpointUsageTrackingKey'],
+                        $endpoint['statsEventName'],
                         $endpoint['headers']
                     )
                 );
@@ -31,7 +31,7 @@ class ResourcesEndpointsExposer {
                         $path,
                         $endpoint['template'] ?? '',
                         $endpoint['resourceId'],
-                        $endpoint['endpointUsageTrackingKey'],
+                        $endpoint['statsEventName'],
                         $endpoint['headers']
                     )
                 );

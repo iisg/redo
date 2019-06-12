@@ -1,5 +1,5 @@
 <?php
-namespace Repeka\Domain\UseCase\EndpointUsageLog;
+namespace Repeka\Domain\UseCase\Stats;
 
 use Repeka\Domain\Cqrs\AbstractCommand;
 use Repeka\Domain\Cqrs\AdjustableCommand;

@@ -10,9 +10,9 @@ services:
     factory: ["@doctrine.orm.entity_manager", getRepository]
     arguments: [Repeka\Domain\Entity\AuditEntry]
 
-  Repeka\Application\Repository\EndpointUsageLogRepository:
+  Repeka\Application\Repository\EventLogDoctrineRepository:
     factory: ["@doctrine.orm.entity_manager", getRepository]
-    arguments: [Repeka\Domain\Entity\EndpointUsageLogEntry]
+    arguments: [Repeka\Domain\Entity\EventLogEntry]
 
   Repeka\Application\Repository\LanguageDoctrineRepository:
     factory: ["@doctrine.orm.entity_manager", getRepository]

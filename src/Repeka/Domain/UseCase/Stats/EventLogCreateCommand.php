@@ -1,5 +1,5 @@
 <?php
-namespace Repeka\Domain\UseCase\EndpointUsageLog;
+namespace Repeka\Domain\UseCase\Stats;
 
 use Repeka\Domain\Cqrs\AbstractCommand;
 use Repeka\Domain\Cqrs\NonValidatedCommand;
@@ -7,19 +7,19 @@ use Repeka\Domain\Cqrs\RequireNoRoles;
 use Repeka\Domain\Entity\ResourceEntity;
 use Symfony\Component\HttpFoundation\Request;
 
-class EndpointUsageLogCreateCommand extends AbstractCommand implements NonValidatedCommand {
+class EventLogCreateCommand extends AbstractCommand implements NonValidatedCommand {
     use RequireNoRoles;
 
     /** @var Request */
     private $request;
     /** @var string */
-    private $endpointUsageTrackingKey;
+    private $eventName;
     /** @var ResourceEntity */
     private $resource;
 
-    public function __construct(Request $request, string $endpointUsageTrackingKey, ?ResourceEntity $resource = null) {
+    public function __construct(Request $request, string $eventName, ?ResourceEntity $resource = null) {
         $this->request = $request;
-        $this->endpointUsageTrackingKey = $endpointUsageTrackingKey;
+        $this->eventName = $eventName;
         $this->resource = $resource;
     }
 
@@ -27,8 +27,8 @@ class EndpointUsageLogCreateCommand extends AbstractCommand implements NonValida
         return $this->request;
     }
 
-    public function getEndpointUsageTrackingKey(): string {
-        return $this->endpointUsageTrackingKey;
+    public function getEventName(): string {
+        return $this->eventName;
     }
 
     public function getResource(): ?ResourceEntity {

@@ -64,7 +64,7 @@ class Configuration implements ConfigurationInterface {
                 ->arrayNode('expose_endpoints')->normalizeKeys(false)->defaultValue([])->arrayPrototype()->children()
                     ->scalarNode('metadata')->defaultValue(null)->end()
                     ->scalarNode('template')->defaultValue(null)->end()
-                    ->scalarNode('endpointUsageTrackingKey')->defaultValue(null)->end()
+                    ->scalarNode('statsEventName')->defaultValue(null)->end()
                     ->integerNode('resourceId')->defaultValue(null)->end()
                     ->arrayNode('headers')->normalizeKeys(false)->defaultValue([])->prototype('scalar')->end()->end()
                 ->end()->end()->end()

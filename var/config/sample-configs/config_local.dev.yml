@@ -83,23 +83,23 @@ repeka:
       metadata: wyrenderowana_tresc_strony
     /resources/{resourceId}:
       template: redo/resource-details/resource-details.twig
-      endpointUsageTrackingKey: resourceDetails
+      statsEventName: resourceDetails
     /resources/{resourceId}/bibtex:
       template: redo/citation-formats/bibtex.twig
-      endpointUsageTrackingKey: bibtex
+      statsEventName: bibtex
       headers:
         Content-Type: 'text/plain'
     /resources/{resourceId}/endnote:
       template: redo/citation-formats/endnote.twig
-      endpointUsageTrackingKey: endnote
+      statsEventName: endnote
       headers:
         Content-Type: 'text/plain'
     /resources/{resourceId}/iso-690:
       template: redo/citation-formats/iso-690.twig
-      endpointUsageTrackingKey: iso-690
+      statsEventName: iso-690
     /resources/{resourceId}/rss:
       template: redo/rss/collection.rss.twig
-      endpointUsageTrackingKey: rss
+      statsEventName: rss
       headers:
         Content-Type: 'application/rss+xml'
 m6_statsd:

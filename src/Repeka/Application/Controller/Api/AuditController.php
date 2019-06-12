@@ -6,7 +6,7 @@ use Repeka\Domain\UseCase\Audit\AuditedCommandNamesQuery;
 use Repeka\Domain\UseCase\Audit\AuditEntryListQuery;
 use Repeka\Domain\UseCase\Audit\AuditEntryListQueryBuilder;
 use Repeka\Domain\UseCase\Audit\AuditExportToCsvCommand;
-use Repeka\Domain\UseCase\EndpointUsageLog\StatisticsQuery;
+use Repeka\Domain\UseCase\Stats\StatisticsQuery;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;

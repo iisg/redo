@@ -1,19 +1,16 @@
 <?php
-namespace Repeka\Domain\UseCase\EndpointUsageLog;
+namespace Repeka\Domain\UseCase\Stats;
 
-use Repeka\Domain\Constants\SystemMetadata;
-use Repeka\Domain\Constants\SystemResource;
 use Repeka\Domain\Cqrs\CommandBus;
-use Repeka\Domain\Entity\ResourceContents;
-use Repeka\Domain\Repository\EndpointUsageLogRepository;
+use Repeka\Domain\Repository\EventLogRepository;
 use Repeka\Domain\Repository\ResourceRepository;
 use Repeka\Domain\Service\UnauthenticatedUserPermissionHelper;
 use Repeka\Domain\UseCase\PageResult;
 use Repeka\Domain\UseCase\Resource\ResourceListQuery;
 
 class StatisticsQueryHandler {
-    /** @var EndpointUsageLogRepository */
-    private $endpointUsageLogEntryRepository;
+    /** @var EventLogRepository */
+    private $eventLogRepository;
     /** @var ResourceRepository */
     private $resourceRepository;
     /** @var CommandBus */
@@ -25,11 +22,11 @@ class StatisticsQueryHandler {
 
     public function __construct(
         CommandBus $commandBus,
-        EndpointUsageLogRepository $endpointUsageLogEntryRepository,
+        EventLogRepository $eventLogRepository,
         ResourceRepository $resourceRepository,
         UnauthenticatedUserPermissionHelper $unauthenticatedUserPermissionHelper
     ) {
-        $this->endpointUsageLogEntryRepository = $endpointUsageLogEntryRepository;
+        $this->eventLogRepository = $eventLogRepository;
         $this->resourceRepository = $resourceRepository;
         $this->commandBus = $commandBus;
         $this->unauthenticatedUserPermissionHelper = $unauthenticatedUserPermissionHelper;
@@ -47,11 +44,11 @@ class StatisticsQueryHandler {
                 ->build()
         );
         $statistics = new StatisticsCollection($resourcesCount, $openResources->getTotalCount());
-        $stats = $this->endpointUsageLogEntryRepository->getUsageStatistics($query->getDateFrom(), $query->getDateTo());
+        $stats = $this->eventLogRepository->getUsageStatistics($query->getDateFrom(), $query->getDateTo());
         $this->addStatistics($statistics, $stats);
-        $requestStats = $this->endpointUsageLogEntryRepository->getRequestsStatistics($query->getDateFrom(), $query->getDateTo());
+        $requestStats = $this->eventLogRepository->getRequestsStatistics($query->getDateFrom(), $query->getDateTo());
         $this->addStatistics($statistics, $requestStats, 'requests');
-        $ipStats = $this->endpointUsageLogEntryRepository->getIpStatistics($query->getDateFrom(), $query->getDateTo());
+        $ipStats = $this->eventLogRepository->getIpStatistics($query->getDateFrom(), $query->getDateTo());
         $this->addStatistics($statistics, $ipStats, 'ips');
         return $statistics;
     }

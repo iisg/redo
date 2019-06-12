@@ -2,7 +2,7 @@
 namespace Repeka\Application\EventListener;
 
 use Repeka\Application\Cqrs\CommandBusAware;
-use Repeka\Domain\UseCase\EndpointUsageLog\EndpointUsageLogCreateCommand;
+use Repeka\Domain\UseCase\Stats\EventLogCreateCommand;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 
 class SessionCountListener {
@@ -16,7 +16,7 @@ class SessionCountListener {
         $session = $request->getSession();
         if ($session && !$session->get(self::ACKNOWLEDGED)) {
             $session->set(self::ACKNOWLEDGED, true);
-            $this->handleCommand(new EndpointUsageLogCreateCommand($request, 'sessions'));
+            $this->handleCommand(new EventLogCreateCommand($request, 'sessions'));
         }
     }
 }

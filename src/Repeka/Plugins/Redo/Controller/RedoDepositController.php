@@ -12,11 +12,11 @@ use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Metadata\MetadataValueAdjuster\ResourceContentsAdjuster;
 use Repeka\Domain\Repository\ResourceRepository;
 use Repeka\Domain\Service\ReproductorPermissionHelper;
-use Repeka\Domain\UseCase\EndpointUsageLog\EndpointUsageLogCreateCommand;
 use Repeka\Domain\UseCase\Resource\ResourceGodUpdateCommand;
 use Repeka\Domain\UseCase\Resource\ResourceListQuery;
 use Repeka\Domain\UseCase\Resource\ResourceQuery;
 use Repeka\Domain\UseCase\Resource\ResourceTransitionCommand;
+use Repeka\Domain\UseCase\Stats\EventLogCreateCommand;
 use Repeka\Domain\Utils\EntityUtils;
 use Repeka\Plugins\WorkflowPlaceTagger\Model\WorkflowPlaceTaggedPath;
 use Repeka\Plugins\WorkflowPlaceTagger\Model\WorkflowPlaceTaggerHelper;
@@ -171,7 +171,7 @@ class RedoDepositController extends Controller {
                 /** @var ResourceEntity $resource */
                 $resource = $this->handleCommand($command);
                 if ($isLastTransition) {
-                    $this->handleCommand(new EndpointUsageLogCreateCommand($request, 'deposit'));
+                    $this->handleCommand(new EventLogCreateCommand($request, 'deposit'));
                     $this->addFlash('deposit', 'success');
                     return $this->redirect('/resources/' . $resource->getId());
                 } else {

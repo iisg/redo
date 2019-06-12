@@ -1,7 +1,7 @@
-Repeka\Domain\Entity\EndpointUsageLogEntry:
+Repeka\Domain\Entity\EventLogEntry:
   type: entity
-  table: endpoint_usage_log
-  repositoryClass: Repeka\Application\Repository\EndpointUsageLogDoctrineRepository
+  table: event_log
+  repositoryClass: Repeka\Application\Repository\EventLogDoctrineRepository
   id:
     id:
       type: integer
@@ -20,10 +20,10 @@ Repeka\Domain\Entity\EndpointUsageLogEntry:
     clientIp:
       type: string
       column: client_ip
-    usageDateTime:
+    eventDateTime:
       type: datetimetz_immutable
       options: {default: CURRENT_TIMESTAMP}
-      column: usage_date_time
-    usageKey:
+      column: event_date_time
+    eventName:
       type: string
-      column: usage_key
+      column: event_name

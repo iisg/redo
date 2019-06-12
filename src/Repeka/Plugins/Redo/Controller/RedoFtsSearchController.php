@@ -8,11 +8,11 @@ use Repeka\Application\Cqrs\CommandBusAware;
 use Repeka\Application\Elasticsearch\Mapping\FtsConstants;
 use Repeka\Application\Twig\Paginator;
 use Repeka\Domain\Exception\EntityNotFoundException;
-use Repeka\Domain\Repository\EndpointUsageLogRepository;
+use Repeka\Domain\Repository\EventLogRepository;
 use Repeka\Domain\Repository\MetadataRepository;
-use Repeka\Domain\UseCase\EndpointUsageLog\EndpointUsageLogCreateCommand;
 use Repeka\Domain\UseCase\Resource\ResourceListFtsQuery;
 use Repeka\Domain\UseCase\Resource\ResourceListQuery;
+use Repeka\Domain\UseCase\Stats\EventLogCreateCommand;
 use Repeka\Domain\Utils\EntityUtils;
 use Repeka\Plugins\Redo\Service\PhraseTranslator\RedoFtsSearchPhraseTranslator;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -31,7 +31,7 @@ class RedoFtsSearchController extends Controller {
     private $resultsPerPage = 10;
     /** @var array */
     private $ftsConfig;
-    private $endpointUsageLogRepository;
+    private $eventLogRepository;
     /** @var RedoFtsSearchPhraseTranslator */
     private $redoFtsSearchPhraseTranslator;
 
@@ -39,13 +39,13 @@ class RedoFtsSearchController extends Controller {
         array $ftsConfig,
         MetadataRepository $metadataRepository,
         Paginator $paginator,
-        EndpointUsageLogRepository $endpointUsageLogRepository,
+        EventLogRepository $eventLogRepository,
         RedoFtsSearchPhraseTranslator $redoFtsSearchPhraseTranslator
     ) {
         $this->ftsConfig = $ftsConfig;
         $this->metadataRepository = $metadataRepository;
         $this->paginator = $paginator;
-        $this->endpointUsageLogRepository = $endpointUsageLogRepository;
+        $this->eventLogRepository = $eventLogRepository;
         $this->redoFtsSearchPhraseTranslator = $redoFtsSearchPhraseTranslator;
     }
 
@@ -64,7 +64,7 @@ class RedoFtsSearchController extends Controller {
                 return $this->redirect('/resources/' . $resources[0]->getId());
             }
         }
-        $this->handleCommand(new EndpointUsageLogCreateCommand($request, 'home'));
+        $this->handleCommand(new EventLogCreateCommand($request, 'home'));
         return [
             'filterableMetadataList' => $this->findFilterableMetadata(),
             'searchableResourceClasses' => $this->ftsConfig['searchable_resource_classes'] ?? [],

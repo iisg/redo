@@ -10,7 +10,7 @@ class ExposedResourceTemplateRoute extends Route {
         string $path,
         string $template,
         ?int $resourceId,
-        ?string $endpointUsageTrackingKey,
+        ?string $statsEventName,
         array $headers = []
     ) {
         parent::__construct(
@@ -19,7 +19,7 @@ class ExposedResourceTemplateRoute extends Route {
                 '_controller' => ResourcesExposureController::class . ':exposeResourceTemplateAction',
                 'template' => $template,
                 'headers' => $headers,
-                'endpointUsageTrackingKey' => $endpointUsageTrackingKey,
+                'statsEventName' => $statsEventName,
             ],
             [],
             [],

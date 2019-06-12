@@ -11,7 +11,7 @@ class ExposedResourceMetadataRoute extends Route {
         string $path,
         $metadataNameOrId,
         ?int $resourceId,
-        ?string $endpointUsageTrackingKey,
+        ?string $statsEventName,
         array $headers = []
     ) {
         Assertion::notNull($metadataNameOrId, 'metadataId must be set for single resource exposed endpoint: ' . $path);
@@ -21,7 +21,7 @@ class ExposedResourceMetadataRoute extends Route {
                 '_controller' => ResourcesExposureController::class . ':exposeResourceMetadataAction',
                 'metadataNameOrId' => $metadataNameOrId,
                 'headers' => $headers,
-                'endpointUsageTrackingKey' => $endpointUsageTrackingKey,
+                'statsEventName' => $statsEventName,
             ],
             [],
             [],

@@ -1,8 +1,8 @@
 <?php
 namespace Repeka\Application\Serialization;
 
-use Repeka\Domain\UseCase\EndpointUsageLog\StatisticEntry;
-use Repeka\Domain\UseCase\EndpointUsageLog\Statistics;
+use Repeka\Domain\UseCase\Stats\StatisticEntry;
+use Repeka\Domain\UseCase\Stats\Statistics;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 

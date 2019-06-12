@@ -9,7 +9,7 @@ use Repeka\Application\Repository\Transactional;
 use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Repository\ResourceRepository;
 use Repeka\Domain\Service\ResourceFileStorage;
-use Repeka\Domain\UseCase\EndpointUsageLog\EndpointUsageLogCreateCommand;
+use Repeka\Domain\UseCase\Stats\EventLogCreateCommand;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -41,7 +41,7 @@ class RedoFilesController extends Controller {
     public function fileAction(Request $request, ResourceEntity $resource, string $filepath) {
         $response = $this->forward(ResourcesFilesController::class . '::fileAction', ['resource' => $resource, 'filepath' => $filepath]);
         if ($response->isSuccessful()) {
-            $this->logEndpointUsage($resource, $request);
+            $this->logEvent($resource, $request);
         }
         return $response;
     }
@@ -58,11 +58,11 @@ class RedoFilesController extends Controller {
                 'resourceId' => $resource,
                 'headers' => [],
                 'template' => 'redo/resource-details/image-reader.twig',
-                'endpointUsageTrackingKey' => 'resourceBrowse',
+                'statsEventName' => 'resourceBrowse',
             ]
         );
         if ($response->isSuccessful()) {
-            $this->logEndpointUsage($resource, $request);
+            $this->logEvent($resource, $request);
         }
         return $response;
     }
@@ -81,7 +81,7 @@ class RedoFilesController extends Controller {
                     $this->createZipFile($this->resourceFileStorage->getFileSystemPath($resource, $path), $outputName);
                 }
             );
-            $this->logEndpointUsage($resource, $request);
+            $this->logEvent($resource, $request);
             return $response;
         }
         return $this->redirect('/resources/' . $resource->getId());
@@ -106,8 +106,8 @@ class RedoFilesController extends Controller {
         pclose($fp);
     }
 
-    private function logEndpointUsage(ResourceEntity $resource, Request $request) {
-        $this->handleCommand(new EndpointUsageLogCreateCommand($request, 'resourceDownload', $resource));
+    private function logEvent(ResourceEntity $resource, Request $request) {
+        $this->handleCommand(new EventLogCreateCommand($request, 'resourceDownload', $resource));
         if ($resource->getKind()->hasMetadata(self::DOWNLOAD_COUNT_METADATA_NAME)) {
             $this->transactional(
                 function () use ($resource) {
