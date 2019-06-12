@@ -104,6 +104,21 @@ workflowPlaceTagger:
       label: Tag value
       placeholder: ~
       description: ~
+logEvent:
+  label: Add stats entry
+  options:
+    eventName:
+      label: Event name
+      placeholder: ~
+      description: ~
+    eventGroup:
+      label: Event group name
+      placeholder: ~
+      description: ~
+    logOnEdit:
+      label: Log when editing resource in this place, too
+      placeholder: ~
+      description: ~
 repekaEmailSender:
   label: 'Send e-mail'
   audit:

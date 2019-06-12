@@ -14,7 +14,12 @@ class EventLogCreateCommandHandler {
     }
 
     public function handle(EventLogCreateCommand $command): EventLogEntry {
-        $eventLogEntry = new EventLogEntry($command->getRequest(), $command->getEventName(), $command->getResource());
+        $eventLogEntry = new EventLogEntry(
+            $command->getEventName(),
+            $command->getEventGroup(),
+            $command->getResource(),
+            $command->getRequest()
+        );
         return $this->eventLogRepository->save($eventLogEntry);
     }
 }

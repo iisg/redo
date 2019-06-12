@@ -16,7 +16,7 @@ class SessionCountListener {
         $session = $request->getSession();
         if ($session && !$session->get(self::ACKNOWLEDGED)) {
             $session->set(self::ACKNOWLEDGED, true);
-            $this->handleCommand(new EventLogCreateCommand($request, 'sessions'));
+            $this->handleCommand(new EventLogCreateCommand('sessions'));
         }
     }
 }

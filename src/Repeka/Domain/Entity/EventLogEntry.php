@@ -10,14 +10,18 @@ class EventLogEntry implements Identifiable {
     private $clientIp;
     private $eventDateTime;
     private $eventName;
+    private $eventGroup;
     private $resource;
 
-    public function __construct(Request $request, string $eventName, ?ResourceEntity $resource = null) {
-        $this->url = $request->getUri();
-        $this->clientIp = $request->getClientIp();
+    public function __construct(string $eventName, string $eventGroup, ?ResourceEntity $resource = null, ?Request $request = null) {
         $this->eventDateTime = new \DateTimeImmutable();
         $this->eventName = $eventName;
         $this->resource = $resource;
+        $this->eventGroup = $eventGroup ?: null;
+        if ($request) {
+            $this->url = $request->getUri();
+            $this->clientIp = $request->getClientIp();
+        }
     }
 
     public function getId() {
@@ -38,6 +42,10 @@ class EventLogEntry implements Identifiable {
 
     public function getEventName(): string {
         return $this->eventName;
+    }
+
+    public function getEventGroup(): string {
+        return $this->eventGroup;
     }
 
     public function getResource(): ?ResourceEntity {

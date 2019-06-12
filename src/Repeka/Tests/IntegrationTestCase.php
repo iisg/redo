@@ -62,7 +62,7 @@ abstract class IntegrationTestCase extends FunctionalTestCase {
         $this->application->setAutoExit(false);
         $this->application->setCatchExceptions(false);
         if (!defined('INTEGRATION_TESTS_BOOTSTRAPPED')) {
-            ini_set('memory_limit', '768M');
+            ini_set('memory_limit', '1024M');
             define('INTEGRATION_TESTS_BOOTSTRAPPED', true);
             $this->executeCommand('doctrine:database:drop --force --if-exists');
             $this->executeCommand('doctrine:database:create');

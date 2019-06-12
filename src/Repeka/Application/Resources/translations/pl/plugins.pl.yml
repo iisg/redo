@@ -108,6 +108,21 @@ workflowPlaceTagger:
       label: Wartość tagu
       placeholder: ~
       description: ~
+logEvent:
+  label: Odnotuj w statystykach
+  options:
+    eventName:
+      label: Nazwa zdarzenia
+      placeholder: ~
+      description: ~
+    eventGroup:
+      label: Grupa zdarzeń
+      placeholder: ~
+      description: ~
+    logOnEdit:
+      label: Odnotuj także przy edycji zasobu w tym stanie
+      placeholder: ~
+      description: ~
 repekaEmailSender:
   label: 'Wyślij e-mail'
   audit:

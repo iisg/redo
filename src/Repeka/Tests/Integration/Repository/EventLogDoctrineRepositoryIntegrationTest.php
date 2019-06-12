@@ -22,10 +22,10 @@ class EventLogDoctrineRepositoryIntegrationTest extends IntegrationTestCase {
     private function fillDataBase() {
         $client = self::createAdminClient();
         $client->apiRequest('GET', '');
-        $this->handleCommandBypassingFirewall(new EventLogCreateCommand($client->getRequest(), 'resourceDetails'));
-        $this->handleCommandBypassingFirewall(new EventLogCreateCommand($client->getRequest(), 'resourceDetails'));
-        $this->handleCommandBypassingFirewall(new EventLogCreateCommand($client->getRequest(), 'home'));
-        $this->handleCommandBypassingFirewall(new EventLogCreateCommand($client->getRequest(), 'bibtex'));
+        $this->handleCommandBypassingFirewall(new EventLogCreateCommand('resourceDetails'));
+        $this->handleCommandBypassingFirewall(new EventLogCreateCommand('resourceDetails'));
+        $this->handleCommandBypassingFirewall(new EventLogCreateCommand('home'));
+        $this->handleCommandBypassingFirewall(new EventLogCreateCommand('bibtex'));
     }
 
     public function testFindAll() {

@@ -64,7 +64,7 @@ class RedoFtsSearchController extends Controller {
                 return $this->redirect('/resources/' . $resources[0]->getId());
             }
         }
-        $this->handleCommand(new EventLogCreateCommand($request, 'home'));
+        $this->handleCommand(new EventLogCreateCommand('home'));
         return [
             'filterableMetadataList' => $this->findFilterableMetadata(),
             'searchableResourceClasses' => $this->ftsConfig['searchable_resource_classes'] ?? [],
