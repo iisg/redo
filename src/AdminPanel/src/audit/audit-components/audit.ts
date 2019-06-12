@@ -17,7 +17,7 @@ export class Audit implements RoutableComponentActivate {
   @bindable auditSettings: AuditSettings[] = [];
   private entries: PageResult<AuditEntry>;
   private displayProgressBar = false;
-  private error: '';
+  private error = '';
   activated: boolean = false;
   exporting: boolean = false;
   exportSuccessText: boolean = false;

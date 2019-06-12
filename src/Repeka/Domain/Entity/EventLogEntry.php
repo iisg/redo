@@ -1,6 +1,7 @@
 <?php
 namespace Repeka\Domain\Entity;
 
+use Repeka\Domain\Service\TimeProvider;
 use Symfony\Component\HttpFoundation\Request;
 
 class EventLogEntry implements Identifiable {
@@ -13,8 +14,14 @@ class EventLogEntry implements Identifiable {
     private $eventGroup;
     private $resource;
 
-    public function __construct(string $eventName, string $eventGroup, ?ResourceEntity $resource = null, ?Request $request = null) {
-        $this->eventDateTime = new \DateTimeImmutable();
+    public function __construct(
+        string $eventName,
+        string $eventGroup,
+        ?ResourceEntity $resource = null,
+        ?Request $request = null,
+        ?TimeProvider $timeProvider = null
+    ) {
+        $this->eventDateTime = new \DateTimeImmutable($timeProvider ? '@' . $timeProvider->getTimestamp() : null);
         $this->eventName = $eventName;
         $this->resource = $resource;
         $this->eventGroup = $eventGroup ?: null;

@@ -65,6 +65,7 @@ class Configuration implements ConfigurationInterface {
                     ->scalarNode('metadata')->defaultValue(null)->end()
                     ->scalarNode('template')->defaultValue(null)->end()
                     ->scalarNode('statsEventName')->defaultValue(null)->end()
+                    ->scalarNode('statsEventGroup')->defaultValue('endpoint')->end()
                     ->integerNode('resourceId')->defaultValue(null)->end()
                     ->arrayNode('headers')->normalizeKeys(false)->defaultValue([])->prototype('scalar')->end()->end()
                 ->end()->end()->end()

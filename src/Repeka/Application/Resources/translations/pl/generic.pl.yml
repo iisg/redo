@@ -256,3 +256,8 @@ Rerender all dynamic metadata in this resource: Przerenderuj wszystkie dynamiczn
 Search results: Wyniki wyszukiwania
 Number of characters: Liczba znaków
 Forbidden file extension: Niedozwolone rozszerzenie pliku
+Aggregation: Grupowanie
+Total: Suma
+Download as CSV: Pobierz plik CSV
+Download as CSV, grouped by resources: Pobierz plik CSV z grupoawniem po zasobach
+No statistics for given filters.: Brak statystyk dla zadanych filtrów.

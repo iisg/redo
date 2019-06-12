@@ -20,12 +20,22 @@ statistics-view {
   }
   .statistics-container {
     .statistics-content {
-      .resources-statistics {
-        padding: $default-gap-size;
+      h3 {
+        margin: 10px 0 10px 15px;
       }
-      .statistics-table {
-        padding-bottom: $default-gap-size;
+      statistics-table {
+        margin-bottom: $default-gap-size;
+        display: block;
+        overflow-x: auto;
       }
+      .statistics-download-links {
+        text-align: center;
+        > a {
+          display: inline-block;
+          margin: 0 5px;
+        }
+      }
+      padding-bottom: $default-gap-size * 2;
     }
   }
 }

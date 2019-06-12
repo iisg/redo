@@ -1,7 +1,8 @@
 import {DeduplicatingHttpClient} from "../common/http-client/deduplicating-http-client";
 import {EntitySerializer} from "../common/dto/entity-serializer";
 import {cachedResponse, forSeconds} from "../common/repository/cached-response";
-import {StatisticsCollection} from "./statistics/statistics-collection";
+import {suppressError as suppressErrorHeader} from "common/http-client/headers";
+import {StatisticsBucket} from "audit/statistics/statistics-bucket";
 
 export class StatisticsQuery {
   protected params: any = {};
@@ -19,18 +20,44 @@ export class StatisticsQuery {
     return this;
   }
 
-  public get(): Promise<StatisticsCollection> {
+  public filterByResourceId(resourceId: number): this {
+    this.params.resourceId = resourceId;
+    return this;
+  }
+
+  public filterByResourceKinds(resourceKinds: string[]): this {
+    this.params.resourceKinds = resourceKinds;
+    return this;
+  }
+
+  public filterByResourceContents(resourceContents: NumberMap<string>): this {
+    this.params.resourceContents = JSON.stringify(resourceContents);
+    return this;
+  }
+
+  public aggregateBy(aggregation: string): this {
+    this.params.aggregation = aggregation;
+    return this;
+  }
+
+  public get(): Promise<StatisticsBucket[]> {
     return this.makeRequest(this.params);
   }
 
+  public getParams() {
+    return this.params;
+  }
+
   @cachedResponse(forSeconds(10))
-  private makeRequest(params): Promise<StatisticsCollection> {
+  private makeRequest(params): Promise<StatisticsBucket[]> {
     return this.httpClient.createRequest(`${this.endpoint}/statistics`)
       .asGet()
       .withParams(params)
+      .withHeader(suppressErrorHeader.name, suppressErrorHeader.value)
       .send()
       .then(response => {
-        return this.entitySerializer.deserialize<StatisticsCollection>(StatisticsCollection, response.content);
+        const promises = response.content.map(s => this.entitySerializer.deserialize<StatisticsBucket>(StatisticsBucket, s));
+        return Promise.all(promises) as any as Promise<StatisticsBucket[]>;
       });
   }
 }

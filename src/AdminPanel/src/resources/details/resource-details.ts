@@ -156,6 +156,7 @@ export class ResourceDetails implements RoutableComponentActivate {
     }
     if (this.hasRole.toView('ADMIN', this.resource.resourceClass)) {
       this.resourceDetailsTabs.addTab('audit', this.i18n.tr('Audit'));
+      this.resourceDetailsTabs.addTab('statistics', this.i18n.tr('Statistics'));
     }
     this.resourceDetailsTabs.activateTab(activeTabId);
   }

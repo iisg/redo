@@ -12,8 +12,8 @@ export function arraysEqual(array1: any[], array2: any[]) {
  * Removes duplicates from array.
  * https://stackoverflow.com/a/14438954/1937994
  */
-export function unique(values: any[]): any[] {
-  return values.filter((value, index, self) => self.indexOf(value) === index);
+export function unique<T>(values: T[], compare: (a: T, b: T) => boolean = (a, b) => a == b): T[] {
+  return values.filter((value, index, self) => self.findIndex(a => compare(value, a)) === index);
 }
 
 export function containsDuplicates(values: any[]): boolean {

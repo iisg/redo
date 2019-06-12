@@ -2,27 +2,46 @@
 namespace Repeka\Domain\UseCase\Stats;
 
 use Repeka\Domain\Cqrs\Command;
+use Repeka\Domain\Entity\ResourceKind;
+use Repeka\Domain\Metadata\MetadataValueAdjuster\ResourceContentsAdjuster;
+use Repeka\Domain\Repository\ResourceKindRepository;
 
 class StatisticsQueryAdjuster {
     private const MOMENT_DATE_FORMAT = 'Y-m-d\TH:i:s';
 
-    public function isDate(string $date): bool {
-        return (date(self::MOMENT_DATE_FORMAT, strtotime($date)) == $date);
-    }
+    /** @var ResourceContentsAdjuster */
+    private $resourceContentsAdjuster;
+    /** @var ResourceKindRepository */
+    private $resourceKindRepository;
 
-    public function adjustDateFrom(string $dateFrom): string {
-        return $this->isDate($dateFrom) ? $dateFrom : "";
-    }
-
-    public function adjustDateTo(string $dateTo): string {
-        return $this->isDate($dateTo) ? date(self::MOMENT_DATE_FORMAT, strtotime('+1 day', strtotime($dateTo))) : "";
+    public function __construct(ResourceContentsAdjuster $resourceContentsAdjuster, ResourceKindRepository $resourceKindRepository) {
+        $this->resourceContentsAdjuster = $resourceContentsAdjuster;
+        $this->resourceKindRepository = $resourceKindRepository;
     }
 
     /** @param StatisticsQuery $command */
     public function adjustCommand(Command $command): Command {
         return new StatisticsQuery(
-            $this->adjustDateFrom($command->getDateFrom()),
-            $this->adjustDateTo($command->getDateTo())
+            $command->getDateFrom(),
+            $command->getDateTo(),
+            $this->resourceKindIdsToResourceKinds($command->getResourceKinds()),
+            $this->resourceContentsAdjuster->adjust($command->getResourceContentsFilter()),
+            $command->getResourceId(),
+            $command->getEventGroup(),
+            $command->getAggregation(),
+            $command->isGroupedByResources()
+        );
+    }
+
+    private function resourceKindIdsToResourceKinds(array $resourceKindIds) {
+        return array_map(
+            function ($resourceKind) {
+                if (!$resourceKind instanceof ResourceKind) {
+                    $resourceKind = $this->resourceKindRepository->findByNameOrId($resourceKind);
+                }
+                return $resourceKind;
+            },
+            $resourceKindIds
         );
     }
 }

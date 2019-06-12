@@ -6,7 +6,6 @@ use Repeka\Domain\Entity\ResourceEntity;
 use Repeka\Domain\Repository\EventLogRepository;
 use Repeka\Domain\UseCase\Stats\EventLogCreateCommand;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class ResourcesExposureController extends Controller {
@@ -22,7 +21,7 @@ class ResourcesExposureController extends Controller {
         $metadataNameOrId,
         array $headers,
         ?string $statsEventName,
-        Request $request
+        ?string $statsEventGroup
     ) {
         // $resourceId parameter name is required to write understandable URLs in config, like /resources/{resourceId}
         /** @var ResourceEntity $resource */
@@ -34,7 +33,7 @@ class ResourcesExposureController extends Controller {
         } catch (\Throwable $e) {
         }
         if ($content) {
-            $this->trackUsage($statsEventName, $request, $resource);
+            $this->trackUsage($statsEventName, $statsEventGroup, $resource);
             $response = new Response($content, Response::HTTP_OK);
             $response->headers->add($headers);
             return $response;
@@ -48,13 +47,12 @@ class ResourcesExposureController extends Controller {
         string $template,
         array $headers,
         ?string $statsEventName,
-        Request $request
+        ?string $statsEventGroup
     ) {
-        // $resourceId parameter name is required to write understandable URLs in config, like /resources/{resourceId}/export_type
         /** @var ResourceEntity $resource */
         $resource = $resourceId;
         $responseData = ['r' => $resource, 'resource' => $resource];
-        $this->trackUsage($statsEventName, $request, $resource);
+        $this->trackUsage($statsEventName, $statsEventGroup, $resource);
         $response = $this->render($template, $responseData);
         $this->denyAccessUnlessGranted(['METADATA_VISIBILITY'], $resource);
         if ($response->getContent()) {
@@ -65,9 +63,9 @@ class ResourcesExposureController extends Controller {
         }
     }
 
-    private function trackUsage($statsEventName, $request, $resource) {
-        if ($statsEventName) {
-            $this->handleCommand(new EventLogCreateCommand($request, $statsEventName, $resource));
+    private function trackUsage(?string $eventName, ?string $eventGroup = null, ?ResourceEntity $resource = null): void {
+        if ($eventName) {
+            $this->handleCommand(new EventLogCreateCommand($eventName, $eventGroup, $resource));
         }
     }
 }

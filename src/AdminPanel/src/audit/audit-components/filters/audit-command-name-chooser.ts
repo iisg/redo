@@ -27,7 +27,7 @@ export class AuditCommandNameChooser {
     if (operationName.indexOf(PLUGIN_ENTRY_PREFIX) === 0) {
       return this.i18n.tr('Plugin') + ': ' + this.i18n.tr('plugins::' + operationName.substr(PLUGIN_ENTRY_PREFIX.length) + '//label');
     } else {
-      return this.i18n.tr('audit_commands::' + operationName);
+      return this.i18n.tr('audit::commands//' + operationName);
     }
   }
 }

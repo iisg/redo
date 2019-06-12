@@ -171,7 +171,7 @@ class RedoDepositController extends Controller {
                 /** @var ResourceEntity $resource */
                 $resource = $this->handleCommand($command);
                 if ($isLastTransition) {
-                    $this->handleCommand(new EventLogCreateCommand($request, 'deposit'));
+                    $this->handleCommand(new EventLogCreateCommand('deposit', 'endpoint'));
                     $this->addFlash('deposit', 'success');
                     return $this->redirect('/resources/' . $resource->getId());
                 } else {

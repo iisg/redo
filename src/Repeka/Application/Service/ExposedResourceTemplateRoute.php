@@ -11,6 +11,7 @@ class ExposedResourceTemplateRoute extends Route {
         string $template,
         ?int $resourceId,
         ?string $statsEventName,
+        ?string $statsEventGroup,
         array $headers = []
     ) {
         parent::__construct(
@@ -20,6 +21,7 @@ class ExposedResourceTemplateRoute extends Route {
                 'template' => $template,
                 'headers' => $headers,
                 'statsEventName' => $statsEventName,
+                'statsEventGroup' => $statsEventGroup,
             ],
             [],
             [],

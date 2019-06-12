@@ -59,6 +59,7 @@ class AuditEntryListQueryBuilder extends AbstractListQueryBuilder {
         $this->transitions = $transitions;
         return $this;
     }
+
     /** @param ResourceContents|array $resourceContents */
     public function filterByResourceContents($resourceContents): self {
         $this->resourceContents = $resourceContents;

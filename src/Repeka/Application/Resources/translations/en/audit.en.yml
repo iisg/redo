@@ -1,3 +1,11 @@
+commands:
+  resource_create: "Resource: created"
+  resource_clone: "Resource: cloned"
+  resource_delete: "Resource: deleted"
+  resource_transition: "Resource: transition"
+  resource_update_contents: "Resource: edit contents"
+  user_authenticate: "User: authentication"
+
 date-range-config:
   no_date: no date
   today: today

@@ -97,7 +97,7 @@
                 <td if.bind="entry.data.workflowPluginName">${'Plugin'|t}: ${'plugins::' + entry.data.workflowPluginName
                     + '//label' | t}
                 </td>
-                <td else>${'audit_commands::' + entry.commandName | t}</td>
+                <td else>${'audit::commands//' + entry.commandName | t}</td>
                 <td>
                     <resource-link if.bind="entry.user"
                         id.bind="entry.user.userData.id"></resource-link>

@@ -2,6 +2,7 @@
 namespace Repeka\Application\Controller\Api;
 
 use Assert\Assertion;
+use Repeka\Domain\Entity\StatisticsBucket;
 use Repeka\Domain\UseCase\Audit\AuditedCommandNamesQuery;
 use Repeka\Domain\UseCase\Audit\AuditEntryListQuery;
 use Repeka\Domain\UseCase\Audit\AuditEntryListQueryBuilder;
@@ -101,19 +102,58 @@ class AuditController extends ApiController {
      * @Method("GET")
      * @Security("has_role('ROLE_ADMIN_SOME_CLASS')")
      */
-    public function getStatisticsAction(Request $request) {
-        $queryBuilder = StatisticsQuery::builder();
-        if ($request->query->has('dateFrom')) {
-            Assertion::date($request->get('dateFrom'), 'Y-m-d\TH:i:s');
-            $dateFrom = $request->get('dateFrom');
-            $queryBuilder->filterByDateFrom($dateFrom);
+    public function getStatisticsAction(Request $request): Response {
+        return $this->createJsonResponse($this->getStatistics($request));
+    }
+
+    /**
+     * @SuppressWarnings("PHPMD.BooleanArgumentFlag")
+     * @return StatisticsBucket[]
+     */
+    private function getStatistics(Request $request, bool $groupByResources = false): array {
+        $queryBuilder = StatisticsQuery::builder()
+            ->filterByDateFrom($request->get('dateFrom', '2000-01-01'))
+            ->filterByDateTo($request->get('dateTo', '+1 day'))
+            ->filterByResourceKinds($request->get('resourceKinds', []))
+            ->filterByResourceId($request->get('resourceId', 0))
+            ->filterByResourceContents(json_decode($request->get('resourceContents', '{}'), true) ?: [])
+            ->filterByEventGroup($request->get('eventGroup', ''))
+            ->aggregateBy($request->get('aggregation', 'millennium'))
+            ->groupByResources($groupByResources);
+        return $this->handleCommand($queryBuilder->build());
+    }
+
+    /**
+     * @Route("/statistics/csv", methods={"GET"})
+     * @Security("has_role('ROLE_ADMIN_SOME_CLASS')")
+     */
+    public function downloadStatisticsAction(Request $request) {
+        ini_set('max_execution_time', 2000);
+        ini_set('memory_limit', '2G');
+        $groupByResources = $request->get('groupByResources', false);
+        $buckets = $this->getStatistics($request, $groupByResources);
+        $tmpFilename = tempnam(sys_get_temp_dir(), 'stats');
+        $headers = ['Event group', 'Event name', 'Bucket', 'Count'];
+        if ($groupByResources) {
+            $headers = array_merge(['Resource ID', 'Resource label'], $headers);
         }
-        if ($request->query->has('dateTo')) {
-            Assertion::date($request->get('dateTo'), 'Y-m-d\TH:i:s');
-            $dateTo = $request->get('dateTo');
-            $queryBuilder->filterByDateTo($dateTo);
+        $csvh = fopen($tmpFilename, 'w');
+        fwrite($csvh, chr(239) . chr(187) . chr(191)); // UTF-8 BOM
+        fputcsv($csvh, $headers);
+        foreach ($buckets as $bucket) {
+            $data = [
+                $bucket->getEventGroup(),
+                $bucket->getEventName(),
+                $bucket->getBucketLabel(),
+                $bucket->getCount(),
+            ];
+            if ($groupByResources) {
+                $data = array_merge([$bucket->getResourceId(), $bucket->getResourceLabel()], $data);
+            }
+            fputcsv($csvh, $data);
         }
-        $tasks = $this->handleCommand($queryBuilder->build());
-        return $this->createJsonResponse($tasks);
+        fclose($csvh);
+        $filename = sprintf('%s-%s.csv', $this->container->getParameter('repeka.theme'), date('Ymd-His'));
+        return $this->file($tmpFilename, $filename)->deleteFileAfterSend(true);
     }
 }

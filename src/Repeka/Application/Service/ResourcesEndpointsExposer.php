@@ -22,6 +22,7 @@ class ResourcesEndpointsExposer {
                         $endpoint['metadata'] ?? null,
                         $endpoint['resourceId'],
                         $endpoint['statsEventName'],
+                        $endpoint['statsEventGroup'],
                         $endpoint['headers']
                     )
                 );
@@ -32,6 +33,7 @@ class ResourcesEndpointsExposer {
                         $endpoint['template'] ?? '',
                         $endpoint['resourceId'],
                         $endpoint['statsEventName'],
+                        $endpoint['statsEventGroup'],
                         $endpoint['headers']
                     )
                 );

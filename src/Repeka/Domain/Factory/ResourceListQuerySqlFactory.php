@@ -43,6 +43,10 @@ class ResourceListQuerySqlFactory {
         $this->paginate();
     }
 
+    public function getFroms(): array {
+        return $this->froms;
+    }
+
     public function getParams(): array {
         return $this->params;
     }
@@ -68,28 +72,33 @@ class ResourceListQuerySqlFactory {
      *       AND ($this->whereAlternatives[0] OR ... OR $this->whereAlternatives[end]).
      */
     protected function getSelectQuery(string $what) {
-        $wheres = $this->wheres;
-        if (!empty($this->whereAlternatives)) {
-            $wheres[] = '(' . implode(' OR ', $this->whereAlternatives) . ')';
-        }
+        $where = $this->getWhereClause();
         return sprintf(
             'SELECT %s FROM %s %s ',
             $what,
             implode(', ', $this->froms),
-            $wheres ? 'WHERE ' . implode(' AND ', $wheres) : ''
+            $where ? 'WHERE ' . $where : ''
         );
+    }
+
+    public function getWhereClause(): string {
+        $wheres = $this->wheres;
+        if (!empty($this->whereAlternatives)) {
+            $wheres[] = '(' . implode(' OR ', $this->whereAlternatives) . ')';
+        }
+        return implode(' AND ', $wheres);
     }
 
     private function filterByIds(): void {
         if ($this->query->getIds()) {
-            $this->wheres[] = 'id IN(:ids)';
+            $this->wheres[] = 'r.id IN(:ids)';
             $this->params['ids'] = $this->query->getIds();
         }
     }
 
     protected function filterByResourceClasses(): void {
         if ($this->query->getResourceClasses()) {
-            $this->wheres[] = 'resource_class IN(:resourceClasses)';
+            $this->wheres[] = 'r.resource_class IN(:resourceClasses)';
             $this->params['resourceClasses'] = $this->query->getResourceClasses();
         }
     }

@@ -7,9 +7,6 @@ import {EventAggregator} from "aurelia-event-aggregator";
 
 @autoinject
 export class AuditPage {
-  audit: Audit;
-  private parameters: any;
-
   auditTabs: DetailsViewTabs;
 
   constructor(private i18n: I18N, private router: Router, private eventAggregator: EventAggregator) {
@@ -17,7 +14,6 @@ export class AuditPage {
   }
 
   activate(parameters: any) {
-    this.parameters = parameters;
     this.buildTabs(parameters.tab);
   }
 

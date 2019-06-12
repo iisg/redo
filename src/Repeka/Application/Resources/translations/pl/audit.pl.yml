@@ -1,0 +1,52 @@
+commands:
+  resource_create: "Zasób: stworzenie"
+  resource_clone: "Zasób: sklonowanie"
+  resource_delete: "Zasób: usunięcie"
+  resource_transition: "Zasób: przejście"
+  resource_update_contents: "Zasób: Edycja"
+  resource_god_update: "Zasób: Edycja - bez walidacji"
+  user_authenticate: "Użytkownik: autentykacja"
+
+date-range-config:
+  no_date: brak daty
+  today: dzisiaj
+  yesterday: wczoraj
+  current_week: aktualny tydzień
+  last_7_days: ostatnie 7 dni
+  previous_week: poprzedni tydzień
+  current_month: aktualny miesiąc
+  last_30_days: ostatnie 30 dni
+  previous_month: poprzedni miesiąc
+  previous_two_months: poprzednie dwa miesiące
+  previous_three_months: poprzednie trzy miesiące
+  previous_six_months: ostatnie pół roku
+  current_year: aktualny rok
+  last_365_days: ostatnie 365 dni
+  previous_year: poprzedni rok
+
+aggregations:
+  day: dni
+  week: tygodnie
+  month: miesiące
+  year: lata
+
+eventGroups:
+  cite: Cytowania
+  endpoint: Widoki
+  download: Pobrania
+  default: Pozostałe
+
+eventNames:
+  resourceDownload: Pobranie zasobu
+  resourceDownloadPdf: Pobranie pliku PDF
+  resourceDownloadEpub: Pobranie pliku EPUB
+  resourceDownloadArchive: Pobranie archiwum masterów
+  resourceDetails: Strona szczegółów zasobu
+  resourceBrowse: Otwarcie przeglądania książki
+  iso-690: ISO-690
+  endnote: EndNote
+  bibtex: BibTeX
+  deposit: Formularz deponowania
+  home: Strona główna
+  rss: Kanał RSS kolekcji
+  sessions: Unikalne odwiedziny

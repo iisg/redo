@@ -1,29 +1,37 @@
 <template>
-    <require from="common/value-converters/statistics-usage-key-value-converter"></require>
+    <require from="common/value-converters/t-with-fallback-value-converter"></require>
 
-    <div class="statistic-group">
-        <div class="statistic-group-title">
-            <span>${statistics.usageKey | statisticsUsageKey}</span>
-        </div>
-        <div class="statistic-group-table">
-            <table>
-                <thead>
-                <tr>
-                    <th></th>
-                    <th repeat.for="entry of statistics.statisticsEntries">
-                        ${dateToMonth(entry.statMonth)}
-                    </th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>${'Group sum' | t}</td>
-                    <td repeat.for="entry of statistics.statisticsEntries">
-                        ${entry.monthlySum}
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
+    <table class="statistics-table">
+        <thead>
+        <tr>
+            <th></th>
+            <th repeat.for="aggregation of aggregations">
+                ${ bucketLabel(aggregation) | t }
+            </th>
+            <th if.bind="aggregations.length > 1">${ 'Total' | t }</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr repeat.for="eventName of eventNames">
+            <th scope="row">${ 'audit::eventNames//' + eventName | tWithFallback }</th>
+            <td repeat.for="aggregation of aggregations">
+                ${ count(aggregation, eventName) }
+            </td>
+            <td if.bind="aggregations.length > 1">
+                ${ count(undefined, eventName) & signal:'buckets-updated' }
+            </td>
+        </tr>
+        </tbody>
+        <tfoot if.bind="eventNames.length > 1">
+        <tr>
+            <td scope="row">${'Total' | t}</td>
+            <td repeat.for="aggregation of aggregations">
+                ${ count(aggregation) & signal:'buckets-updated' }
+            </td>
+            <td if.bind="aggregations.length > 1">
+                ${ count() & signal:'buckets-updated' }
+            </td>
+        </tr>
+        </tfoot>
+    </table>
 </template>

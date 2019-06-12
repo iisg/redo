@@ -1,47 +1,65 @@
 <template>
     <require from="common/components/buttons/toggle-button"></require>
-    <require from="./statistics-period-chooser"></require>
     <require from="./statistics-table"></require>
-    <require from="./ip-statistics-table"></require>
     <require from="common/components/loading-bar/loading-cover"></require>
+    <require from="common/value-converters/t-with-fallback-value-converter"></require>
+    <require from="../audit-components/filters/date-range-picker"></require>
+    <require from="../audit-components/filters/resource-contents-yaml-filter"></require>
+    <require from="../audit-components/filters/audit-resource-kind-chooser"></require>
 
-    <span class="page-subtitle">${'Period of time' | t}</span>
+    <require from="common/components/dropdown-select/dropdown-select"></require>
 
     <div class="with-sticky-button">
         <div class="content simple-form">
             <span>${'Date' | t}</span>
-            <statistics-period-chooser date-from.bind="dateFrom"
-                date-to.bind="dateTo"></statistics-period-chooser>
+            <date-range-picker date-from.bind="filters.dateFrom"
+                date-to.bind="filters.dateTo"></date-range-picker>
+            <span>${'Aggregation' | t}</span>
+            <dropdown-select
+                values.one-time="['day', 'week', 'month', 'year']"
+                value.bind="filters.aggregation">
+                <template replace-part="option-template">
+                    ${'audit::aggregations//' + option | tWithFallback }
+                </template>
+            </dropdown-select>
+            <template if.bind="!resourceId">
+                <span>${'Resource kind' | t}</span>
+                <audit-resource-kind-chooser selected-resource-kinds-ids.bind="filters.resourceKinds"></audit-resource-kind-chooser>
+                <span>${'Resource contents' | t}</span>
+                <resource-contents-yaml-filter value.bind="filters.resourceContents"></resource-contents-yaml-filter>
+            </template>
         </div>
         <toggle-button class="sticky-button"
             primary-icon-name="filter-2"
             primary-label="Show"
-            click.delegate="onDateChange()"></toggle-button>
+            click.delegate="fetchStatistics()"></toggle-button>
     </div>
     <loading-cover loading.bind="displayProgressBar"
         class="statistics-container">
-        <div if.bind="statisticsCollection"
-            class="statistics-content">
-            <div class="resources-statistics simple-form">
-                <span>${ 'Number of resources in system' | t }</span>
-                <span class="value">${statisticsCollection.resourcesCount}</span>
-                <span>${ 'Number of open resources' | t }</span>
-                <span class="value">${statisticsCollection.openResourcesCount}</span>
+        <div class="statistics-content"
+            repeat.for="eventGroup of eventGroups">
+            <h3>${'audit::eventGroups//' + eventGroup | tWithFallback }</h3>
+            <statistics-table all-buckets.bind="entries"
+                event-group.bind="eventGroup"
+                aggregation.bind="filters.aggregation"></statistics-table>
+            <div class="statistics-download-links">
+                <a href.bind="'/api/audit/statistics/csv?eventGroup=' + eventGroup + '&' + currentParams"
+                    target="_top">
+                    <icon name="download-2"></icon>
+                    ${ 'Download as CSV' | t & oneTime }
+                </a>
+                <a href.bind="'/api/audit/statistics/csv?groupByResources=1&eventGroup=' + eventGroup + '&' + currentParams"
+                    target="_top">
+                    <icon name="download-2"></icon>
+                    ${ 'Download as CSV, grouped by resources' | t & oneTime }
+                </a>
             </div>
-            <template repeat.for="statistics of statisticsCollection.statistics">
-                <div class="statistics-table">
-                    <statistics-table if.bind="statistics.usageKey !== 'ips' && statistics.statisticsEntries.length"
-                        statistics.bind="statistics"></statistics-table>
-                    <ip-statistics-table if.bind="statistics.usageKey === 'ips' && statistics.statisticsEntries.length"
-                        statistics.bind="statistics"></ip-statistics-table>
-                </div>
-            </template>
+        </div>
+        <div class="alert alert-info"
+            if.bind="eventGroups.length === 0 && !displayProgressBar">
+            <icon name="information"></icon>
+            ${'No statistics for given filters.' | t & oneTime}
         </div>
     </loading-cover>
-    <div if.bind="!isAnyStatistic && !displayProgressBar"
-        class="alert alert-info">
-        <icon name="information"></icon>
-        ${'No entry matches given filters.' | t}
-    </div>
     <slot></slot>
 </template>

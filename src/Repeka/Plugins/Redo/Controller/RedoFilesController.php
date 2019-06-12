@@ -38,10 +38,11 @@ class RedoFilesController extends Controller {
      * @Method("GET")
      * @Security("is_granted('METADATA_VISIBILITY', resource)")
      */
-    public function fileAction(Request $request, ResourceEntity $resource, string $filepath) {
+    public function fileAction(ResourceEntity $resource, string $filepath) {
         $response = $this->forward(ResourcesFilesController::class . '::fileAction', ['resource' => $resource, 'filepath' => $filepath]);
         if ($response->isSuccessful()) {
-            $this->logEvent($resource, $request);
+            $fileType = strtolower(pathinfo($filepath, PATHINFO_EXTENSION));
+            $this->logEvent($resource, $fileType);
         }
         return $response;
     }
@@ -59,11 +60,9 @@ class RedoFilesController extends Controller {
                 'headers' => [],
                 'template' => 'redo/resource-details/image-reader.twig',
                 'statsEventName' => 'resourceBrowse',
+                'statsEventGroup' => 'download',
             ]
         );
-        if ($response->isSuccessful()) {
-            $this->logEvent($resource, $request);
-        }
         return $response;
     }
 
@@ -81,7 +80,7 @@ class RedoFilesController extends Controller {
                     $this->createZipFile($this->resourceFileStorage->getFileSystemPath($resource, $path), $outputName);
                 }
             );
-            $this->logEvent($resource, $request);
+            $this->logEvent($resource, 'archive');
             return $response;
         }
         return $this->redirect('/resources/' . $resource->getId());
@@ -106,8 +105,9 @@ class RedoFilesController extends Controller {
         pclose($fp);
     }
 
-    private function logEvent(ResourceEntity $resource, Request $request) {
-        $this->handleCommand(new EventLogCreateCommand($request, 'resourceDownload', $resource));
+    private function logEvent(ResourceEntity $resource, string $fileType) {
+        $eventName = 'resourceDownload' . ucfirst(strtolower($fileType));
+        $this->handleCommand(new EventLogCreateCommand($eventName, 'download', $resource));
         if ($resource->getKind()->hasMetadata(self::DOWNLOAD_COUNT_METADATA_NAME)) {
             $this->transactional(
                 function () use ($resource) {

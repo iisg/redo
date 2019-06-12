@@ -1,8 +1,0 @@
-resource_create: "Ressourcen: bilden"
-resource_clone: "Ressourcen: klonen"
-resource_delete: "Ressourcen: löschen"
-resource_transition: "Ressourcen: übergehen"
-resource_update_contents: "Ressourcen: bearbeiten"
-resource_god_update: "Ressourcen: bearbeiten – ohne Validation"
-
-user_authenticate: "Benutzer: Authentifizierung"

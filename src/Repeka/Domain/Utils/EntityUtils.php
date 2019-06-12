@@ -41,8 +41,8 @@ final class EntityUtils {
      * @param Identifiable[] $entities
      * @return Identifiable[]
      */
-    public static function getLookupMap(array $entities): array {
-        $ids = self::mapToIds($entities);
+    public static function getLookupMap(array $entities, string $prop = 'id'): array {
+        $ids = self::mapToIds($entities, $prop);
         return array_combine($ids, $entities);
     }
 
@@ -51,15 +51,16 @@ final class EntityUtils {
      * @param array|Identifiable[] $entities
      * @return (int|string)[]
      */
-    public static function mapToIds($entities): array {
+    public static function mapToIds($entities, string $prop = 'id'): array {
         if (!is_array($entities)) {
             $entities = iterator_to_array($entities);
         }
+        $getter = 'get' . ucfirst($prop);
         return array_values(
             array_map(
-                function ($entity) {
+                function ($entity) use ($prop, $getter) {
                     /** @var Identifiable $entity */
-                    return is_array($entity) ? $entity['id'] : $entity->getId();
+                    return is_array($entity) || $entity instanceof \ArrayAccess ? $entity[$prop] : $entity->$getter();
                 },
                 $entities
             )

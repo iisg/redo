@@ -1,68 +1,85 @@
 import {autoinject} from "aurelia-dependency-injection";
 import {AuditEntryRepository} from "../audit-entry-repository";
 import {bindable, ComponentAttached} from "aurelia-templating";
-import {Router} from "aurelia-router";
-import * as moment from "moment";
-import {StatisticsCollection} from "./statistics-collection";
-import {getQueryParameters} from "common/utils/url-utils";
-import {changeHandler} from "common/components/binding-mode";
+import {NavigationInstruction, Router} from "aurelia-router";
 import {debounce} from "lodash";
+import {StatisticsFilters} from "audit/statistics/statistics-filters";
+import {StatisticsBucket} from "audit/statistics/statistics-bucket";
+import {removeValue, unique} from "common/utils/array-utils";
 import {computedFrom} from "aurelia-binding";
+import {StatisticsQuery} from "audit/statistics-query";
+import {EventAggregator} from "aurelia-event-aggregator";
 
 @autoinject
 export class StatisticsView implements ComponentAttached {
-  statisticsCollection: StatisticsCollection;
-  @bindable(changeHandler('fetchStatistics')) dateFrom: string;
-  @bindable(changeHandler('fetchStatistics')) dateTo: string;
-  displayProgressBar = false;
+  @bindable filters: StatisticsFilters = new StatisticsFilters();
+  @bindable resourceId: number;
 
-  constructor(private auditEntryRepository: AuditEntryRepository, private router: Router) {
+  displayProgressBar = false;
+  private error = '';
+  private entries: StatisticsBucket[];
+  private lastQuery: StatisticsQuery;
+  private activated: boolean = false;
+
+  constructor(private auditEntryRepository: AuditEntryRepository, private router: Router, private eventAggregator: EventAggregator) {
+  }
+
+  bind() {
+    if (this.resourceId) {
+      this.eventAggregator.subscribeOnce("router:navigation:success",
+        (event: { instruction: NavigationInstruction }) => {
+          this.activate(event.instruction.queryParams);
+        });
+    }
+  }
+
+  activate(params: any) {
+    if (this.resourceId != undefined) {
+      params.id = this.resourceId;
+    }
+    this.filters = StatisticsFilters.fromParams(params);
+    this.fetchStatistics();
+    this.activated = true;
   }
 
   attached() {
-    this.fetchStatistics();
-  }
-
-  activate() {
-    this.onDateChange();
-  }
-
-  private formatDate(date): string {
-    const localDate = (moment(date).add(-(moment().utcOffset()), 'm'));
-    return moment.parseZone(localDate).utc().format('YYYY-MM-DDTHH:mm:ss');
-  }
-
-  private fetchStatistics = debounce(() => {
-    if (this.dateFrom && this.dateTo) {
-      const dateFrom = this.formatDate(moment(this.dateFrom).startOf('month').toDate());
-      const dateTo = this.formatDate(moment(this.dateTo).endOf('month').toDate());
-      this.displayProgressBar = true;
-      this.auditEntryRepository.getStatisticsQuery()
-        .filterByDateFrom(dateFrom)
-        .filterByDateTo(dateTo)
-        .get()
-        .then(response => this.statisticsCollection = response)
-        .finally(() => this.displayProgressBar = false);
+    if (!this.activated) {
+      this.activate(this.router.currentInstruction.queryParams);
     }
+  }
+
+  fetchStatistics() {
+    let route = this.resourceId ? 'resources/details' : 'audit';
+    this.router.navigateToRoute(route, this.filters.toParams(), {trigger: false, replace: true});
+    this.fetchEntries();
+  }
+
+  fetchEntries = debounce(() => {
+    this.displayProgressBar = true;
+    this.error = '';
+    this.lastQuery = this.filters.buildQuery(this.auditEntryRepository.getStatisticsQuery());
+    this.lastQuery
+      .get()
+      .then(entries => this.entries = entries)
+      .catch(e => {
+        this.entries = [];
+        throw this.error = e;
+      })
+      .finally(() => this.displayProgressBar = false);
   }, 50);
 
-  onDateChange() {
-    const queryParameters = getQueryParameters(this.router);
-    const parameters = {};
-    parameters['tab'] = queryParameters['tab'];
-    if (this.dateFrom) {
-      parameters['dateFrom'] = queryParameters['dateFrom'];
+  @computedFrom('entries')
+  get eventGroups(): string[] {
+    const eventGroups = this.entries ? unique(this.entries.map(e => e.eventGroup)) : [];
+    if (eventGroups.includes('default')) {
+      removeValue(eventGroups, 'default');
+      eventGroups.push('default'); // push the "default" group to the end
     }
-    if (this.dateTo) {
-      parameters['dateTo'] = queryParameters['dateTo'];
-    }
-    this.router.navigateToRoute('audit', parameters, {trigger: false, replace: true});
-    this.fetchStatistics();
+    return eventGroups;
   }
 
-  @computedFrom('statisticsCollection')
-  get isAnyStatistic(): boolean {
-    return this.statisticsCollection
-      && !!this.statisticsCollection.statistics.filter(v => v.statisticsEntries.length).length;
+  @computedFrom('lastQuery')
+  get currentParams(): string {
+    return this.lastQuery ? $.param(this.lastQuery.getParams()) : '';
   }
 }

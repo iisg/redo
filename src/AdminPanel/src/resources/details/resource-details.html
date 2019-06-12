@@ -10,6 +10,7 @@
     <require from="common/components/redo-footer/redo-footer.html"></require>
     <require from="users/details/user-roles"></require>
     <require from="audit/audit-components/audit"></require>
+    <require from="audit/statistics/statistics-view"></require>
     <require from="resources/controls/input/file-manager/resource-file-manager"></require>
     <require from="common/components/buttons/toggle-button"></require>
     <require from="./resource-display-strategy-playground"></require>
@@ -126,6 +127,12 @@
                     <redo-footer></redo-footer>
                 </audit>
             </aup-tab-pane>
+            <aup-tab-pane tab="statistics">
+                <statistics-view if.bind="resourceDetailsTabs.activeTabId === 'statistics'"
+                    resource-id.bind="resource.id">
+                    <redo-footer></redo-footer>
+                </statistics-view>
+            </aup-tab-pane>
             <aup-tab-pane tab="relationships">
                 <div if.bind="resourceDetailsTabs.activeTabId === 'relationships'">
                     <entity-chooser entities.bind="metadataList"
@@ -145,8 +152,7 @@
                 <user-roles if.bind="resourceDetailsTabs.activeTabId === 'user-roles'"
                     user-data.bind="resource"></user-roles>
             </aup-tab-pane>
-            <redo-footer if.bind="resourceDetailsTabs.activeTabId !== 'children' && resourceDetailsTabs.activeTabId !== 'audit'
-                && resourceDetailsTabs.activeTabId !== 'relationships'"></redo-footer>
+            <redo-footer if.bind="['children', 'audit', 'relationships', 'statistics'].indexOf(resourceDetailsTabs.activeTabId) < 0"></redo-footer>
         </aup-tab-content>
     </div>
 </template>
