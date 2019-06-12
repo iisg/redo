@@ -14,6 +14,7 @@ regon_failed: Niepoprawny numer REGON
 otherInfo_failed: Wartość jest wymagana
 mustBeTrue_failed: Zgoda jest wymagana
 email_failed: Niepoprawny adres e-mail
+polishIban_failed: Niepoprawny numer konta bankowego
 
 labels:
   maxCount: Maksymalna liczba wartości
