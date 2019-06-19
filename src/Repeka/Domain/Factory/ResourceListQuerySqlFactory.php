@@ -165,7 +165,10 @@ class ResourceListQuerySqlFactory {
                 $whereClauses = [];
                 foreach ($filterValues as $filterValue) {
                     $paramName = 'filter' . $nextFilterId;
-                    if (is_int($filterValue)) {
+                    if ($filterValue === null) {
+                        $whereClauses[] = "$contentsPath->'$metadataId' IS NULL";
+                        $paramName = null;
+                    } elseif (is_int($filterValue)) {
                         $filterValue = json_encode([['value' => $filterValue]]);
                         $whereClauses[] = "$contentsPath->'$metadataId' @> :$paramName";
                     } elseif ($filterValue == '.+') {

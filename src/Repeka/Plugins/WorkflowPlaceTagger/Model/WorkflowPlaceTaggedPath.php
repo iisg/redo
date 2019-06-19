@@ -45,7 +45,11 @@ class WorkflowPlaceTaggedPath {
         $currentPlace = $startPlace;
         while ($currentPlace->getId() != $endPlace->getId()) {
             $transitions = $this->workflow->getTransitionsFromPlace($currentPlace);
-            Assertion::count($transitions, 1, "Expected to found 1 transition from the place {$currentPlace->getId()}, %d found");
+            Assertion::count(
+                $transitions,
+                1,
+                "Expected to found 1 transition from the place {$currentPlace->getId()}, " . count($transitions) . " found"
+            );
             $transition = $transitions[0];
             $tos = $transition->getToIds();
             Assertion::count($tos, 1, "Expected to found 1 target place for the transition {$transition->getId()}, %d found");

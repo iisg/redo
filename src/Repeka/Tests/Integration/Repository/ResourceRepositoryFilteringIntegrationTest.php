@@ -213,6 +213,21 @@ class ResourceRepositoryFilteringIntegrationTest extends IntegrationTestCase {
         $this->assertFalse($this->resourceRepository->hasChildren($this->getPhpBookResource()));
     }
 
+    public function testFilteringByExcludedMetadata() {
+        $excludedMetadata = $this->getMetadataRepository()->findByName('opis');
+        $resources = $this->resourceRepository->findByQuery(
+            ResourceListQuery::builder()
+                ->filterByResourceKind($this->getBookResourceKind())
+                ->filterByContents([$excludedMetadata->getId() => null])
+                ->build()
+        )->getResults();
+        /** * @var ResourceEntity $resource */
+        foreach ($resources as $resource) {
+            $metadataIds = array_keys($resource->getContents()->toArray());
+            $this->assertNotContains($excludedMetadata->getId(), $metadataIds);
+        }
+    }
+
     private function getEbooksCategoryResourceId(): int {
         $connection = $this->container->get('doctrine.orm.entity_manager')->getConnection();
         $categoryNameMetadataId = $connection->query("SELECT id FROM metadata WHERE label->'EN' = '\"Category name\"';")->fetch()['id'];
