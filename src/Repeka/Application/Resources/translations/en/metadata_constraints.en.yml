@@ -6,6 +6,7 @@ regon_failed: Invalid REGON number
 otherInfo_failed: Value is required
 email_failed: Invalid e-mail address
 polishIban_failed: Invalid bank account number
+doublePrecision_failed: Invalid real number
 
 labels:
   maxCount: Max value count

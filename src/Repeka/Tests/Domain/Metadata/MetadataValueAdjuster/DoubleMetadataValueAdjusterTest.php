@@ -23,7 +23,7 @@ class DoubleMetadataValueAdjusterTest extends \PHPUnit_Framework_TestCase {
         try {
             $this->assertEquals($expectedOutput, $this->adjuster->adjustMetadataValue($value, $metadata)->getValue());
         } catch (ValidationException $e) {
-            $this->assertNull($expectedOutput, 'No failure was expeced.');
+            $this->assertNull($expectedOutput, 'No failure was expected.');
         }
     }
 
@@ -41,6 +41,8 @@ class DoubleMetadataValueAdjusterTest extends \PHPUnit_Framework_TestCase {
             ['0.0', 0],
             ['0.1', .1],
             ['-5.4', -5.4],
+            [0, 0],
+            [null, 0]
         ];
     }
 }

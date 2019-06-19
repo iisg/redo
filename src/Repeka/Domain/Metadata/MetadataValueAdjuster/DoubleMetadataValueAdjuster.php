@@ -14,7 +14,7 @@ class DoubleMetadataValueAdjuster implements MetadataValueAdjuster {
     public function adjustMetadataValue(MetadataValue $value, Metadata $metadata): MetadataValue {
         $textValue = trim($this->replaceCommaWithDot($value->getValue()));
         $floatValue = floatval($textValue);
-        if (!$floatValue && (strlen($textValue) == 0 || $textValue{0} !== '0')) {
+        if ($textValue && !$floatValue && $textValue{0} !== '0') {
             throw new ValidationException('Invalid double value: ' . $value->getValue());
         }
         return $value->withNewValue($floatValue);

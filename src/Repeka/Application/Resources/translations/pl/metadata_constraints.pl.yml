@@ -15,6 +15,7 @@ otherInfo_failed: Wartość jest wymagana
 mustBeTrue_failed: Zgoda jest wymagana
 email_failed: Niepoprawny adres e-mail
 polishIban_failed: Niepoprawny numer konta bankowego
+doublePrecision_failed: Niepoprawna liczba rzeczywista
 
 labels:
   maxCount: Maksymalna liczba wartości
