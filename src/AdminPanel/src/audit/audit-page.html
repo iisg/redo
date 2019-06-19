@@ -12,12 +12,12 @@
         </div>
         <aup-tab-content>
             <aup-tab-pane tab="audit">
-                <audit>
+                <audit if="condition.bind: auditTabs.activeTabId === 'audit'; cache: false">
                     <redo-footer></redo-footer>
                 </audit>
             </aup-tab-pane>
             <aup-tab-pane tab="statistics">
-                <statistics-view>
+                <statistics-view if="condition.bind: auditTabs.activeTabId === 'statistics'; cache: false">
                     <redo-footer></redo-footer>
                 </statistics-view>
             </aup-tab-pane>

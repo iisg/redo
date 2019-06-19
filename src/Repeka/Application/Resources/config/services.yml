@@ -102,6 +102,10 @@ services:
       # must be called before LocaleListener, which has priority of 16, by assigning higher priority
       # must be called before GlobalExceptionListener which has priority of 1000, by assigning higher priority, or error uses default locale
 
+  Repeka\Application\EventListener\Doctrine\DatabaseTimezoneSetter:
+    tags:
+      - { name: doctrine.event_listener, event: postConnect }
+
   Repeka\Application\EventListener\Doctrine\ResourceKindMetadataListConverterListener:
     tags:
       - { name: doctrine.event_listener, event: prePersist }
