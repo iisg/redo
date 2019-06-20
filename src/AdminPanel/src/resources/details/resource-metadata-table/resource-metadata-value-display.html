@@ -15,8 +15,17 @@
     <compose view-model="../../controls/control-strategy"
         view="../../controls/display/control-display-${metadata.control}.html"
         model.bind="{metadataValue: value, resource: resource}"></compose>
+    <button if.bind="!metadata.parentId && submetadataResource.kind.metadataList.length"
+        class="expand-collapse-submetadata-button"
+        type="button"
+        click.delegate="toggleMetadataVisibility()">
+        <div>
+            <icon name="forward"
+                rotation.bind="submetadataCollapsed ? 0 : 90"></icon>
+        </div>
+    </button>
 
-    <resource-metadata-table if.bind="submetadataResource.kind.metadataList.length"
+    <resource-metadata-table if.bind="submetadataResource.kind.metadataList.length && (!submetadataCollapsed || metadata.parentId)"
         resource.bind="submetadataResource"
         hide-empty-metadata.one-time="true"
         check-metadata-brief.bind="checkMetadataBrief"

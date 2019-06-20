@@ -15,11 +15,12 @@ export class LocalStorage {
     }
   }
 
-  static get(key: string) {
+  static get(key: string, defaultValue: any = undefined) {
     try {
-      return JSON.parse(localStorage.getItem(key));
+      return JSON.parse(localStorage.getItem(key)) || defaultValue;
     } catch (exception) {
       this.handleLocalStorageException(exception);
+      return defaultValue;
     }
   }
 

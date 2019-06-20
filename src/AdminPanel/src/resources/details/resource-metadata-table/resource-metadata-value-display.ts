@@ -5,6 +5,7 @@ import {Resource} from "../../resource";
 import {MetadataValue} from "../../metadata-value";
 import {EntitySerializer} from "../../../common/dto/entity-serializer";
 import {MetadataRepository} from "../../../resources-config/metadata/metadata-repository";
+import {LocalStorage} from "common/utils/local-storage";
 
 @autoinject
 export class ResourceMetadataValueDisplay {
@@ -12,10 +13,17 @@ export class ResourceMetadataValueDisplay {
   @bindable resource: Resource;
   @bindable value: MetadataValue;
   @bindable checkMetadataBrief: boolean = false;
+  submetadataCollapsed: boolean = false;
+
+  private static LOCAL_STORAGE_COLLAPSED_KEY = 'collapsedSubmetadata';
 
   private submetadataResource: Resource;
 
   constructor(private entitySerializer: EntitySerializer, private metadataRepository: MetadataRepository) {
+  }
+
+  attached() {
+    this.submetadataCollapsed = LocalStorage.get(ResourceMetadataValueDisplay.LOCAL_STORAGE_COLLAPSED_KEY, {})[this.metadata.id] || false;
   }
 
   async valueChanged() {
@@ -27,7 +35,18 @@ export class ResourceMetadataValueDisplay {
     }
   }
 
+  toggleMetadataVisibility(): void {
+    this.submetadataCollapsed = !this.submetadataCollapsed;
+    const setting = LocalStorage.get(ResourceMetadataValueDisplay.LOCAL_STORAGE_COLLAPSED_KEY, {});
+    setting[this.metadata.id] = this.submetadataCollapsed;
+    LocalStorage.set(ResourceMetadataValueDisplay.LOCAL_STORAGE_COLLAPSED_KEY, setting);
+  }
+
   private get hasSubmetadata(): boolean {
     return this.value.submetadata && Object.keys(this.value.submetadata).length > 0;
+  }
+
+  private get isCollapsible(): boolean {
+    return !this.metadata.parentId;
   }
 }
