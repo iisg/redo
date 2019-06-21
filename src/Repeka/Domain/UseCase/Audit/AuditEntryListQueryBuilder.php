@@ -13,6 +13,11 @@ class AuditEntryListQueryBuilder extends AbstractListQueryBuilder {
     private $resourceContents = [];
     private $resourceId = 0;
 
+    public function __construct() {
+        $this->dateFrom = new \DateTime('2000-01-01');
+        $this->dateTo = new \DateTime('+1 day');
+    }
+
     public function build(): AuditEntryListQuery {
         return new AuditEntryListQuery(
             $this->commandNames,
@@ -36,12 +41,12 @@ class AuditEntryListQueryBuilder extends AbstractListQueryBuilder {
     }
 
     public function filterByDateFrom($dateFrom): self {
-        $this->dateFrom = $dateFrom;
+        $this->dateFrom = $dateFrom instanceof \DateTime ? $dateFrom : new \DateTime($dateFrom);
         return $this;
     }
 
     public function filterByDateTo($dateTo): self {
-        $this->dateTo = $dateTo;
+        $this->dateTo = $dateTo instanceof \DateTime ? $dateTo : new \DateTime($dateTo);
         return $this;
     }
 

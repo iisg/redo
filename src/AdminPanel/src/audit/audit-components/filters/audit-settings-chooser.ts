@@ -1,14 +1,12 @@
-import {computedFrom} from "aurelia-binding";
+import {computedFrom, observable} from "aurelia-binding";
 import {autoinject} from "aurelia-dependency-injection";
 import {I18N} from "aurelia-i18n";
 import {bindable} from "aurelia-templating";
-import {observable} from "aurelia-binding";
 import {twoWay} from "common/components/binding-mode";
 import {InCurrentLanguageValueConverter} from 'resources-config/multilingual-field/in-current-language';
 import {AuditListFilters} from "../audit-list-filters";
 import {AuditSettings} from "./audit-settings";
 import {parseQueryString} from "aurelia-path";
-import {EventAggregator} from "aurelia-event-aggregator";
 
 @autoinject
 export class AuditSettingsChooser {
@@ -18,9 +16,7 @@ export class AuditSettingsChooser {
   private urlNamesByIds: StringMap<string>;
   private urlParamsByIds: StringMap<string>;
 
-  constructor(private inCurrentLanguage: InCurrentLanguageValueConverter,
-              private eventAggregator: EventAggregator,
-              private i18n: I18N) {
+  constructor(private inCurrentLanguage: InCurrentLanguageValueConverter, private i18n: I18N) {
   }
 
   attached() {
@@ -55,7 +51,6 @@ export class AuditSettingsChooser {
       this.filters.resultsPerPage = resultsPerPage || AuditListFilters.DEFAULT_RESULTS_PER_PAGE;
       this.filters.currentPageNumber = 1;
       this.filters = AuditListFilters.fromParams(params);
-      this.eventAggregator.publish('auditSettingsChanged');
     }
   }
 

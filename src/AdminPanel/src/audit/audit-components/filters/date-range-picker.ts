@@ -8,7 +8,6 @@ import {changeHandler, twoWay} from "common/components/binding-mode";
 import {isString} from "common/utils/object-utils";
 import {DateMode, FlexibleDateContent, inputDateConfig} from "resources/controls/input/flexible-date-input/flexible-date-config";
 import {DateRangeConfig, DateRangeMode} from "./date-range-config";
-import {EventAggregator} from "aurelia-event-aggregator";
 
 enum DateRangePart {
   FROM = 'from',
@@ -22,17 +21,16 @@ export class DateRangePicker implements ComponentAttached {
   private isLoaded = false;
   private optionIsChanging = false;
 
-  availableDateOptions: string[] = values(DateRangeMode);
+  predefinedDateRanges: string[] = values(DateRangeMode);
   value: FlexibleDateContent;
   datepicker: Element;
   linkedDatepicker: Element;
 
-  @bindable(changeHandler('updateDateOption')) dateOption;
-  @bindable(twoWay) dateFrom: string;
-  @bindable(twoWay) dateTo: string;
+  @bindable(changeHandler('updatepredefinedDateRange')) predefinedDateRange;
+  @bindable(twoWay.and(changeHandler('updateFromTo'))) dateFrom: string;
+  @bindable(twoWay.and(changeHandler('updateFromTo'))) dateTo: string;
 
-  constructor(private element: Element,
-              private eventAggregator: EventAggregator) {
+  constructor(private element: Element) {
   }
 
   attached() {
@@ -49,11 +47,7 @@ export class DateRangePicker implements ComponentAttached {
       this.isLoaded = true;
     });
 
-    this.eventAggregator.subscribe('auditSettingsChanged', () => {
-      this.auditSettingsChanged();
-    });
-
-}
+  }
 
   private createDateTimePickers() {
     const options = inputDateConfig[this.rangeDateMode].options;
@@ -122,9 +116,15 @@ export class DateRangePicker implements ComponentAttached {
     }
   }
 
-  getDatePart(input: FlexibleDateContent, part: DateRangePart) {
-    if (input) {
-      return input[part] ? moment(input[part]).format('YYYY-MM-DD') : undefined;
+  getDatePart(input: FlexibleDateContent, part: DateRangePart): string {
+    if (input && input[part]) {
+      let date = moment(input[part]);
+      if (part == DateRangePart.FROM) {
+        date = date.startOf('day');
+      } else {
+        date = date.endOf('day');
+      }
+      return date.format();
     }
     return undefined;
   }
@@ -136,7 +136,7 @@ export class DateRangePicker implements ComponentAttached {
     this.value.from = this.dateFrom;
     this.value.to = this.dateTo;
     if (!this.optionIsChanging) {
-      this.dateOption = undefined;
+      this.predefinedDateRange = undefined;
     }
   }
 
@@ -147,8 +147,8 @@ export class DateRangePicker implements ComponentAttached {
     this.valueChanged();
   }
 
-  updateDateOption(): void {
-    if (this.dateOption && !this.optionIsChanging) {
+  updatepredefinedDateRange(): void {
+    if (this.predefinedDateRange && !this.optionIsChanging) {
       this.optionIsChanging = true;
       let dateFrom: string = undefined;
       let dateTo: string = undefined;
@@ -157,7 +157,7 @@ export class DateRangePicker implements ComponentAttached {
       $(this.datepicker).data('DateTimePicker').clear();
       $(this.linkedDatepicker).data("DateTimePicker").clear();
       this.setDateRange(dateFrom, dateTo);
-      let dateConfig = new DateRangeConfig(this.dateOption);
+      let dateConfig = new DateRangeConfig(this.predefinedDateRange);
       dateFrom = dateConfig.dateFrom;
       dateTo = dateConfig.dateTo;
       this.setDateRange(dateFrom, dateTo);
@@ -165,23 +165,22 @@ export class DateRangePicker implements ComponentAttached {
     }
   }
 
-  auditSettingsChanged(): void {
-    if (!this.optionIsChanging) {
-      this.optionIsChanging = true;
-      this.dateOption = undefined;
-      let dateFrom: string = this.dateFrom;
-      let dateTo: string = this.dateTo;
-      $(this.linkedDatepicker).data("DateTimePicker").minDate(false);
-      $(this.datepicker).data('DateTimePicker').maxDate(false);
-      if (!dateFrom) {
-        $(this.datepicker).data('DateTimePicker').clear();
-      }
-      if (!dateTo) {
-        $(this.linkedDatepicker).data('DateTimePicker').clear();
-      }
-      this.setDateRange(dateFrom, dateTo);
-      this.optionIsChanging = false;
-    }
-  }
-
+  // auditSettingsChanged(): void {
+  //   if (!this.optionIsChanging) {
+  //     this.optionIsChanging = true;
+  //     this.predefinedDateRange = undefined;
+  //     let dateFrom: string = this.dateFrom;
+  //     let dateTo: string = this.dateTo;
+  //     $(this.linkedDatepicker).data("DateTimePicker").minDate(false);
+  //     $(this.datepicker).data('DateTimePicker').maxDate(false);
+  //     if (!dateFrom) {
+  //       $(this.datepicker).data('DateTimePicker').clear();
+  //     }
+  //     if (!dateTo) {
+  //       $(this.linkedDatepicker).data('DateTimePicker').clear();
+  //     }
+  //     this.setDateRange(dateFrom, dateTo);
+  //     this.optionIsChanging = false;
+  //   }
+  // }
 }

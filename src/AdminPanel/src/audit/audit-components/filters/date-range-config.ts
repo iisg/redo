@@ -43,7 +43,7 @@ export class DateRangeConfig {
   }
 
   public static isDateValid(input) {
-    return input ? (moment(input, "YYYY-MM-DD", true).isValid()) : false;
+    return input ? (moment(input).isValid()) : false;
   }
 
   setDates(): void {

@@ -40,12 +40,12 @@ class AuditEntryListQuerySqlFactory extends ResourceListQuerySqlFactory {
 
     private function filterByDate() {
         if ($this->query->getDateFrom()) {
-            $this->wheres[] = 'ae.created_at >= :dateFrom::timestamp at time zone \'utc\'';
-            $this->params['dateFrom'] = $this->query->getDateFrom();
+            $this->wheres[] = 'ae.created_at >= :dateFrom::timestamp';
+            $this->params['dateFrom'] = $this->query->getDateFrom()->format(\DateTime::ATOM);
         }
         if ($this->query->getDateTo()) {
-            $this->wheres[] = 'ae.created_at < :dateTo::timestamp at time zone \'utc\'';
-            $this->params['dateTo'] = $this->query->getDateTo();
+            $this->wheres[] = 'ae.created_at < :dateTo::timestamp';
+            $this->params['dateTo'] = $this->query->getDateTo()->format(\DateTime::ATOM);
         }
     }
 

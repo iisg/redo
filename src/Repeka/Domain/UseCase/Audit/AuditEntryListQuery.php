@@ -13,8 +13,9 @@ class AuditEntryListQuery extends AbstractListQuery implements NonValidatedComma
     private $users;
     private $resourceKinds;
     private $transitions;
-    /** @var string */
+    /** @var \DateTime */
     private $dateFrom;
+    /** @var \DateTime */
     private $dateTo;
     /** @var ResourceContents */
     private $resourceContentsFilter;
@@ -22,8 +23,8 @@ class AuditEntryListQuery extends AbstractListQuery implements NonValidatedComma
 
     public function __construct(
         array $commandNames,
-        string $dateFrom,
-        string $dateTo,
+        \DateTime $dateFrom,
+        \DateTime $dateTo,
         array $users,
         array $resourceKinds,
         array $transitions,
@@ -51,11 +52,11 @@ class AuditEntryListQuery extends AbstractListQuery implements NonValidatedComma
         return $this->commandNames;
     }
 
-    public function getDateFrom(): string {
+    public function getDateFrom(): \DateTime {
         return $this->dateFrom;
     }
 
-    public function getDateTo(): string {
+    public function getDateTo(): \DateTime {
         return $this->dateTo;
     }
 

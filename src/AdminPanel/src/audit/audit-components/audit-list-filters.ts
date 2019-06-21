@@ -2,7 +2,6 @@ import {observable} from "aurelia-binding";
 import {AuditEntryListQuery} from "../audit-entry-list-query";
 import {safeJsonParse} from "common/utils/object-utils";
 import {DateRangeConfig} from "./filters/date-range-config";
-import * as moment from "moment";
 
 export class AuditListFilters {
   static DEFAULT_RESULTS_PER_PAGE: number = 10;
@@ -64,10 +63,10 @@ export class AuditListFilters {
       query = query.filterByResourceId(this.resourceId);
     }
     if (this.dateFrom) {
-      query = query.filterByDateFrom(this.convertDateToUTC(this.dateFrom));
+      query = query.filterByDateFrom(this.dateFrom);
     }
     if (this.dateTo) {
-      query = query.filterByDateTo(this.convertDateToUTC(this.dateTo));
+      query = query.filterByDateTo(this.dateTo);
     }
     return query
       .filterByResourceContents(this.resourceContents)
@@ -87,7 +86,6 @@ export class AuditListFilters {
     filters.commandNames = (params['commandNames'] || '').split(',').filter(commandName => !!commandName.trim());
     filters.dateFrom = DateRangeConfig.isDateValid(params['dateFrom']) ? params['dateFrom'] : "";
     filters.dateTo = DateRangeConfig.isDateValid(params['dateTo']) ? params['dateTo'] : "";
-    filters.dateTo = filters.fixDateTo(filters.dateFrom, filters.dateTo);
     filters.users = (params['users'] || '').split(',').filter(user => !!user.trim());
     filters.resourceKinds = (params['resourceKinds'] || '').split(',').filter(resourceKind => !!resourceKind.trim());
     filters.transitions = (params['transitions'] || '').split(',').filter(transition => !!transition.trim());
@@ -122,30 +120,12 @@ export class AuditListFilters {
     }
   }
 
-  private fixDateTo(dateFrom: string, dateTo: string) {
-    if ((dateFrom) && (dateTo)) {
-      if ((dateTo) < (dateFrom)) {
-        dateTo = undefined;
-      }
-    }
-    return dateTo;
-  }
-
   private setCustomColumns(serializedCustomColumns: string): void {
     const customColumns = safeJsonParse(serializedCustomColumns);
     if (Array.isArray(customColumns)) {
       this.customColumns = customColumns.map(col => {
         return {displayStrategy: col};
       });
-    }
-  }
-
-  private convertDateToUTC(date: string) {
-    if (date) {
-      const localDate = (moment(date).add(-(moment().utcOffset()), 'm'));
-      return moment.parseZone(localDate).utc().format('YYYY-MM-DDTHH:mm:ss');
-    } else {
-      return "";
     }
   }
 }

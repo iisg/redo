@@ -9,37 +9,16 @@ class AuditEntryListQueryAdjuster implements CommandAdjuster {
     /** @var MetadataRepository */
     private $metadataRepository;
 
-    private const MOMENT_DATE_FORMAT = 'Y-m-d\TH:i:s';
-
     public function __construct(MetadataRepository $metadataRepository) {
         $this->metadataRepository = $metadataRepository;
-    }
-
-    public function isDate(string $date): bool {
-        return (date(self::MOMENT_DATE_FORMAT, strtotime($date)) == $date);
-    }
-
-    public function adjustDateFrom(string $dateFrom): string {
-        return $this->isDate($dateFrom) ? $dateFrom : "";
-    }
-
-    public function adjustDateTo(string $dateTo): string {
-        return $this->isDate($dateTo) ? date(self::MOMENT_DATE_FORMAT, strtotime('+1 day', strtotime($dateTo))) : "";
-    }
-
-    public function addQuotes(array $transitions): array {
-        array_walk($transitions, function (&$x) {
-            $x = "\"$x\"";
-        });
-        return $transitions;
     }
 
     /** @param AuditEntryListQuery $command */
     public function adjustCommand(Command $command): Command {
         $adjustedQuery = new AuditEntryListQuery(
             $command->getCommandNames(),
-            $this->adjustDateFrom($command->getDateFrom()),
-            $this->adjustDateTo($command->getDateTo()),
+            $command->getDateFrom(),
+            $command->getDateTo(),
             $command->getUsers(),
             $command->getResourceKinds(),
             $this->addQuotes($command->getTransitions()),
@@ -49,5 +28,15 @@ class AuditEntryListQueryAdjuster implements CommandAdjuster {
             $command->getResourceId()
         );
         return $adjustedQuery;
+    }
+
+    private function addQuotes(array $transitions): array {
+        array_walk(
+            $transitions,
+            function (&$x) {
+                $x = "\"$x\"";
+            }
+        );
+        return $transitions;
     }
 }

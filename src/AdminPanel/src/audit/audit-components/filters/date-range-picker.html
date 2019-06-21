@@ -3,8 +3,8 @@
     <require from="eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css"></require>
 
     <dropdown-select class="available-options"
-        values.bind="availableDateOptions"
-        value.bind="dateOption"
+        values.bind="predefinedDateRanges"
+        value.bind="predefinedDateRange"
         hide-clear-button>
         <template replace-part="option-template">
             ${'audit::date-range-config//' + option | t }

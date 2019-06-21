@@ -34,6 +34,7 @@ export class StatisticsView implements ComponentAttached {
   }
 
   activate(params: any) {
+    delete params.id;
     if (this.resourceId != undefined) {
       params.id = this.resourceId;
     }

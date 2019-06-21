@@ -1,5 +1,4 @@
 import {safeJsonParse} from "common/utils/object-utils";
-import * as moment from "moment";
 import {StatisticsQuery} from "audit/statistics-query";
 import {DateRangeConfig} from "audit/audit-components/filters/date-range-config";
 
@@ -41,10 +40,10 @@ export class StatisticsFilters {
       query = query.filterByResourceId(this.resourceId);
     }
     if (this.dateFrom) {
-      query = query.filterByDateFrom(this.convertDateToUTC(this.dateFrom));
+      query = query.filterByDateFrom(this.dateFrom);
     }
     if (this.dateTo) {
-      query = query.filterByDateTo(this.convertDateToUTC(this.dateTo));
+      query = query.filterByDateTo(this.dateTo);
     }
     if (this.aggregation) {
       query = query.aggregateBy(this.aggregation);
@@ -58,29 +57,10 @@ export class StatisticsFilters {
     const filters = new StatisticsFilters();
     filters.dateFrom = DateRangeConfig.isDateValid(params['dateFrom']) ? params['dateFrom'] : "";
     filters.dateTo = DateRangeConfig.isDateValid(params['dateTo']) ? params['dateTo'] : "";
-    filters.dateTo = filters.fixDateTo(filters.dateFrom, filters.dateTo);
     filters.resourceKinds = (params['resourceKinds'] || '').split(',').filter(resourceKind => !!resourceKind.trim());
     filters.resourceContents = safeJsonParse(params['resourceContents']);
     filters.resourceId = +params['id'];
     filters.aggregation = params['aggregation'];
     return filters;
-  }
-
-  private fixDateTo(dateFrom: string, dateTo: string) {
-    if ((dateFrom) && (dateTo)) {
-      if ((dateTo) < (dateFrom)) {
-        dateTo = undefined;
-      }
-    }
-    return dateTo;
-  }
-
-  private convertDateToUTC(date: string) {
-    if (date) {
-      const localDate = (moment(date).add(-(moment().utcOffset()), 'm'));
-      return moment.parseZone(localDate).utc().format('YYYY-MM-DDTHH:mm:ss');
-    } else {
-      return "";
-    }
   }
 }
