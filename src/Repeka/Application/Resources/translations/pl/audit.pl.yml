@@ -40,6 +40,7 @@ eventNames:
   resourceDownload: Pobranie zasobu
   resourceDownloadPdf: Pobranie pliku PDF
   resourceDownloadEpub: Pobranie pliku EPUB
+  resourceDownloadJpg: Pobranie pliku JPG
   resourceDownloadArchive: Pobranie archiwum masterów
   resourceDetails: Strona szczegółów zasobu
   resourceBrowse: Otwarcie przeglądania książki
