@@ -79,8 +79,10 @@ export class AuditListFilters {
       .setResultsPerPage(this.resultsPerPage);
   }
 
-  static fromParams(params: StringMap<any>): AuditListFilters {
-    const filters = new AuditListFilters();
+  static fromParams(params: StringMap<any>, filters: AuditListFilters = undefined): AuditListFilters {
+    if (!filters) {
+      filters = new AuditListFilters();
+    }
     filters.resultsPerPage = +params['resultsPerPage'] || AuditListFilters.DEFAULT_RESULTS_PER_PAGE;
     filters.currentPageNumber = +params['currentPageNumber'] || 1;
     filters.commandNames = (params['commandNames'] || '').split(',').filter(commandName => !!commandName.trim());

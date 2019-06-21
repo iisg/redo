@@ -48,9 +48,9 @@ export class AuditSettingsChooser {
       if (resourceId != undefined) {
         params.id = resourceId;
       }
+      this.filters = AuditListFilters.fromParams(params, this.filters);
       this.filters.resultsPerPage = resultsPerPage || AuditListFilters.DEFAULT_RESULTS_PER_PAGE;
       this.filters.currentPageNumber = 1;
-      this.filters = AuditListFilters.fromParams(params);
     }
   }
 
