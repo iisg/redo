@@ -40,13 +40,15 @@ class TasksController extends ApiController {
     private function getResourceListQueryBuilder(array $params): ResourceListQueryBuilder {
         $sortByIds = $params['sortByIds'] ?? [];
         $workflowPlacesIds = $params['workflowPlacesIds'] ?? [];
+        $resourceKindIds = $params['resourceKinds'] ?? [];
         $contentsFilter = $params['contentsFilter'] ?? [];
         Assertion::isArray($sortByIds);
         Assertion::isArray($workflowPlacesIds);
         $resourceListQueryBuilder = ResourceListQuery::builder()
             ->filterByContents(is_array($contentsFilter) ? $contentsFilter : [])
             ->sortBy($sortByIds)
-            ->filterByWorkflowPlacesIds($workflowPlacesIds);
+            ->filterByWorkflowPlacesIds($workflowPlacesIds)
+            ->filterByResourceKinds($resourceKindIds);
         if (array_key_exists('page', $params) || array_key_exists('resultsPerPage', $params)) {
             $page = $params['page'] ?? 1;
             $resultsPerPage = $params['resultsPerPage'] ?? 10;

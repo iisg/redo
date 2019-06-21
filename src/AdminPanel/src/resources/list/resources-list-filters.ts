@@ -6,6 +6,7 @@ export class ResourcesListFilters {
   sortBy: ResourceSort[] = [];
   resultsPerPage: number = 10;
   currentPage: number = 1;
+  kindIds: number[] = [];
 }
 
 export interface FilterChangedEvent<Value> {

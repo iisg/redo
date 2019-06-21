@@ -61,6 +61,7 @@ export class ResourcesListPaginated {
     this.subscribeToFilterChange('metadataFilterValueChanged',
       (filterChange: MetadataFilterChange) => this.metadataFilterValueChanged(filterChange));
     this.subscribeToFilterChange('placeFilterValueChanged', (placeIds: string[]) => this.placeFilterValueChanged(placeIds));
+    this.subscribeToFilterChange('kindFilterValueChanged', (kindIds: number[]) => this.kindFilterValueChanged(kindIds));
     this.subscribeToFilterChange('currentPageNumberChanged', (page: number) => this.currentPageNumberChanged(page));
     this.subscribeToFilterChange('elementsPerPageChanged', (resultsPerPage: number) => this.resultsPerPageChanged(resultsPerPage));
   }
@@ -100,6 +101,14 @@ export class ResourcesListPaginated {
       this.filters.places = [];
     }
     this.filters.places = placesIds;
+    this.notifyFiltersChanged();
+  }
+
+  private kindFilterValueChanged(kindIds: number[]) {
+    if (!this.filters.kindIds) {
+      this.filters.kindIds = [];
+    }
+    this.filters.kindIds = kindIds;
     this.notifyFiltersChanged();
   }
 

@@ -24,7 +24,8 @@
             resource-class.bind="resourceClass"
             sort-by.bind="filters.sortBy"
             contents-filter.bind="filters.contents"
-            places-filter.bind="filters.places"></resources-list-table>
+            places-filter.bind="filters.places"
+            kind-filter.bind="filters.kindIds"></resources-list-table>
     </loading-cover>
     <div class="alert alert-info"
         if.bind="resources.length === 0 && !displayProgressBar">

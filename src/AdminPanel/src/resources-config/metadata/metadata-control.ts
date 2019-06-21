@@ -19,5 +19,6 @@ export const filterableControls = [
   MetadataControl.TEXTAREA,
   MetadataControl.INTEGER,
   MetadataControl.RELATIONSHIP,
-  MetadataControl.SYSTEM_LANGUAGE
+  MetadataControl.SYSTEM_LANGUAGE,
+  MetadataControl.TIMESTAMP,
 ];

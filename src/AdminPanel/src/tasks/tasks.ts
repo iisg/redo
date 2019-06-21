@@ -111,6 +111,9 @@ export class Tasks {
     if (filters.places && filters.places.length) {
       query = query.filterByWorkflowPlacesIds(filters.places);
     }
+    if (filters.kindIds && filters.kindIds.length) {
+      query = query.filterByResourceKindIds(filters.kindIds);
+    }
     query = query.sortByMetadataIds(filters.sortBy)
       .setResultsPerPage(filters.resultsPerPage)
       .setCurrentPageNumber(filters.currentPage);
