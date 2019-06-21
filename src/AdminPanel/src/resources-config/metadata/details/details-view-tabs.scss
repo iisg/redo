@@ -23,4 +23,7 @@ aup-tab-content {
       left: 0;
     }
   }
+  @media (max-width: $maximum-screen-width-for-mobile-layout) {
+    overflow: visible;
+  }
 }

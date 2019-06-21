@@ -72,6 +72,9 @@ html {
   }
 
   .view-with-tabs {
+    @media (max-width: $maximum-screen-width-for-mobile-layout) {
+      overflow: auto;
+    }
     display: flex;
     flex-direction: column;
     .name-with-buttons-and-tabs {
