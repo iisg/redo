@@ -93,6 +93,7 @@ export class ResourcesListPaginated {
       this.filters.contents = {};
     }
     this.filters.contents[metadataIdWithValue.metadataId] = metadataIdWithValue.value;
+    this.setDefaultPage();
     this.notifyFiltersChanged();
   }
 
@@ -101,6 +102,7 @@ export class ResourcesListPaginated {
       this.filters.places = [];
     }
     this.filters.places = placesIds;
+    this.setDefaultPage();
     this.notifyFiltersChanged();
   }
 
@@ -109,6 +111,7 @@ export class ResourcesListPaginated {
       this.filters.kindIds = [];
     }
     this.filters.kindIds = kindIds;
+    this.setDefaultPage();
     this.notifyFiltersChanged();
   }
 
@@ -121,5 +124,9 @@ export class ResourcesListPaginated {
   private currentPageNumberChanged(newValue: number) {
     this.filters.currentPage = newValue;
     this.notifyFiltersChanged();
+  }
+
+  private setDefaultPage() {
+    this.filters.currentPage = 1;
   }
 }
