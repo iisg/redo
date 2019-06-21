@@ -164,23 +164,4 @@ export class DateRangePicker implements ComponentAttached {
       this.optionIsChanging = false;
     }
   }
-
-  // auditSettingsChanged(): void {
-  //   if (!this.optionIsChanging) {
-  //     this.optionIsChanging = true;
-  //     this.predefinedDateRange = undefined;
-  //     let dateFrom: string = this.dateFrom;
-  //     let dateTo: string = this.dateTo;
-  //     $(this.linkedDatepicker).data("DateTimePicker").minDate(false);
-  //     $(this.datepicker).data('DateTimePicker').maxDate(false);
-  //     if (!dateFrom) {
-  //       $(this.datepicker).data('DateTimePicker').clear();
-  //     }
-  //     if (!dateTo) {
-  //       $(this.linkedDatepicker).data('DateTimePicker').clear();
-  //     }
-  //     this.setDateRange(dateFrom, dateTo);
-  //     this.optionIsChanging = false;
-  //   }
-  // }
 }
