@@ -47,6 +47,16 @@ class MetadataListQuerySqlFactoryTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals(['tytul', 'opis'], $factory->getParams()['metadataNames']);
     }
 
+    public function testFilterByNamesOrIds() {
+        $query = MetadataListQuery::builder()->filterByIds([1])->filterByNames(['Tytuł', 'Opis'])->build();
+        $factory = new MetadataListQuerySqlFactory($query);
+        $this->assertContains('name IN(:metadataNames) OR id IN(:ids)', $factory->getPageQuery());
+        $this->assertArrayHasKey('metadataNames', $factory->getParams());
+        $this->assertEquals(['tytul', 'opis'], $factory->getParams()['metadataNames']);
+        $this->assertArrayHasKey('ids', $factory->getParams());
+        $this->assertEquals([1], $factory->getParams()['ids']);
+    }
+
     public function testFilterByControls() {
         $query = MetadataListQuery::builder()->filterByControls([MetadataControl::FILE(), MetadataControl::TEXT()])->build();
         $factory = new MetadataListQuerySqlFactory($query);

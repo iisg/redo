@@ -7,6 +7,7 @@ import {ApiRepository} from "../../common/repository/api-repository";
 import {cachedResponse, forOneMinute} from "../../common/repository/cached-response";
 import {debouncePromise} from "../../common/utils/function-utils";
 import {keyBy} from "lodash";
+import {normalizeEntityName} from "common/utils/string-utils";
 
 @autoinject
 export class MetadataRepository extends ApiRepository<Metadata> {
@@ -20,14 +21,16 @@ export class MetadataRepository extends ApiRepository<Metadata> {
     if (this.idsToQuery.indexOf(id) === -1) {
       this.idsToQuery.push(id);
     }
-    return this.fetchMetadata().then(metadataList => metadataList[id]);
+    return this.fetchMetadata().then(metadataList => metadataList['byId'][id] || metadataList['byName'][normalizeEntityName(id + '')]);
   }
 
   private fetchMetadata = debouncePromise(() => {
     if (this.idsToQuery.length) {
-      const query = this.getListQuery().filterByIds(this.idsToQuery);
+      const query = this.getListQuery().filterByNamesOrIds(this.idsToQuery);
       this.idsToQuery = [];
-      return query.get().then(metadataList => keyBy(metadataList, 'id'));
+      return query.get().then(metadataList => {
+        return {byId: keyBy(metadataList, 'id'), byName: keyBy(metadataList, 'name')};
+      });
     }
   }, 100);
 

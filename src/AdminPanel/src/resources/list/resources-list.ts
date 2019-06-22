@@ -9,7 +9,7 @@ import {booleanAttribute} from "common/components/boolean-attribute";
 import {DisabilityReason} from "common/components/buttons/toggle-button";
 import {Alert} from "common/dialog/alert";
 import {LocalStorage} from "common/utils/local-storage";
-import {safeJsonParse} from "common/utils/object-utils";
+import {deepCopy, safeJsonParse} from "common/utils/object-utils";
 import {getQueryParameters} from "common/utils/url-utils";
 import {Metadata} from "resources-config/metadata/metadata";
 import {MetadataRepository} from "resources-config/metadata/metadata-repository";
@@ -61,9 +61,7 @@ export class ResourcesList {
   private resultsPerPageValueChangedOnActivate: boolean;
   private currentPageNumberChangedOnActivate: boolean;
   private displayAllLevels: boolean = false;
-  private sortButtonToggleEventSubscription: Subscription;
-  private metadataFilterValueChangeEventSubscription: Subscription;
-  private placesFilterValueChangeEventSubscription: Subscription;
+  private eventSubscriptions: Subscription[] = [];
   private resourceKindIdsAllowedByParent: number[];
   private sortByKey: string;
   private kindFilter: number[];
@@ -96,23 +94,31 @@ export class ResourcesList {
       this.setResourceKindsAllowedByParent();
     }
     this.sortByKey = this.SORT_BY_KEY_PREFIX + this.resourceClass;
-    this.sortButtonToggleEventSubscription = this.eventAggregator.subscribe('sortButtonToggled',
-      ({value}: FilterChangedEvent<ResourceSort>) => {
-        this.sortButtonToggled(value);
-      });
-    this.metadataFilterValueChangeEventSubscription = this.eventAggregator.subscribe('metadataFilterValueChanged',
-      ({value}: FilterChangedEvent<MetadataFilterChange>) => {
-        this.metadataFilterValueChanged(value);
-      });
-    this.placesFilterValueChangeEventSubscription = this.eventAggregator.subscribe('placeFilterValueChanged',
-      ({value}: FilterChangedEvent<PlacesFilterChange>) => {
-        this.placeFilterValueChanged(value);
-      }
+    this.eventSubscriptions.push(
+      this.eventAggregator.subscribe('sortButtonToggled',
+        ({value}: FilterChangedEvent<ResourceSort>) => {
+          this.sortButtonToggled(value);
+        })
     );
-    this.placesFilterValueChangeEventSubscription = this.eventAggregator.subscribe('kindFilterValueChanged',
-      ({value}: FilterChangedEvent<KindsFilterChange>) => {
-        this.kindFilterValueChanged(value);
-      }
+    this.eventSubscriptions.push(
+      this.eventAggregator.subscribe('metadataFilterValueChanged',
+        ({value}: FilterChangedEvent<MetadataFilterChange>) => {
+          this.metadataFilterValueChanged(value);
+        })
+    );
+    this.eventSubscriptions.push(
+      this.eventAggregator.subscribe('placeFilterValueChanged',
+        ({value}: FilterChangedEvent<PlacesFilterChange>) => {
+          this.placeFilterValueChanged(value);
+        }
+      )
+    );
+    this.eventSubscriptions.push(
+      this.eventAggregator.subscribe('kindFilterValueChanged',
+        ({value}: FilterChangedEvent<KindsFilterChange>) => {
+          this.kindFilterValueChanged(value);
+        }
+      )
     );
     if (this.resourceKind) {
       this.activate(this.router.currentInstruction.queryParams);
@@ -120,9 +126,7 @@ export class ResourcesList {
   }
 
   unbind() {
-    this.sortButtonToggleEventSubscription.dispose();
-    this.metadataFilterValueChangeEventSubscription.dispose();
-    this.placesFilterValueChangeEventSubscription.dispose();
+    this.eventSubscriptions.forEach(s => s.dispose());
   }
 
   private setResourceKindsAllowedByParent() {
@@ -145,8 +149,7 @@ export class ResourcesList {
 
   private sortButtonToggled(resourceSort: ResourceSort) {
     this.sortBy = resourceSort ? [resourceSort] : this.DEFAULT_SORTING;
-    this.updateURL(true);
-    this.fetchResources();
+    this.fetchList();
     LocalStorage.set(this.sortByKey, this.sortBy);
   }
 
@@ -155,6 +158,11 @@ export class ResourcesList {
       this.contentsFilter = {};
     }
     this.contentsFilter[metadataIdWithValue.metadataId] = metadataIdWithValue.value;
+    this.contentsFilter = deepCopy(this.contentsFilter);
+    this.fetchList();
+  }
+
+  fetchList() {
     this.updateURL(true);
     this.fetchResources();
   }
@@ -164,8 +172,7 @@ export class ResourcesList {
       this.placesFilter = [];
     }
     this.placesFilter = placesIds;
-    this.updateURL(true);
-    this.fetchResources();
+    this.fetchList();
   }
 
   private kindFilterValueChanged(resourceKinds: number[]) {
@@ -173,8 +180,7 @@ export class ResourcesList {
       this.kindFilter = [];
     }
     this.kindFilter = resourceKinds;
-    this.updateURL(true);
-    this.fetchResources();
+    this.fetchList();
   }
 
   activate(parameters: any) {
@@ -196,8 +202,7 @@ export class ResourcesList {
     if (this.metadata) {
       this.updateContentsFilter(this.metadata);
     } else {
-      this.updateURL(true);
-      this.fetchResources();
+      this.fetchList();
     }
     this.activated = true;
   }
@@ -264,9 +269,8 @@ export class ResourcesList {
     } else if (!this.resourceKind && this.kindFilter && this.kindFilter.length) {
       query = query.filterByResourceKindIds(this.kindFilter);
     }
-    if (this.contentsFilter && Object.values(this.contentsFilter).find(value => value != undefined)) {
-      query = query.filterByContents(this.contentsFilter)
-        .suppressError();
+    if (this.contentsFilter && Object.values(this.contentsFilter).find(value => value !== undefined)) {
+      query = query.filterByContents(this.contentsFilter).suppressError();
     }
     if (this.idsFilter) {
       query = query.filterByIds(this.idsFilter);
@@ -287,7 +291,6 @@ export class ResourcesList {
           if (!resources.length && resources.page !== 1) {
             this.currentPageNumber = 1;
           } else {
-            this.displayProgressBar = false;
             this.resources = resources;
             this.addFormOpened = this.addFormOpened
               ? this.addFormOpened
@@ -299,12 +302,11 @@ export class ResourcesList {
         }
       }
     }).catch(error => {
-      this.displayProgressBar = false;
       this.resources = new PageResult<Resource>();
       const title = this.i18n.tr("Invalid request");
       const text = this.i18n.tr("The searched phrase is incorrect");
       this.alert.show({type: 'error'}, title, text);
-    });
+    }).finally(() => this.displayProgressBar = false);
   }
 
   fetchPossibleResourceKinds() {
@@ -387,7 +389,7 @@ export class ResourcesList {
       route = 'resources';
       parameters['resourceClass'] = this.resourceClass;
     }
-    if (this.contentsFilter && Object.values(this.contentsFilter).find(value => value != undefined)) {
+    if (this.contentsFilter && Object.values(this.contentsFilter).find(value => value !== undefined)) {
       parameters['contentsFilter'] = JSON.stringify(this.contentsFilter);
     }
     if (this.idsFilter) {
@@ -459,7 +461,16 @@ export class ResourcesList {
       }
     }
     this.contentsFilter = newContentFilters;
-    this.updateURL(true);
-    this.fetchResources();
+    this.fetchList();
+  }
+
+  switchToAllResourcesView() {
+    this.displayAllLevels = true;
+    this.fetchList();
+  }
+
+  switchToTopResourcesView() {
+    this.displayAllLevels = false;
+    this.fetchList();
   }
 }

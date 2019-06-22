@@ -23,8 +23,7 @@ class MetadataListQuerySqlFactory {
 
     private function build() {
         $this->excludeIds();
-        $this->filterByIds();
-        $this->filterByNames();
+        $this->filterByNamesOrIds();
         $this->filterByControls();
         $this->filterByResourceClasses();
         $this->filterByTopLevel();
@@ -43,10 +42,18 @@ class MetadataListQuerySqlFactory {
         }
     }
 
-    private function filterByIds(): void {
+    private function filterByNamesOrIds(): void {
+        $wheres = [];
+        if ($this->query->getNames()) {
+            $wheres[] = "name IN(:metadataNames)";
+            $this->params['metadataNames'] = array_map([StringUtils::class, 'normalizeEntityName'], $this->query->getNames());
+        }
         if ($this->query->getIds()) {
-            $this->wheres[] = 'id IN(:ids)';
+            $wheres[] = 'id IN(:ids)';
             $this->params['ids'] = $this->query->getIds();
+        }
+        if ($wheres) {
+            $this->wheres[] = implode(' OR ', $wheres);
         }
     }
 
@@ -94,13 +101,6 @@ class MetadataListQuerySqlFactory {
         if ($this->query->getRequiredKindIds()) {
             $this->wheres[] = "((constraints->>'resourceKind') is NULL OR (constraints->'resourceKind') @> :requiredKindId)";
             $this->params['requiredKindId'] = $requiredKindId;
-        }
-    }
-
-    private function filterByNames(): void {
-        if ($this->query->getNames()) {
-            $this->wheres[] = "name IN(:metadataNames)";
-            $this->params['metadataNames'] = array_map([StringUtils::class, 'normalizeEntityName'], $this->query->getNames());
         }
     }
 

@@ -8,6 +8,9 @@ use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\UseCase\Resource\ResourceListQuery;
 use Repeka\Domain\Utils\EntityUtils;
 
+/**
+ * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
+ */
 class ResourceListQuerySqlFactory {
 
     /** @var ResourceListQuery */
@@ -166,7 +169,7 @@ class ResourceListQuerySqlFactory {
                 $whereClauses = [];
                 foreach ($filterValues as $filterValue) {
                     $paramName = 'filter' . $nextFilterId;
-                    if ($filterValue === null) {
+                    if ($filterValue === null || $filterValue === 'null') {
                         $whereClauses[] = "$contentsPath->'$metadataId' IS NULL";
                         $paramName = null;
                     } elseif (is_int($filterValue)) {

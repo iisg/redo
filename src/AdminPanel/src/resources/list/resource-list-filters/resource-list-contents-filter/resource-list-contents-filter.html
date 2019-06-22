@@ -1,0 +1,28 @@
+<template>
+    <require from="audit/audit-components/filters/resource-contents-yaml-filter"></require>
+    <require from="common/components/buttons/toggle-button"></require>
+
+    <div class="resources-list-title"
+        if.bind="!showFilter">
+        <a click.delegate="showFilter = true">${ 'Advanced resource contents filter' | t }</a>
+    </div>
+    <div class="well"
+        else>
+        <a click.delegate="showFilter = false">${ 'Advanced resource contents filter' | t }</a>
+        <div class="form-group">
+            <resource-contents-yaml-filter value.bind="newContentsFilter"
+                rerender.bind="rerenderYaml"
+                keyup.delegate="submitOnCtrlEnter($event)"></resource-contents-yaml-filter>
+        </div>
+        <a click.delegate="showHelp = !showHelp">Co tu mogę wpisać?</a>
+        <div class="form-group resource-list-contents-filter-help"
+            if.bind="showHelp"
+            innerhtml.one-time="'advancedResourceContentsFilterHelp' | t">
+        </div>
+        <div class="text-right">
+            <toggle-button primary-icon-name="filter-2"
+                primary-label="Filter_verb"
+                click.delegate="updateFilter()"></toggle-button>
+        </div>
+    </div>
+</template>

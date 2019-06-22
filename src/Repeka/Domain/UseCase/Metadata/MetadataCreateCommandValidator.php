@@ -55,6 +55,7 @@ class MetadataCreateCommandValidator extends CommandAttributesValidator {
                 'name',
                 Validator::allOf(
                     Validator::notBlank(),
+                    Validator::not(Validator::numericVal()),
                     Validator::callback([$this, 'metadataNameIsUnique'])
                         ->setTemplate('metadataNameIsNotUnique')
                 )

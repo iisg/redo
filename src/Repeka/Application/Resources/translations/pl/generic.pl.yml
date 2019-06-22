@@ -261,3 +261,31 @@ Total: Suma
 Download as CSV: Pobierz plik CSV
 Download as CSV, grouped by resources: Pobierz plik CSV z grupoawniem po zasobach
 No statistics for given filters.: Brak statystyk dla zadanych filtrów.
+Advanced resource contents filter: Zaawansowany filtr po metadanych zasobu
+
+advancedResourceContentsFilterHelp: >
+  <p>W zaawansowanym wyszukiwaniu zasobów możesz podać wartości metadanych, które mają wystąpić w zasobie. <string>Wszystkie</strong>
+  podane wartości metadanych muszą występować w zasobie. Jeśli nałożysz warunek na metadaną imię i nazwisko, to w wynikach wyszukiwania
+  pojawią się jedynie zasoby zawierającą obydwie metadane spełniające zadany warunek.</p>
+  <p>Format, w którym wartości powinny zostać podane to YAML. W uproszczeniu, powinny to być pary wartości <code>metadata: filtr</code>.
+  Wartości filtrów mogą być liczbami, ciągami znaków lub wyrażeniami regularnymi. Zobacz poniższe przykłady by poznać możliwości tego mechanizmu.</p>
+  <ul>
+    <li><code>imie: Jan</code> - znajdzie zasoby z metadaną <code>imie</code> zawierającą <code>Jan</code> ale także <code>Janina</code> czy <code>Bojanowski</code></li>
+    <li><code>imie: ^Jan$</code> - tylko <code>Jan</code></li>
+    <li><code>imie: ^Jan</code> - rozpoczynające się od <code>Jan</code> a więc <code>Jan</code> ale także <code>Janina</code></li>
+    <li><code>4: Jan</code> - zamiast nazwy metadanej można także użyć jej identyfikatora; zauważ jednak, że zostanie on automatycznie zamieniony po wyszukaniu na nazwę</li>
+    <li><pre><code>imie: Jan
+  nazwisko: Kowalski$</code></pre> - zasoby z metadanymim zawierającymi ciąg znaków <code>jan</code> w metadanej <code>imie</code> oraz ciąg znaków kończący się na <code>kowalski</code> w metadanej <code>nazwisko</code></li>
+    <li><code>imie: [Jan, Józef]</code> - zasoby z metadaną <code>imie</code> zawierającą <code>Jan</code> lub <code>Józef</code></li>
+    <li><code>imie: null</code> - zasoby bez żadnej wartości metadanej <code>imie</code></li>
+    <li><code>imie: .+</code> - zasoby zawierające jakąkolwiek wartość metadanej <code>imie</code></li>
+    <li><code>data_urodzenia: '<2000-01-01T00:00:00'</code> - osoby urodzone przed 1 stycznia 2000r</li>
+    <li><code>data_urodzenia: ['<2000-01-01T00:00:00', '>1990-01-01T00:00:00']</code> - osoby urodzone przed 1 stycznia 2000r LUB po 1 stycznia 1990 (efektywnie: wszyscy!) - zakładając, że kontrolka metadanej to data</li>
+    <li><code>data_urodzenia: [['<2000-01-01T00:00:00', '>1990-01-01T00:00:00']]</code> - osoby urodzone przed 1 stycznia 2000r I po 1 stycznia 1990</li>
+    <li><code>numer_buta: 36</code> - osoby urodzone z numerem buta równym 36 - zakłądając, że kontrolka metadanej to liczba całkowita</li>
+    <li><code>numer_buta: '>=36'</code> - osoby z numerem buta większym lub równym 36</li>
+    <li><code>numer_buta: [['>=36', '<40']]</code> - osoby z numerem buta od 36 do 39</li>
+  </ul>
+  <p>Do filtrowania można użyć wszystkich metadanych poza elastyczną datą. Pamiętaj, że filtrując po relacjach musisz używać identyfikatorów zasobów
+  w relacji, a nie ich etykiet.</p>
+  <p>Nie zapomnij, że możesz filtrować listę z użyciem <code>Ctrl+Enter</code>!</p>

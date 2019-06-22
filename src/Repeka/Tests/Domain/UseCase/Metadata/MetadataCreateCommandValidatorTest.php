@@ -117,4 +117,10 @@ class MetadataCreateCommandValidatorTest extends \PHPUnit_Framework_TestCase {
         $command = new MetadataCreateCommand('notUniqueName', ['PL' => 'Test'], [], [], 'text', 'books');
         $this->validator->validate($command);
     }
+
+    public function testFailsIfMetadataIfNumericName() {
+        $this->expectException(InvalidCommandException::class);
+        $command = new MetadataCreateCommand('123', ['PL' => 'Test'], [], [], 'text', 'books', [], 'group1');
+        $this->validator->validate($command);
+    }
 }

@@ -7,13 +7,18 @@
     <require from="common/components/resource-kind/resource-kind-chooser/resource-kind-chooser"></require>
     <require from="common/components/buttons/cancel-button.html"></require>
     <require from="common/components/loading-bar/loading-cover"></require>
+    <require from="./resource-list-filters/resource-list-contents-filter/resource-list-contents-filter"></require>
 
     <div if.bind="!metadata && !resourceKind && !parentResource"
         class="resources-list-title">
-        <span if.bind="displayAllLevels"
-            class="page-title">${'Search results' | t}</span>
-        <span else
-            class="page-title">${'Top level resources' | resourceClassTranslation:resourceClass}</span>
+        <div if.bind="displayAllLevels">
+            <span class="page-title">${'All resources' | resourceClassTranslation:resourceClass}</span>
+            <a click.delegate="switchToTopResourcesView()">${ 'Display top level resources only' | resourceClassTranslation:resourceClass }</a>
+        </div>
+        <div else>
+            <span class="page-title">${'Top level resources' | resourceClassTranslation:resourceClass}</span>
+            <a click.delegate="switchToAllResourcesView()">${ 'Display all resources' | resourceClassTranslation:resourceClass }</a>
+        </div>
     </div>
 
     <pagination total-number-of-elements.bind="totalNumberOfResources"
@@ -28,7 +33,6 @@
     <div if.bind="!hideAddButton && addFormOpened"
         class="add-form well fade-inup-outdown au-animate">
         <span>${'Add new resource' | resourceClassTranslation:resourceClass}</span>
-
         <div class="resource-kind-chooser-with-cancel-button">
             <resource-kind-chooser
                 hide-clear-button.one-time="true"
@@ -50,6 +54,9 @@
     </div>
     <loading-cover loading.bind="displayProgressBar"
         class="resource-list-table-container">
+        <resource-list-contents-filter if.one-time="'ADMIN' | hasRole:resource.resourceClass"
+            contents-filter.bind="contentsFilter"
+            filter.delegate="fetchList()"></resource-list-contents-filter>
         <resources-list-table resources.bind="resources"
             resource-class.bind="resourceClass"
             disabled-metadata.bind="metadata"

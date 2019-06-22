@@ -9,3 +9,7 @@ export function stringToHtml(str: string): string {
   $e.text(str);
   return $e.html().replace(/[\n\r]/g, '<br>');
 }
+
+export function normalizeEntityName(name: string): string {
+  return name.replace(/([a-z])([A-Z])/g, '$1 $2').replace(/[^a-z0-9]/g, '_').replace(/_+/g, '_');
+}

@@ -35,6 +35,7 @@ class MetadataController extends ApiController {
     /**
      * @Route
      * @Method("GET")
+     * @SuppressWarnings("PHPMD.CyclomaticComplexity")
      */
     public function getListAction(Request $request) {
         $queryBuilder = MetadataListQuery::builder();
@@ -61,6 +62,11 @@ class MetadataController extends ApiController {
         }
         if ($ids = $request->query->get('ids')) {
             $queryBuilder->filterByIds($ids);
+        }
+        if ($namesOrIds = $request->query->get('namesOrIds')) {
+            $ids = array_filter($namesOrIds, 'is_numeric');
+            $names = array_diff($namesOrIds, $ids);
+            $queryBuilder->filterByIds($ids)->filterByNames($names);
         }
         if ($systemMetadataIds = $request->query->get('systemMetadataIds')) {
             $queryBuilder->addSystemMetadataIds($systemMetadataIds);

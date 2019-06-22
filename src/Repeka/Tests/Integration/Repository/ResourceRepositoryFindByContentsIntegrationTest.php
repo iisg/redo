@@ -270,6 +270,21 @@ class ResourceRepositoryFindByContentsIntegrationTest extends IntegrationTestCas
         }
     }
 
+    public function testFilteringByExcludedMetadataWithNullString() {
+        $excludedMetadata = $this->getMetadataRepository()->findByName('opis');
+        $resources = $this->getResourceRepository()->findByQuery(
+            ResourceListQuery::builder()
+                ->filterByResourceKind($this->getPhpBookResource()->getKind())
+                ->filterByContents([$excludedMetadata->getId() => 'null'])
+                ->build()
+        )->getResults();
+        /** * @var ResourceEntity $resource */
+        foreach ($resources as $resource) {
+            $metadataIds = array_keys($resource->getContents()->toArray());
+            $this->assertNotContains($excludedMetadata->getId(), $metadataIds);
+        }
+    }
+
     public function testFindingByInteger() {
         $query = ResourceListQuery::builder()->filterByContents(['liczba_stron' => '404'])->build();
         $results = $this->handleCommandBypassingFirewall($query);

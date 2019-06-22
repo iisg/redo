@@ -25,6 +25,11 @@ export class MetadataListQuery {
     return this;
   }
 
+  public filterByNamesOrIds(namesOrIds: number | string[]): MetadataListQuery {
+    this.params.namesOrIds = namesOrIds;
+    return this;
+  }
+
   public filterByResourceClasses(resourceClasses: string | string[]): MetadataListQuery {
     if (!Array.isArray(resourceClasses)) {
       resourceClasses = [resourceClasses as string];
