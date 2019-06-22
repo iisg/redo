@@ -1,11 +1,6 @@
 <template>
-    <require from="common/value-converters/basename-value-converter"></require>
-    <require from="resources/controls/input/file-manager/resource-file-properties"></require>
-
-    <div class="control-display-file">
-        <a href.bind="metadataValue.value & validate:validationController:validationRules"
-            target="_top">${metadataValue.value | basename}</a>
-        <resource-file-properties path.bind="metadataValue.value"
-            resource.bind="resource"></resource-file-properties>
-    </div>
+    <compose view-model="../control-strategy"
+        view="../display/control-display-${metadata.control}.html"
+        model.bind="{metadataValue: metadataValue, resource: resource}"></compose>
+    <span value.bind="metadataValue.value & validate:validationController:validationRules"></span>
 </template>
