@@ -1,6 +1,6 @@
 import {autoinject} from "aurelia-dependency-injection";
 import {HttpClient, HttpResponseMessage} from "aurelia-http-client";
-import {bindable, ComponentAttached} from "aurelia-templating";
+import {bindable} from "aurelia-templating";
 import {suppressError as suppressErrorHeader} from "common/http-client/headers";
 import {random, times} from 'lodash';
 import {Metadata} from "resources-config/metadata/metadata";
@@ -56,7 +56,7 @@ export class SimpleFileUpload {
     formData.append('reqid', reqId);
     formData.append('upload[]', file);
     formData.append('cmd', 'upload');
-    formData.append('target', 'lresourceFiles_Lw');
+    formData.append('target', `l${this.metadata.constraints.simpleFileUploadTargetDir || 'resourceFiles'}_Lw`);
     formData.append('overwrite', '0');
     return this.httpClient.createRequest(SimpleFileUpload.fileUploadEndpoint(this.resource.id))
       .asPost()

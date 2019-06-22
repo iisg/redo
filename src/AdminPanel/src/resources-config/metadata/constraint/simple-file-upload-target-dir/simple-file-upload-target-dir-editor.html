@@ -1,0 +1,9 @@
+<template>
+    <require from="common/components/restore-from-original-button/restore-from-original-button"></require>
+
+    <input class="form-control"
+        type="text"
+        value.bind="value">
+    <restore-from-original-button if.bind="hasBase && wasModified"
+        click.delegate="resetToOriginalValues()"></restore-from-original-button>
+</template>

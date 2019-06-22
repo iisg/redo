@@ -36,6 +36,7 @@ labels:
   noConfigurationConstraints: Pozostałe wymagania
   otherInfo: Wartość wymagana, jeśli wybrano "Inne" w odpowiadającym słowniku
   mustBeTrue: Wymagaj zaznaczenia "Tak"
+  simpleFileUploadTargetDir: Katalog zasobu, do którego domyślnie wysyłane są pliki
 
 customMessages:
   cmi:

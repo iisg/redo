@@ -9,7 +9,6 @@ import {MinMaxValue} from "./metadata-min-max-value";
 import {MetadataControl} from "./metadata-control";
 import {FrontendConfig} from "../../config/FrontendConfig";
 import {AutoMapperWithCustomProperties} from "../../common/dto/auto-mapper";
-import {ArrayMapper} from "../../common/dto/mappers";
 
 export interface MultilingualText extends StringStringMap {
 }
@@ -31,6 +30,7 @@ export class MetadataConstraints {
   @map(MinMaxConstraintMapper) minMaxValue?: MinMaxValue = new MinMaxValue();
   @map doublePrecision?: number;
   @map fileUploaderType?: string;
+  @map simpleFileUploadTargetDir?: string;
   @map relationshipSelectorType?: string;
   @map('string[]') allowedFileExtensions?: string[];
 

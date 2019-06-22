@@ -76,7 +76,11 @@
   window.addEventListener("message", function (event) {
     if (event.data.command === 'showToast') {
       if (event.data.result === 'success') {
+          {% if metadata is defined %}
         toastMessage = 'Wybrane {{ metadata.control == 'directory' ? 'katalogi' : 'pliki' }} dodano do metadanej {{ metadata.name }}.';
+          {% else %}
+        toastMessage = 'Wybrane pliki dodano do metadanej.';
+          {% endif %}
         mode = 'info';
       } else {
         toastMessage = event.data.message;

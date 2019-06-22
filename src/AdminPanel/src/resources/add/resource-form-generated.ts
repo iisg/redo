@@ -117,7 +117,9 @@ export class ResourceFormGenerated {
       if (inArray(clonedMetadata.id, this.requiredMetadataIdsForTransition || [])) {
         clonedMetadata.constraints.minCount = 1;
       }
-      if (!inArray(clonedMetadata.id, this.lockedMetadataIds || [])) {
+      if (inArray(clonedMetadata.id, this.lockedMetadataIds || [])) {
+        this.contentsValidator[clonedMetadata.id] = []; // always valid validator for locked metadata
+      } else {
         this.contentsValidator[clonedMetadata.id] = this.allMetadataValidator.createRules(clonedMetadata, this.resource).rules;
       }
     }
