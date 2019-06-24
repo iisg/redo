@@ -11,6 +11,7 @@ export class ResourceClassTranslationValueConverter implements ToViewValueConver
       console.warn('Defaulting resource class to books, as none were given for the translation: ' + key); // tslint:disable-line
       resourceClass = 'books';
     }
-    return this.i18n.tr(`resource_classes::${resourceClass}//${key}`);
+    const translation = this.i18n.tr(`resource_classes::${resourceClass}//${key}`);
+    return translation.indexOf('//') >= 0 ? this.i18n.tr(`resource_classes::${key}`) : translation;
   }
 }

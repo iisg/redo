@@ -1,36 +1,32 @@
-books:
-  resources: Ressourcen
-  resources/details: Ressourcen
-  settings: Einstellungen Ressourcen
-  resource-kinds: Arten Ressourcen
-  resource-kinds/details: Arten Ressourcen
-  metadata: Arten Metadaten
-  metadata/details: Arten Metadaten
-  workflows: Prozesse
-  workflows/new: Prozesse
-  workflows/details: Prozesse
-  Metadata Kinds: Arten Metadaten
-  Add new resource kind: Neue Art Ressourcen hinzufügen
-  Add new metadata kind: Neue Art Metadaten hinzufügen
-  Add new resource: Neue Ressourcen hinzufügen
-  Add metadata kind: Neue Art Metadaten
-  No metadata kinds.: Keine Arten Metadaten
-  No resource kinds.: Keine Arten Ressourcen
-  No resources.: Keine Ressourcen
-  Workflow: Prozess
-  No workflows.: Keine Prozesse
-  Resource's state prevents modification of these values.: Der Stand der Ressourcen ermöglicht, diese Werte zu modifizieren
-  Metadata value required: Der Wert der Metadaten ist erforderlich
-  This metadata can be used to specify assignees: Diese Metadaten können für Bezeichnung der verantwortlichen Person verwendet werden
-  New workflow: Neuer Prozess
-  # [Missing] Save the workflow and assign it to any resource kind to edit the table
-  # [Missing] Assign the workflow to any resource kind to display the table
-  # [Missing] Assign the workflow to any resource kind to edit the table
-  This metadata determines who can perform these actions:: Diese Metadaten bestimmen, wer folgende Maßnahmen ausführen kann:
-  Edit resource before transition: Bearbeitung der Ressourcen vor dem Übergang
-  Added resource will be in following place: Die hinzugefügten Ressourcen wird sich im Stand befinden
-  To states: Zum Stand
-  # [Missing] Top level resources
+resources: Ressourcen
+resources/details: Ressourcen
+settings: Einstellungen Ressourcen
+resource-kinds: Arten Ressourcen
+resource-kinds/details: Arten Ressourcen
+metadata: Arten Metadaten
+metadata/details: Arten Metadaten
+workflows: Prozesse
+workflows/new: Prozesse
+workflows/details: Prozesse
+Metadata Kinds: Arten Metadaten
+Add new resource kind: Neue Art Ressourcen hinzufügen
+Add new metadata kind: Neue Art Metadaten hinzufügen
+Add new resource: Neue Ressourcen hinzufügen
+Add metadata kind: Neue Art Metadaten
+No metadata kinds.: Keine Arten Metadaten
+No resource kinds.: Keine Arten Ressourcen
+No resources.: Keine Ressourcen
+Workflow: Prozess
+No workflows.: Keine Prozesse
+Resource's state prevents modification of these values.: Der Stand der Ressourcen ermöglicht, diese Werte zu modifizieren
+Metadata value required: Der Wert der Metadaten ist erforderlich
+This metadata can be used to specify assignees: Diese Metadaten können für Bezeichnung der verantwortlichen Person verwendet werden
+New workflow: Neuer Prozess
+This metadata determines who can perform these actions:: Diese Metadaten bestimmen, wer folgende Maßnahmen ausführen kann:
+Edit resource before transition: Bearbeitung der Ressourcen vor dem Übergang
+Added resource will be in following place: Die hinzugefügten Ressourcen wird sich im Stand befinden
+To states: Zum Stand
+
 dictionaries:
   resources: Wörterbücher
   resources/details: Wörterbücher

@@ -1,104 +1,43 @@
-books:
-  tasks: Books
-  resources: Books
-  resources/details: Books
-  settings: Book settings
-  resource-kinds: Book kinds
-  metadata: Metadata kinds
-  metadata/details: Metadata kinds
-  workflows: Workflows
-  workflows/new: Workflows
-  workflows/details: Workflows
-  Metadata Kinds: Metadata Kinds
-  Add new resource kind: Add new resource kind
-  Add new metadata kind: Add new metadata kind
-  Add new resource: Add new resource
-  Add metadata kind: Add metadata kind
-  No metadata kinds.: No metadata kinds.
-  No resource kinds.: No resource kinds.
-  No resources.: No resources.
-  Resource: Resource
-  Workflow: Workflow
-  No workflows.: No workflows.
-  Resource's state prevents modification of these values.: Resource's state prevents modification of these values.
-  Metadata value required: Metadata value required
-  This metadata can be used to specify assignees: This metadata can be used to specify assignees
-  New workflow: New workflow
-  Save the workflow and assign it to any resource kind to edit the table: Save the workflow and assign it to any resource kind to edit the table
-  Assign the workflow to any resource kind to display the table: Assign the workflow to any resource kind to display the table
-  Assign the workflow to any resource kind to edit the table: Assign the workflow to any resource kind to edit the table
-  This metadata determines who can perform these actions:: This metadata determines who can perform these actions:
-  Edit resource before transition: Edit resource before transition
-  Added resource will be in following place: Added resource will be in following place
-  To states: To states
-  Top level resources: Top level resources
+resources: Resources
+resources/details: Resources
+settings: Resource settings
+resource-kinds: Resource kinds
+metadata: Metadata kinds
+metadata/details: Metadata kinds
+workflows: Workflows
+workflows/new: Workflows
+workflows/details: Workflows
+
 dictionaries:
   resources: Dictionaries
   resources/details: Dictionaries
   settings: Dictionaries settings
   resource-kinds: Dictionary kinds
-  metadata: Metadata kinds
-  metadata/details: Metadata kinds
-  workflows: Workflows
-  workflows/new: Workflows
-  workflows/details: Workflows
-  Metadata Kinds: Metadata Kinds
   Add new resource kind: Add new dictionary kind
-  Add new metadata kind: Add new metadata kind
   Add new resource: Add new dictionary
-  Add metadata kind: Add metadata kind
-  No metadata kinds.: No metadata kinds.
   No resource kinds.: No dictionary kinds.
   No resources.: No dictionaries.
   Resource: Dictionary
-  Workflow: Workflow
-  No workflows.: No workflows.
   Resource's state prevents modification of these values.: Dictionaries state prevents modification of these values.
-  Metadata value required: Metadata value required
-  This metadata can be used to specify assignees: This metadata can be used to specify assignees
-  New workflow: New workflow
-  Save the workflow and assign it to any resource kind to edit the table: Save the workflow and assign it to any resource kind to edit the table
-  Assign the workflow to any resource kind to display the table: Assign the workflow to any resource kind to display the table
-  Assign the workflow to any resource kind to edit the table: Assign the workflow to any resource kind to edit the table
-  This metadata determines who can perform these actions:: This metadata determines who can perform these actions:
   Edit resource before transition: Edit dictionary before transition
   Added resource will be in following place: Added dictionary will be in following place
-  To states: To states
   Top level resources: Top level dictionaries
+
 users:
   users: Users
   resources: Users
   settings: Users settings
   resource-kinds: User kinds
   resources/details: Users
-  metadata: Metadata kinds
-  metadata/details: Metadata kinds
-  workflows: Workflows
-  workflows/new: Workflows
-  workflows/details: Workflows
   users/roles: Roles
-  Metadata Kinds: Metadata Kinds
   Add new resource kind: Add new user kind
-  Add new metadata kind: Add new metadata kind
   Add new resource: Add new user
-  Add metadata kind: Add metadata kind
-  No metadata kinds.: No metadata kinds.
   No resource kinds.: No user kinds.
   No resources.: No users.
   Resource: User
-  Workflow: Workflow
-  No workflows.: No workflows.
   Resource's state prevents modification of these values.: User's state prevents modification of these values.
-  Metadata value required: Metadata value required
-  This metadata can be used to specify assignees: This metadata can be used to specify assignees
-  New workflow: New workflow
-  Save the workflow and assign it to any resource kind to edit the table: Save the workflow and assign it to any resource kind to edit the table
-  Assign the workflow to any resource kind to display the table: Assign the workflow to any resource kind to display the table
-  Assign the workflow to any resource kind to edit the table: Assign the workflow to any resource kind to edit the table
-  This metadata determines who can perform these actions:: This metadata determines who can perform these actions:
   Edit resource before transition: Edit user before transition
   Added resource will be in following place: Added user will be in following place
-  To states: To states
   users/details: Users
   Top level resources: Top level users
 cms:
@@ -106,64 +45,26 @@ cms:
   settings: CMS settings
   resource-kinds: Template kinds
   resources/details: Templates
-  metadata: Metadata kinds
-  metadata/details: Metadata kinds
-  workflows: Workflows
-  workflows/new: Workflows
-  workflows/details: Workflows
-  Metadata Kinds: Metadata Kinds
   Add new resource kind: Add new template kind
-  Add new metadata kind: Add new metadata kind
   Add new resource: Add new template
-  Add metadata kind: Add metadata kind
-  No metadata kinds.: No metadata kinds.
   No resource kinds.: No template kinds.
   No resources.: No templates.
   Resource: Template
-  Workflow: Workflow
-  No workflows.: No workflows.
   Resource's state prevents modification of these values.: Template's state prevents modification of these values.
-  Metadata value required: Metadata value required
-  This metadata can be used to specify assignees: This metadata can be used to specify assignees
-  New workflow: New workflow
-  Save the workflow and assign it to any resource kind to edit the table: Save the workflow and assign it to any resource kind to edit the table
-  Assign the workflow to any resource kind to display the table: Assign the workflow to any resource kind to display the table
-  Assign the workflow to any resource kind to edit the table: Assign the workflow to any resource kind to edit the table
-  This metadata determines who can perform these actions:: This metadata determines who can perform these actions:
   Edit resource before transition: Edit template before transition
   Added resource will be in following place: Added template will be in following place
-  To states: To states
   Top level resources: Top level cms
 remarks:
   resources: Remarks
   settings: Remarks settings
   resource-kinds: Remark kinds
   resources/details: Remark
-  metadata: Metadata kinds
-  metadata/details: Metadata kinds
-  workflows: Workflows
-  workflows/new: Workflows
-  workflows/details: Workflows
-  Metadata Kinds: Metadata Kinds
   Add new resource kind: Add new remark kind
   Add new metadata kind: Add new metadata kind
-  Add new resource: Add new template
-  Add metadata kind: Add metadata kind
-  No metadata kinds.: No metadata kinds.
+  Add new resource: Add new remark
   No resource kinds.: No remark kinds.
-  No resources.: No remarks.
   Resource: Remark
-  Workflow: Workflow
-  No workflows.: No workflows.
   Resource's state prevents modification of these values.: Remark's state prevents modification of these values.
-  Metadata value required: Metadata value required
-  This metadata can be used to specify assignees: This metadata can be used to specify assignees
-  New workflow: New workflow
-  Save the workflow and assign it to any resource kind to edit the table: Save the workflow and assign it to any resource kind to edit the table
-  Assign the workflow to any resource kind to display the table: Assign the workflow to any resource kind to display the table
-  Assign the workflow to any resource kind to edit the table: Assign the workflow to any resource kind to edit the table
-  This metadata determines who can perform these actions:: This metadata determines who can perform these actions:
   Edit resource before transition: Edit remark before transition
   Added resource will be in following place: Added remark will be in following place
-  To states: To states
   Top level resources: Top level remarks

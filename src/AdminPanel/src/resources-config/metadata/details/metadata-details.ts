@@ -12,6 +12,7 @@ import {ResourceKindRepository} from "../../resource-kind/resource-kind-reposito
 import {Metadata, MetadataConstraints, SupportedMetadataConstraintDefinition} from "../metadata";
 import {MetadataRepository} from "../metadata-repository";
 import {DetailsViewTabs} from "./details-view-tabs";
+import {ResourceClassTranslationValueConverter} from "common/value-converters/resource-class-translation-value-converter";
 
 @autoinject
 export class MetadataDetails implements RoutableComponentActivate {
@@ -30,7 +31,8 @@ export class MetadataDetails implements RoutableComponentActivate {
               private eventAggregator: EventAggregator,
               private deleteEntityConfirmation: DeleteEntityConfirmation,
               private entitySerializer: EntitySerializer,
-              private contextResourceClass: ContextResourceClass) {
+              private contextResourceClass: ContextResourceClass,
+              private resourceClassTranslation: ResourceClassTranslationValueConverter) {
     this.metadataDetailsTabs = new DetailsViewTabs(this.eventAggregator, () => this.updateUrl());
   }
 
@@ -74,7 +76,7 @@ export class MetadataDetails implements RoutableComponentActivate {
     if (this.metadata.resourceClass && !this.metadata.parentId) {
       this.metadataDetailsTabs.addTab(
         'resource-kinds',
-        () => `${this.i18n.tr('resource_classes::' + this.metadata.resourceClass + '//resource-kinds')} (${this.resourceKindList.length})`
+        () => `${this.resourceClassTranslation.toView('resource-kinds', this.metadata.resourceClass)} (${this.resourceKindList.length})`
       );
     }
     this.metadataDetailsTabs.activateTab(activeTabId);

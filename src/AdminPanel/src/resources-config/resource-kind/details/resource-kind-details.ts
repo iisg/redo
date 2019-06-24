@@ -11,6 +11,7 @@ import {DetailsViewTabs} from "../../metadata/details/details-view-tabs";
 import {GroupMetadataList} from "../../metadata/metadata";
 import {MetadataGroupRepository} from "../../metadata/metadata-group-repository";
 import {ResourceRepository} from "../../../resources/resource-repository";
+import {ResourceClassTranslationValueConverter} from "common/value-converters/resource-class-translation-value-converter";
 
 @autoinject
 export class ResourceKindDetails implements RoutableComponentActivate {
@@ -30,7 +31,8 @@ export class ResourceKindDetails implements RoutableComponentActivate {
               private i18n: I18N,
               private deleteEntityConfirmation: DeleteEntityConfirmation,
               private contextResourceClass: ContextResourceClass,
-              private metadataGroupRepository: MetadataGroupRepository) {
+              private metadataGroupRepository: MetadataGroupRepository,
+              private resourceClassTranslation: ResourceClassTranslationValueConverter) {
     this.resourceKindDetailsTabs = new DetailsViewTabs(this.eventAggregator, () => this.updateUrl());
   }
 
@@ -74,7 +76,7 @@ export class ResourceKindDetails implements RoutableComponentActivate {
       .addTab('details', () => `${this.i18n.tr('Metadata')} (${this.resourceKind.metadataList.filter(m => !!m.resourceClass).length})`);
     this.resourceKindDetailsTabs.addTab(
       'resources',
-      () => this.i18n.tr('resource_classes::' + this.resourceKind.resourceClass + '//resources')
+      () => this.resourceClassTranslation.toView('resources', this.resourceKind.resourceClass)
         + (this.numberOfResources === undefined ? '' : ` (${this.numberOfResources})`)
     );
     if (this.resourceKind.workflow) {

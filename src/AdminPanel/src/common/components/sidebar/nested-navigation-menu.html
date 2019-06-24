@@ -6,13 +6,15 @@
             <a if.bind="!item.items"
                 route-href="route.bind: item.routeName; params.bind: item.params">
                 <icon name.bind="item.icon"></icon>
-                <span>${item.labelKey | t}</span>
+                <span if.one-time="item.resourceClass">${item.labelKey | resourceClassTranslation:item.resourceClass}</span>
+                <span else>${item.labelKey | t}</span>
             </a>
             <template else>
                 <a click.delegate="item.toggle()">
                     <icon name="forward"
                         rotation.bind="item.expanded ? 90 : 0"></icon>
-                    <span>${item.labelKey | t}</span>
+                    <span if.one-time="item.resourceClass">${item.labelKey | resourceClassTranslation:item.resourceClass}</span>
+                    <span else>${item.labelKey | t}</span>
                 </a>
                 <ul if.bind="item.expanded"
                     class="navigation-menu-subitems anim-height-inout-150 au-animate">
@@ -21,7 +23,8 @@
                         if.one-time="child.requiredRole | hasRole:child.resourceClass">
                         <a route-href="route.bind: child.routeName; params.bind: child.params">
                             <icon name.bind="child.icon"></icon>
-                            <span>${child.labelKey | t}</span>
+                            <span if.one-time="child.resourceClass">${child.labelKey | resourceClassTranslation:child.resourceClass}</span>
+                            <span else>${child.labelKey | t}</span>
                         </a>
                     </li>
                 </ul>

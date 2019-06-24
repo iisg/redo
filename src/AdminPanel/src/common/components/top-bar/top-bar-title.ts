@@ -2,14 +2,18 @@ import {EventAggregator} from "aurelia-event-aggregator";
 import {NavigationInstruction} from "aurelia-router";
 import {inlineView} from "aurelia-templating";
 import {ContextResourceClass, ResourceClassChangeEvent} from "resources/context/context-resource-class";
+import {I18N} from "aurelia-i18n";
+import {ResourceClassTranslationValueConverter} from "common/value-converters/resource-class-translation-value-converter";
 
-@inlineView('<template><span>${title | t}</span></template>')
+@inlineView('<template><span>${title}</span></template>')
 export class TopBarTitle {
   title: string;
   private resourceClass: string;
   private lastInstruction: NavigationInstruction;
 
-  constructor(eventAggregator: EventAggregator) {
+  constructor(eventAggregator: EventAggregator,
+              private i18n: I18N,
+              private resourceClassTranslation: ResourceClassTranslationValueConverter) {
     eventAggregator.subscribe(ContextResourceClass.CHANGE_EVENT,
       (event: ResourceClassChangeEvent) => this.updateResourceClass(event));
     eventAggregator.subscribe('router:navigation:success',
@@ -32,11 +36,11 @@ export class TopBarTitle {
     }
     const configName = this.lastInstruction.config.name;
     if (this.resourceClass) {
-      this.title = `resource_classes::${this.resourceClass}//${configName}`;
+      this.title = this.resourceClassTranslation.toView(configName, this.resourceClass);
     } else {
       const configTitle = this.lastInstruction.config.title;
       if (configTitle) {
-        this.title = `navigation::${configTitle}`;
+        this.title = this.i18n.tr(`navigation::${configTitle}`);
       }
     }
   }

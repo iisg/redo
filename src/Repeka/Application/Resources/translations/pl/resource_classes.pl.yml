@@ -1,69 +1,51 @@
-books:
-  resources: Zasoby
-  resources/details: Zasoby
-  settings: Ustawienia zasobów
-  resource-kinds: Rodzaje zasobów
-  resource-kinds/details: Rodzaje zasobów
-  metadata: Rodzaje metadanych
-  metadata/details: Rodzaje metadanych
-  workflows: Procesy
-  workflows/new: Procesy
-  workflows/details: Procesy
-  Metadata Kinds: Rodzaje metadanych
-  Add new resource kind: Dodaj nowy rodzaj zasobu
-  Add new metadata kind: Dodaj nowy rodzaj metadanych
-  Add new resource: Dodaj nowy zasób
-  Add metadata kind: Dodaj rodzaj metadanej
-  No metadata kinds.: Brak rodzajów metadanych.
-  No resource kinds.: Brak rodzajów zasobów.
-  No resources.: Brak zasobów.
-  Workflow: Proces
-  No workflows.: Brak procesów
-  Resource's state prevents modification of these values.: Stan zasobu uniemożliwia modyfikację tych wartości.
-  Metadata value required: Wartość metadanej jest wymagana
-  This metadata can be used to specify assignees: Ta metadana może być używana do określania osoby odpowiedzialnej
-  New workflow: Nowy proces
-  Save the workflow and assign it to any resource kind to edit the table: Zapisz proces i przypisz go do dowolnego rodzaju zasobu aby edytować tabelę
-  Assign the workflow to any resource kind to display the table: Przypisz proces do jakiekogolwiek rodzaju zasobu aby wyświetlić tabelę
-  Assign the workflow to any resource kind to edit the table: Przypisz proces do jakiekogolwiek rodzaju zasobu aby edytować tabelę
-  This metadata determines who can perform these actions:: Ta metadana określa, kto może wykonać następujące czynności:
-  Edit resource before transition: Edycja zasobu przed przejściem
-  Added resource will be in following place: Dodany zasób znajdzie się w stanie
-  To states: Do stanu
-  Top level resources: Zasoby głównego poziomu
+resources: Zasoby
+resources/details: Zasoby
+settings: Ustawienia zasobów
+resource-kinds: Rodzaje zasobów
+resource-kinds/details: Rodzaje zasobów
+metadata: Rodzaje metadanych
+metadata/details: Rodzaje metadanych
+workflows: Procesy
+workflows/new: Procesy
+workflows/details: Procesy
+Metadata Kinds: Rodzaje metadanych
+Add new resource kind: Dodaj nowy rodzaj zasobu
+Add new metadata kind: Dodaj nowy rodzaj metadanych
+Add new resource: Dodaj nowy zasób
+Add metadata kind: Dodaj rodzaj metadanej
+No metadata kinds.: Brak rodzajów metadanych.
+No resource kinds.: Brak rodzajów zasobów.
+No resources.: Brak zasobów.
+Workflow: Proces
+No workflows.: Brak procesów
+Resource's state prevents modification of these values.: Stan zasobu uniemożliwia modyfikację tych wartości.
+Metadata value required: Wartość metadanej jest wymagana
+This metadata can be used to specify assignees: Ta metadana może być używana do określania osoby odpowiedzialnej
+New workflow: Nowy proces
+Save the workflow and assign it to any resource kind to edit the table: Zapisz proces i przypisz go do dowolnego rodzaju zasobu aby edytować tabelę
+Assign the workflow to any resource kind to display the table: Przypisz proces do jakiekogolwiek rodzaju zasobu aby wyświetlić tabelę
+Assign the workflow to any resource kind to edit the table: Przypisz proces do jakiekogolwiek rodzaju zasobu aby edytować tabelę
+This metadata determines who can perform these actions:: Ta metadana określa, kto może wykonać następujące czynności:
+Edit resource before transition: Edycja zasobu przed przejściem
+Added resource will be in following place: Dodany zasób znajdzie się w stanie
+To states: Do stanu
+Top level resources: Zasoby głównego poziomu
+
 dictionaries:
   resources: Słowniki
   resources/details: Słowniki
   settings: Ustawienia słowników
   resource-kinds: Rodzaje słowników
   resource-kinds/details: Rodzaje słowników
-  metadata: Rodzaje metadanych
-  metadata/details: Rodzaje metadanych
-  workflows: Procesy
-  workflows/new: Procesy
-  workflows/details: Procesy
-  Metadata Kinds: Rodzaje metadanych
   Add new resource kind: Dodaj nowy rodzaj słownika
   Add new metadata kind: Dodaj nowy rodzaj metadanych słownikowych
   Add new resource: Dodaj nowy słownik
-  Add metadata kind: Dodaj rodzaj metadanej
-  No metadata kinds.: Brak rodzajów metadanych.
   No resource kinds.: Brak rodzajów słowników.
   No resources.: Brak słowników.
   Workflow: Proces słownikowy
-  No workflows.: Brak procesów
   Resource's state prevents modification of these values.: Stan słownika uniemożliwia modyfikację tych wartości.
-  Metadata value required: Wartość metadanej jest wymagana
-  This metadata can be used to specify assignees: Ta metadana może być używana do określania osoby odpowiedzialnej
-  New workflow: Nowy proces
-  Save the workflow and assign it to any resource kind to edit the table: Zapisz proces i przypisz go do dowolnego rodzaju zasobu aby edytować tabelę
-  Assign the workflow to any resource kind to display the table: Przypisz proces do jakiekogolwiek rodzaju zasobu aby wyświetlić tabelę
-  Assign the workflow to any resource kind to edit the table: Przypisz proces do jakiekogolwiek rodzaju zasobu aby edytować tabelę
-  This metadata determines who can perform these actions:: Ta metadana określa, kto może wykonać następujące czynności:
   Edit resource before transition: Edycja słownika przed przejściem
   Added resource will be in following place: Dodany słownik znajdzie się w stanie
-  To states: Do stanu
-  List of required metadata: Lista metadanych wymaganych do przejścia
   Top level resources: Słowniki głównego poziomu
 users:
   users: Użytkownicy
@@ -72,34 +54,15 @@ users:
   resource-kinds: Rodzaje użytkowników
   resource-kinds/details: Rodzaje użytkowników
   resources/details: Użytkownicy
-  metadata: Rodzaje metadanych
-  metadata/details: Rodzaje metadanych
-  workflows: Procesy
-  workflows/new: Procesy
-  workflows/details: Procesy
-  users/roles: Role
-  Metadata Kinds: Rodzaje metadanych
+  users/roles: Roles
   Add new resource kind: Dodaj nowy rodzaj użytkownika
-  Add new metadata kind: Dodaj nowy rodzaj metadanych
   Add new resource: Dodaj nowego użytkownika
-  Add metadata kind: Dodaj rodzaj metadanej
-  No metadata kinds.: Brak rodzajów metadanych.
   No resource kinds.: Brak rodzajów użytkowników.
   No resources.: Brak użytkowników.
   Resource: Użytkownik
-  Workflow: Proces
-  No workflows.: Brak procesów
   Resource's state prevents modification of these values.: Stan użytkownika uniemożliwia modyfikację tych wartości.
-  Metadata value required: Wartość metadanej jest wymagana
-  This metadata can be used to specify assignees: Ta metadana może być używana do określania osoby odpowiedzialnej
-  New workflow: Nowy proces
-  Save the workflow and assign it to any resource kind to edit the table: Zapisz proces i przypisz go do dowolnego rodzaju zasobu aby edytować tabelę
-  Assign the workflow to any resource kind to display the table: Przypisz proces do jakiekogolwiek rodzaju zasobu aby wyświetlić tabelę
-  Assign the workflow to any resource kind to edit the table: Przypisz proces do jakiekogolwiek rodzaju zasobu aby edytować tabelę
-  This metadata determines who can perform these actions:: Ta metadana określa, kto może wykonać następujące czynności:
   Edit resource before transition: Edycja użytkownika przed przejściem
-  Added resource will be in following place: Dodany użytkownika znajdzie się w stanie
-  To states: Do stanu
+  Added resource will be in following place: Dodany użytkownik znajdzie się w stanie
   users/details: Użytkownicy
   Top level resources: Użytkownicy głównego poziomu
 cms:
@@ -108,131 +71,35 @@ cms:
   settings: Ustawienia CMS
   resource-kinds: Rodzaje szablonów
   resource-kinds/details: Rodzaje szablonów
-  metadata: Rodzaje metadanych
-  metadata/details: Rodzaje metadanych
-  workflows: Procesy
-  workflows/new: Procesy
-  workflows/details: Procesy
-  Metadata Kinds: Rodzaje metadanych
   Add new resource kind: Dodaj nowy rodzaj szablonów
   Add new metadata kind: Dodaj nowy rodzaj metadanych
   Add new resource: Dodaj nowy szablon
-  Add metadata kind: Dodaj rodzaj metadanej
-  No metadata kinds.: Brak rodzajów metadanych.
   No resource kinds.: Brak rodzajów szablonów.
   No resources.: Brak szablonów.
-  Workflow: Proces
-  No workflows.: Brak procesów
   Resource's state prevents modification of these values.: Stan szablonu uniemożliwia modyfikację tych wartości.
-  Metadata value required: Wartość metadanej jest wymagana
-  This metadata can be used to specify assignees: Ta metadana może być używana do określania osoby odpowiedzialnej
-  New workflow: Nowy proces
-  Save the workflow and assign it to any resource kind to edit the table: Zapisz proces i przypisz go do dowolnego rodzaju zasobu aby edytować tabelę
-  Assign the workflow to any resource kind to display the table: Przypisz proces do jakiekogolwiek rodzaju zasobu aby wyświetlić tabelę
-  Assign the workflow to any resource kind to edit the table: Przypisz proces do dowolnego rodzaju zasobu aby edytować tabelę
-  This metadata determines who can perform these actions:: Ta metadana określa, kto może wykonać następujące czynności:
   Edit resource before transition: Edycja szablonu przed przejściem
   Added resource will be in following place: Dodany szablon znajdzie się w stanie
-  To states: Do stanu
-  List of required metadata: Lista metadanych wymaganych do przejścia
   Top level resources: Szablony CMS głównego poziomu
 grants:
   resources: Granty
   resources/details: Granty
   settings: Ustawienia grantów
-  resource-kinds: Rodzaje zasobów
-  resource-kinds/details: Rodzaje zasobów
-  metadata: Rodzaje metadanych
-  metadata/details: Rodzaje metadanych
-  workflows: Procesy
-  workflows/new: Procesy
-  workflows/details: Procesy
-  Metadata Kinds: Rodzaje metadanych
-  Add new resource kind: Dodaj nowy rodzaj zasobu
-  Add new metadata kind: Dodaj nowy rodzaj metadanych
-  Add new resource: Dodaj nowy zasób
-  Add metadata kind: Dodaj rodzaj metadanej
-  No metadata kinds.: Brak rodzajów metadanych.
-  No resource kinds.: Brak rodzajów zasobów.
-  No resources.: Brak zasobów.
-  Workflow: Proces
-  No workflows.: Brak procesów
-  Resource's state prevents modification of these values.: Stan zasobu uniemożliwia modyfikację tych wartości.
-  Metadata value required: Wartość metadanej jest wymagana
-  This metadata can be used to specify assignees: Ta metadana może być używana do określania osoby odpowiedzialnej
-  New workflow: Nowy proces
-  Save the workflow and assign it to any resource kind to edit the table: Zapisz proces i przypisz go do dowolnego rodzaju zasobu aby edytować tabelę
-  Assign the workflow to any resource kind to display the table: Przypisz proces do jakiekogolwiek rodzaju zasobu aby wyświetlić tabelę
-  Assign the workflow to any resource kind to edit the table: Przypisz proces do jakiekogolwiek rodzaju zasobu aby edytować tabelę
-  This metadata determines who can perform these actions:: Ta metadana określa, kto może wykonać następujące czynności:
-  Edit resource before transition: Edycja zasobu przed przejściem
-  Added resource will be in following place: Dodany zasób znajdzie się w stanie
-  To states: Do stanu
-  Top level resources: Zasoby głównego poziomu
 remarks:
   resources: Uwagi
   resources/details: Uwagi
   settings: Ustawienia uwag
   resource-kinds: Rodzaje uwag
   resource-kinds/details: Rodzaje uwag
-  metadata: Rodzaje metadanych
-  metadata/details: Rodzaje metadanych
-  workflows: Procesy
-  workflows/new: Procesy
-  workflows/details: Procesy
-  Metadata Kinds: Rodzaje metadanych
   Add new resource kind: Dodaj nowy rodzaj uwag
   Add new metadata kind: Dodaj nowy rodzaj metadanych
   Add new resource: Dodaj nową uwagę
-  Add metadata kind: Dodaj rodzaj metadanej
-  No metadata kinds.: Brak rodzajów metadanych.
   No resource kinds.: Brak rodzajów uwag.
   No resources.: Brak uwag.
-  Resource: Uwaga
-  Workflow: Proces
-  No workflows.: Brak procesów
   Resource's state prevents modification of these values.: Stan uwagi uniemożliwia modyfikację tych wartości.
-  Metadata value required: Wartość metadanej jest wymagana
-  This metadata can be used to specify assignees: Ta metadana może być używana do określania osoby odpowiedzialnej
-  New workflow: Nowy proces
-  Save the workflow and assign it to any resource kind to edit the table: Zapisz proces i przypisz go do dowolnego rodzaju zasobu aby edytować tabelę
-  Assign the workflow to any resource kind to display the table: Przypisz proces do jakiekogolwiek rodzaju zasobu aby wyświetlić tabelę
-  Assign the workflow to any resource kind to edit the table: Przypisz proces do jakiekogolwiek rodzaju zasobu aby edytować tabelę
-  This metadata determines who can perform these actions:: Ta metadana określa, kto może wykonać następujące czynności:
   Edit resource before transition: Edycja uwagi przed przejściem
   Added resource will be in following place: Dodana uwaga znajdzie się w stanie
-  To states: Do stanu
   Top level resources: Uwagi głównego poziomu
 features:
   resources: Inne funkcje
   resources/details: Inne funkcje
   settings: Ustawienia funkcji
-  resource-kinds: Rodzaje zasobów
-  resource-kinds/details: Rodzaje zasobów
-  metadata: Rodzaje metadanych
-  metadata/details: Rodzaje metadanych
-  workflows: Procesy
-  workflows/new: Procesy
-  workflows/details: Procesy
-  Metadata Kinds: Rodzaje metadanych
-  Add new resource kind: Dodaj nowy rodzaj zasobu
-  Add new metadata kind: Dodaj nowy rodzaj metadanych
-  Add new resource: Dodaj nowy zasób
-  Add metadata kind: Dodaj rodzaj metadanej
-  No metadata kinds.: Brak rodzajów metadanych.
-  No resource kinds.: Brak rodzajów zasobów.
-  No resources.: Brak zasobów.
-  Workflow: Proces
-  No workflows.: Brak procesów
-  Resource's state prevents modification of these values.: Stan zasobu uniemożliwia modyfikację tych wartości.
-  Metadata value required: Wartość metadanej jest wymagana
-  This metadata can be used to specify assignees: Ta metadana może być używana do określania osoby odpowiedzialnej
-  New workflow: Nowy proces
-  Save the workflow and assign it to any resource kind to edit the table: Zapisz proces i przypisz go do dowolnego rodzaju zasobu aby edytować tabelę
-  Assign the workflow to any resource kind to display the table: Przypisz proces do jakiekogolwiek rodzaju zasobu aby wyświetlić tabelę
-  Assign the workflow to any resource kind to edit the table: Przypisz proces do jakiekogolwiek rodzaju zasobu aby edytować tabelę
-  This metadata determines who can perform these actions:: Ta metadana określa, kto może wykonać następujące czynności:
-  Edit resource before transition: Edycja zasobu przed przejściem
-  Added resource will be in following place: Dodany zasób znajdzie się w stanie
-  To states: Do stanu
-  Top level resources: Zasoby głównego poziomu
