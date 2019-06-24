@@ -87,19 +87,24 @@ class ResourceKindUpdateCommandValidator extends CommandAttributesValidator {
     }
 
     public function overrideMetadataValidator(Metadata $metadata): bool {
-        $metadataUpdateCommand = new MetadataUpdateCommand(
-            $metadata,
-            $metadata->getLabel(),
-            $metadata->getDescription(),
-            $metadata->getPlaceholder(),
-            $metadata->getConstraints(),
-            $metadata->getGroupId(),
-            $metadata->getDisplayStrategy(),
-            $metadata->isShownInBrief(),
-            $metadata->isCopiedToChildResource()
-        );
-        $metadataUpdateCommand = $this->metadataUpdateCommandAdjuster->adjustCommand($metadataUpdateCommand);
-        $this->metadataUpdateCommandValidator->getValidator($metadataUpdateCommand)->assert($metadataUpdateCommand);
+        if ($metadata->getId() > 0) {
+            $metadataUpdateCommand = new MetadataUpdateCommand(
+                $metadata,
+                $metadata->getLabel(),
+                $metadata->getDescription(),
+                $metadata->getPlaceholder(),
+                $metadata->getConstraints(),
+                $metadata->getGroupId(),
+                $metadata->getDisplayStrategy(),
+                $metadata->isShownInBrief(),
+                $metadata->isCopiedToChildResource()
+            );
+            $metadataUpdateCommand = $this->metadataUpdateCommandAdjuster->adjustCommand($metadataUpdateCommand);
+            $this->metadataUpdateCommandValidator
+                ->getValidator($metadataUpdateCommand)
+                ->setName($metadata->getName())
+                ->assert($metadataUpdateCommand);
+        }
         return true;
     }
 

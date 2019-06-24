@@ -125,6 +125,7 @@ class ResourceKindUpdateCommandValidatorTest extends \PHPUnit_Framework_TestCase
 
     public function testValidIfWorkflowIsNull() {
         $rkWithWorkflow = $this->createResourceKindMock(1, 'books', [], $this->createMockEntity(ResourceWorkflow::class, 1), 'test');
+        $this->metadataUpdateCommandValidator->method('getValidator')->willReturn(Validator::alwaysValid());
         $command = new ResourceKindUpdateCommand(
             $rkWithWorkflow,
             ['PL' => 'Labelka'],
@@ -139,6 +140,7 @@ class ResourceKindUpdateCommandValidatorTest extends \PHPUnit_Framework_TestCase
 
     public function testValidIfWorkflowTheSame() {
         $workflow = $this->createMockEntity(ResourceWorkflow::class, 1);
+        $this->metadataUpdateCommandValidator->method('getValidator')->willReturn(Validator::alwaysValid());
         $rkWithWorkflow = $this->createResourceKindMock(1, 'books', [], $workflow, 'test');
         $command = new ResourceKindUpdateCommand(
             $rkWithWorkflow,
@@ -156,6 +158,7 @@ class ResourceKindUpdateCommandValidatorTest extends \PHPUnit_Framework_TestCase
 
     public function testInvalidIfTryingToChangeWorkflow() {
         $this->expectException(InvalidCommandException::class);
+        $this->metadataUpdateCommandValidator->method('getValidator')->willReturn(Validator::alwaysValid());
         $workflow = $this->createMockEntity(ResourceWorkflow::class, 1);
         $rkWithWorkflow = $this->createResourceKindMock(1, 'books', [], $workflow, 'test');
         $command = new ResourceKindUpdateCommand(
