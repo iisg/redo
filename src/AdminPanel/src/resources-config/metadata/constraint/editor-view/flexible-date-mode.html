@@ -1,0 +1,7 @@
+<template>
+    <require from="../flexible-date-mode/flexible-date-mode-editor"></require>
+
+    <flexible-date-mode-editor mode.bind="metadata.constraints.flexibleDateMode"
+        original-mode.bind="originalMetadata.constraints.flexibleDateMode"
+        has-base.bind="!!originalMetadata"></flexible-date-mode-editor>
+</template>

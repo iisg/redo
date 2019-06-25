@@ -37,6 +37,7 @@ labels:
   otherInfo: Wartość wymagana, jeśli wybrano "Inne" w odpowiadającym słowniku
   mustBeTrue: Wymagaj zaznaczenia "Tak"
   simpleFileUploadTargetDir: Katalog zasobu, do którego domyślnie wysyłane są pliki
+  flexibleDateMode: Format daty
 
 customMessages:
   cmi:

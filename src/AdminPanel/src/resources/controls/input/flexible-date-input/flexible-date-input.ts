@@ -9,12 +9,14 @@ export class FlexibleDateInput implements ComponentAttached {
   @bindable isRangeSelected: boolean;
   @bindable onlyRange;
   @bindable fixedRangeMode: DateMode;
-  private isLoaded = false;
+  @bindable fixedDateMode: DateMode;
+  @bindable showConfig: boolean = true;
   selectedDateMode: DateMode;
   selectedRangeDateMode: DateMode;
   dateMode: DateMode;
-  rangeDateModes: DateMode[] = values(DateMode).filter(v => v != DateMode.RANGE);
+  rangeDateModes: DateMode[] = values(DateMode).filter(v => v != DateMode.RANGE && v != DateMode.FLEXIBLE);
   modePlace: number = 0;
+  private isLoaded = false;
 
   attached(): void {
     if (this.fixedRangeMode) {
@@ -32,7 +34,9 @@ export class FlexibleDateInput implements ComponentAttached {
         this.dateMode = this.selectedRangeDateMode = DateMode.YEAR;
         this.isRangeSelected = true;
       } else {
-        this.dateMode = this.selectedDateMode = DateMode.YEAR;
+        this.dateMode = this.selectedDateMode = this.fixedDateMode
+          ? this.fixedDateMode
+          : DateMode.YEAR;
         this.isRangeSelected = false;
       }
       const modeChoice = this.rangeDateModes.indexOf(this.dateMode);

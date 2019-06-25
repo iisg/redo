@@ -2,5 +2,7 @@
     <require from="./flexible-date-input/flexible-date-input"></require>
 
     <flexible-date-input value.bind="metadataValue.value & validate:validationController:validationRules"
+        fixed-date-mode.one-time="metadata.constraints.flexibleDateMode !== 'flexible' ? metadata.constraints.flexibleDateMode : undefined"
+        show-config.one-time="metadata.constraints.flexibleDateMode === 'flexible'"
         disabled.bind="disabled"></flexible-date-input>
 </template>

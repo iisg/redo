@@ -26,3 +26,4 @@ labels:
   email: E-mail
   noConfigurationConstraints: Other requirements
   otherInfo: Value required, if chosen "others" in corresponding relation
+  flexibleDateMode: Date format

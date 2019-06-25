@@ -10,6 +10,7 @@ import {MetadataControl} from "./metadata-control";
 import {FrontendConfig} from "../../config/FrontendConfig";
 import {AutoMapperWithCustomProperties} from "../../common/dto/auto-mapper";
 import {FileUploaderType} from "./constraint/file-uploader-type/file-uploader-type-editor";
+import {DateMode} from "../../resources/controls/input/flexible-date-input/flexible-date-config";
 
 export interface MultilingualText extends StringStringMap {
 }
@@ -34,6 +35,7 @@ export class MetadataConstraints {
   @map simpleFileUploadTargetDir?: string;
   @map relationshipSelectorType?: string = FileUploaderType.SIMPLE;
   @map('string[]') allowedFileExtensions?: string[];
+  @map flexibleDateMode?: DateMode = DateMode.FLEXIBLE;
 
   constructor(initialValues?: MetadataConstraints) {
     $.extend(this, initialValues);

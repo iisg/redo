@@ -1,22 +1,24 @@
 <template>
     <require from="../datetime-picker/datetime-picker"></require>
 
-    <div if.bind="!fixedRangeMode">
-        <label if.bind="!onlyRange">
-            <input type="checkbox"
-                checked.bind="isRangeSelected">
-            <span>${'Range' | t}</span>
-        </label>
-        <div>
-            <button class="btn"
-                click.delegate="changeMode()">
-                <icon name="workflow-2"></icon>
-                <span>
-                    ${dateMode | t}
-                </span>
-            </button>
+    <template if.bind="showConfig">
+        <div if.bind="!fixedRangeMode">
+            <label if.bind="!onlyRange">
+                <input type="checkbox"
+                    checked.bind="isRangeSelected">
+                <span>${'Range' | t}</span>
+            </label>
+            <div>
+                <button class="btn"
+                    click.delegate="changeMode()">
+                    <icon name="workflow-2"></icon>
+                    <span>
+                        ${dateMode | t}
+                    </span>
+                </button>
+            </div>
         </div>
-    </div>
+    </template>
     <datetime-picker if.bind="isLoaded"
         flexible.bind="true"
         date-mode.bind="selectedDateMode"

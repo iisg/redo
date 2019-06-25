@@ -5,7 +5,8 @@ export enum DateMode {
   MONTH = 'month',
   DAY = 'day',
   DATE_TIME = 'date_time',
-  RANGE = 'range'
+  RANGE = 'range',
+  FLEXIBLE = 'flexible'
 }
 
 export const ATOM_DATEFORMAT = 'YYYY-MM-DDThh:mm:ss';

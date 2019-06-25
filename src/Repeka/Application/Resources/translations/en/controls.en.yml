@@ -12,6 +12,7 @@ file: File
 directory: Directory
 display-strategy: Display strategy
 system-language: System language
+flexible-mode-format: Dynamically chosen format
 
 flexible-date-modes:
   year: Year
@@ -19,6 +20,7 @@ flexible-date-modes:
   day: Day
   date_time: Time
   range: Range
+  flexible: Flexible
 
 file-uploader-types:
   simple: Basic file selection

@@ -12,6 +12,7 @@ file: Plik
 directory: Folder plików
 display-strategy: Strategia wyświetlania
 system-language: Język systemowy
+flexible-mode-format: Format wybierany podczas wprowadzania
 
 flexible-date-modes:
   year: Rok
@@ -19,6 +20,7 @@ flexible-date-modes:
   day: Dzień
   date_time: Czas
   range: Zakres
+  flexible: Elastyczny
 
 file-uploader-types:
   simple: Prosty wybór pliku

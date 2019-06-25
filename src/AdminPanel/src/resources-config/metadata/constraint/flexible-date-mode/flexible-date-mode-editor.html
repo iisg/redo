@@ -1,0 +1,15 @@
+<template>
+    <require from="common/components/restore-from-original-button/restore-from-original-button"></require>
+
+    <div repeat.for="dateMode of rangeDateModes">
+        <label>
+            <input type="radio"
+                name="date-modes"
+                checked.bind="mode"
+                model.one-time="dateMode">
+            ${dateMode | t} -> ${format(dateMode)}
+        </label>
+    </div>
+    <restore-from-original-button if.bind="hasBase && wasModified"
+        click.delegate="resetToOriginalValues()"></restore-from-original-button>
+</template>
