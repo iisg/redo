@@ -6,7 +6,7 @@ use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Domain\Repository\ResourceKindRepository;
 use Repeka\Domain\UseCase\Resource\ResourceListQuery;
 use Repeka\Domain\UseCase\Resource\ResourceListQueryAdjuster;
-use Repeka\Domain\UseCase\Resource\ResourceListQuerySort;
+use Repeka\Domain\Utils\ResourceListQuerySort;
 use Repeka\Tests\Traits\StubsTrait;
 
 class ResourceListQueryAdjusterTest extends \PHPUnit_Framework_TestCase {

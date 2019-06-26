@@ -6,6 +6,7 @@ use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\ResourceKind;
 use Repeka\Domain\Entity\User;
 use Repeka\Domain\UseCase\Audit\AbstractListQueryBuilder;
+use Repeka\Domain\Utils\ResourceListQuerySort;
 
 /** @SuppressWarnings(PHPMD.TooManyPublicMethods) */
 class ResourceListQueryBuilder extends AbstractListQueryBuilder {

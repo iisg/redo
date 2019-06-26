@@ -248,4 +248,46 @@ class ResourceRepositoryFindByContentsIntegrationTest extends IntegrationTestCas
         $results = $this->handleCommandBypassingFirewall($query);
         $this->assertCount(5, $results);
     }
+
+    public function testFindingByDateRange() {
+        $query = ResourceListQuery::builder()->filterByContents(['data_utworzenia_rekordu' => [['>2000-01-01', '<2015-01-01']]])->build();
+        $results = $this->handleCommandBypassingFirewall($query);
+        $this->assertCount(0, $results);
+    }
+
+    public function testFilteringByExcludedMetadata() {
+        $excludedMetadata = $this->getMetadataRepository()->findByName('opis');
+        $resources = $this->getResourceRepository()->findByQuery(
+            ResourceListQuery::builder()
+                ->filterByResourceKind($this->getPhpBookResource()->getKind())
+                ->filterByContents([$excludedMetadata->getId() => null])
+                ->build()
+        )->getResults();
+        /** * @var ResourceEntity $resource */
+        foreach ($resources as $resource) {
+            $metadataIds = array_keys($resource->getContents()->toArray());
+            $this->assertNotContains($excludedMetadata->getId(), $metadataIds);
+        }
+    }
+
+    public function testFindingByInteger() {
+        $query = ResourceListQuery::builder()->filterByContents(['liczba_stron' => '404'])->build();
+        $results = $this->handleCommandBypassingFirewall($query);
+        $this->assertCount(1, $results);
+    }
+
+    public function testFindingByIntegerIsExact() {
+        $query = ResourceListQuery::builder()->filterByContents(['liczba_stron' => '4'])->build();
+        $results = $this->handleCommandBypassingFirewall($query);
+        $this->assertCount(0, $results);
+    }
+
+    public function testFindingByIntegerGreaterThanComparesIntValue() {
+        $query = ResourceListQuery::builder()->filterByContents(['liczba_stron' => '>9'])->build();
+        $results = $this->handleCommandBypassingFirewall($query);
+        $this->assertCount(2, $results);
+        $query = ResourceListQuery::builder()->filterByContents(['liczba_stron' => '<500'])->build();
+        $results = $this->handleCommandBypassingFirewall($query);
+        $this->assertCount(1, $results);
+    }
 }

@@ -152,6 +152,7 @@ class ResourceListQuerySqlFactory {
     /**
      * Each call to filterByContents adds an alternative to search query.
      * @SuppressWarnings("PHPMD.CyclomaticComplexity")
+     * @SuppressWarnings("PHPMD.NPathComplexity")
      */
     protected function filterByContents(ResourceContents $resourceContents, $contentsPath = 'r.contents'): void {
         $nextFilterId = $this->getUnusedParamId();
@@ -172,7 +173,7 @@ class ResourceListQuerySqlFactory {
                         $filterValue = json_encode([['value' => $filterValue]]);
                         $whereClauses[] = "$contentsPath->'$metadataId' @> :$paramName";
                     } elseif ($filterValue == '.+') {
-                        $whereClauses[] = "$contentsPath->>'$metadataId' IS NOT NULL";
+                        $whereClauses[] = "$contentsPath->'$metadataId' IS NOT NULL";
                         $paramName = null;
                     } else {
                         $metadataFrom = $this->fromsMetadataMap[$contentsPath . $metadataId] ?? null;
@@ -184,7 +185,9 @@ class ResourceListQuerySqlFactory {
                         $condition = '~*';
                         if (preg_match('#^([<>]=?)([\s\d-:T\+]+)$#', $filterValue, $matches)) {
                             list(, $conditionValue, $compareValue) = array_map('trim', $matches);
-                            if (!is_numeric($compareValue)) {
+                            if (is_numeric($compareValue)) {
+                                $compareValue = intval($compareValue);
+                            } else {
                                 $timestamp = strtotime($compareValue);
                                 if ($timestamp) {
                                     $compareValue = (new \DateTime('@' . $timestamp))->format(\DateTime::ATOM);
@@ -195,7 +198,11 @@ class ResourceListQuerySqlFactory {
                                 $condition = $conditionValue;
                             }
                         }
-                        $whereClauses[] = "$metadataFrom->>'value' $condition :$paramName";
+                        if (is_int($filterValue)) {
+                            $whereClauses[] = "$metadataFrom->'value' $condition :$paramName::JSONB";
+                        } else {
+                            $whereClauses[] = "$metadataFrom->>'value' $condition :$paramName";
+                        }
                     }
                     if ($paramName) {
                         $this->params[$paramName] = $filterValue;

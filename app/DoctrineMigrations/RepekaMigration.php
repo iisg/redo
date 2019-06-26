@@ -25,8 +25,11 @@ abstract class RepekaMigration extends AbstractMigration implements ContainerAwa
     }
 
     protected function fetchAll(string $sqlQuery, array $params = []): array {
-        /** @var EntityManagerInterface $em */
-        $em = $this->container->get('doctrine.orm.entity_manager');
+        $em = $this->getEntityManager();
         return $em->getConnection()->fetchAll($sqlQuery, $params);
+    }
+
+    protected function getEntityManager(): EntityManagerInterface {
+        return $this->container->get('doctrine.orm.entity_manager');
     }
 }

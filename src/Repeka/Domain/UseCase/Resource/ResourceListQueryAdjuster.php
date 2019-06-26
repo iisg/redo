@@ -85,9 +85,6 @@ class ResourceListQueryAdjuster implements CommandAdjuster {
     public function convertSortByMetadataColumnsToIntegers(array $sortByIds): array {
         return array_map(
             function ($sortBy) {
-                if ($sortBy instanceof ResourceListQuerySort) {
-                    $sortBy = $sortBy->toArray();
-                }
                 $sortId = is_numeric($sortBy['columnId']) ? intval($sortBy['columnId']) : $sortBy['columnId'];
                 if (!is_numeric($sortId) && !in_array($sortId, ['id', 'kindId'])) {
                     $sortId = $this->metadataRepository->findByName($sortId)->getId();

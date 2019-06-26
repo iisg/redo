@@ -121,7 +121,7 @@ class AuditController extends ApiController {
      * @Security("has_role('ROLE_ADMIN_SOME_CLASS')")
      */
     public function downloadStatisticsAction(Request $request) {
-        ini_set('max_execution_time', 2000);
+        ini_set('max_execution_time', '2000');
         ini_set('memory_limit', '2G');
         $groupByResources = $request->get('groupByResources', false);
         $buckets = $this->getStatistics($request, $groupByResources);
