@@ -1,3 +1,4 @@
+@import "./colors";
 $search-bar-width: 600px;
 $advanced-options-column-border-width: 1px;
 
@@ -5,7 +6,6 @@ $advanced-options-column-border-width: 1px;
   display: flex;
   flex-direction: column;
   align-items: center;
-
   .search-box-with-expand-toggle {
     display: flex;
     flex-direction: column;
@@ -26,6 +26,11 @@ $advanced-options-column-border-width: 1px;
           font-size: $default-font-size;
           font-style: italic;
         }
+        &:focus {
+          border-top-color: $secondary-accents-color;
+          border-bottom-color: $secondary-accents-color;
+          border-left-color: $secondary-accents-color;
+        }
       }
       button {
         display: inline-block;
@@ -34,6 +39,9 @@ $advanced-options-column-border-width: 1px;
         border-bottom-right-radius: $default-gap-size / 4;
         background-color: $main-theme-color;
         color: $primary-background-color;
+        &:focus {
+          background-color: $light-blue;
+        }
       }
     }
     .expand-toggle {

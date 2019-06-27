@@ -6,19 +6,11 @@ $filters-panel-width: 340px;
   .search-bar {
     background-color: $primary-background-color;
     border-bottom: 1px solid $light-grey;
-    .search-button:focus {
-      background-color: $light-blue;
-    }
     .input-with-button {
       input {
         border-top-color: $main-theme-color;
         border-bottom-color: $main-theme-color;
         border-left-color: $main-theme-color;
-        &:focus {
-          border-top-color: $secondary-accents-color;
-          border-bottom-color: $secondary-accents-color;
-          border-left-color: $secondary-accents-color;
-        }
       }
     }
   }
@@ -33,7 +25,7 @@ $filters-panel-width: 340px;
   .filters-panel {
     button:focus {
       .toggle {
-        color: $blue;
+        color: $light-blue;
       }
     }
     margin-left: $default-gap-size;

@@ -26,7 +26,11 @@
           border-top-color: $main-theme-color;
           border-bottom-color: $main-theme-color;
           border-left-color: $main-theme-color;
-
+          &:focus {
+            border-top-color: $secondary-accents-color;
+            border-bottom-color: $secondary-accents-color;
+            border-left-color: $secondary-accents-color;
+          }
         }
       }
     }

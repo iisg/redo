@@ -120,16 +120,16 @@
                                             title="{{ 'Full resolution scans' | trans }}"
                                             data-sitekey="{{ getFrontendConfig().captcha_key }}"
                                             data-callback='onSubmit'
-                                            aria-labelledby="archive-legend archive-tiff">
-                                            <span id="archive-tiff">{{ 'Full resolution scans' | trans }}</span>
+                                            aria-labelledby="archive-legend archive-tiff-scans">
+                                            <span id="archive-tiff-scans">{{ 'Full resolution scans' | trans }}</span>
                                         </button>
                                     </form>
                                     {% set masterAttachmentsFilesDir = resource | m('zalacznik_katalog_plikow_master') %}
                                     {% if masterAttachmentsFilesDir is not empty %}
                                         <a href="/redo/resources/{{ resource.id }}/archive/{{ masterAttachmentsFilesDir|first.value }}"
                                             title="{{ 'Full resolution attachment' | trans }}"
-                                            aria-labelledby="archive-legend archive-tiff">
-                                            <span id="archive-tiff">{{ 'Full resolution attachment' | trans }}</span>
+                                            aria-labelledby="archive-legend archive-tiff-attachment">
+                                            <span id="archive-tiff-attachment">{{ 'Full resolution attachment' | trans }}</span>
                                         </a>
                                     {% endif %}
                                 </div>
@@ -142,7 +142,7 @@
                         <span class="download-options-icon">{{ icon('resource-2', 1.5) }}</span>
                         <fieldset>
                             <legend align="left"
-                                id="cite-legend"><span title="{{ 'Files' | trans }}">{{ 'Files' | trans }}</span></legend>
+                                id="cite-legend-files"><span title="{{ 'Files' | trans }}">{{ 'Files' | trans }}</span></legend>
                             <div class="formats in-one-line">
                                 <span class="text-center small">
                                     {{ resource | m('prawa_dostepu') | resourceLabel }}
@@ -169,8 +169,8 @@
                             </a>
                             <a href="/resources/{{ resource.id }}/iso-690"
                                 title="{{ 'Download resource data in ISO 690 format' | trans }}"
-                                aria-labelledby="cite-legend cite-iso690">
-                                <span id="cite-iso690">
+                                aria-labelledby="cite-legend cite-iso690-icon cite-iso690">
+                                <span id="cite-iso690-icon">
                                     {{ icon('double-quote-sign', 1.25) }}
                                     <span id="cite-iso690"
                                         class="hidden"
