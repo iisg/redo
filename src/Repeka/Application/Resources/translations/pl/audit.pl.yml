@@ -42,8 +42,8 @@ eventNames:
   resourceDownloadEpub: Pobranie pliku EPUB
   resourceDownloadJpg: Pobranie pliku JPG
   resourceDownloadArchive: Pobranie archiwum masterów
+  resourceDownloadBrowse: Otwarcie przeglądania książki
   resourceDetails: Strona szczegółów zasobu
-  resourceBrowse: Otwarcie przeglądania książki
   iso-690: ISO-690
   endnote: EndNote
   bibtex: BibTeX

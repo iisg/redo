@@ -59,10 +59,11 @@ class RedoFilesController extends Controller {
                 'resourceId' => $resource,
                 'headers' => [],
                 'template' => 'redo/resource-details/image-reader.twig',
-                'statsEventName' => 'resourceBrowse',
-                'statsEventGroup' => 'download',
             ]
         );
+        if ($response->isSuccessful()) {
+            $this->logEvent($resource, 'browse');
+        }
         return $response;
     }
 
