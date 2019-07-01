@@ -227,8 +227,9 @@ export class ResourceDetails implements RoutableComponentActivate {
 
   @computedFrom('parentResource', 'resource')
   get isCloneAllowed(): boolean {
-    return (this.parentResource && this.parentResource.kind.allowedToClone && this.isReproductor.toView(this.parentResource))
-      || (!this.parentResource && this.resource.kind.allowedToClone && this.hasRole.toView('ADMIN', this.resource.resourceClass));
+    return this.resource.kind.allowedToClone
+      && (this.parentResource && this.isReproductor.toView(this.parentResource))
+      || (!this.parentResource && this.hasRole.toView('ADMIN', this.resource.resourceClass));
   }
 
   cloneResource(cloneTimes: number): Promise<any> {

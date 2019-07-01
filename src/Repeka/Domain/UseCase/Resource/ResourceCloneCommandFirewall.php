@@ -8,7 +8,7 @@ use Repeka\Domain\Entity\User;
 use Repeka\Domain\Exception\InsufficientPrivilegesException;
 use Repeka\Domain\Repository\ResourceRepository;
 
-class ResourceMultipleCloneCommandFirewall implements CommandFirewall {
+class ResourceCloneCommandFirewall implements CommandFirewall {
     /** @var ResourceRepository */
     private $resourceRepository;
 
@@ -18,13 +18,14 @@ class ResourceMultipleCloneCommandFirewall implements CommandFirewall {
 
     /** @param ResourceCloneCommand $command */
     public function ensureCanExecute(Command $command, User $executor): void {
-        if (!$command->isTopLevel()) {
-            $parentId = current($command->getContents()->getValuesWithoutSubmetadata(SystemMetadata::PARENT));
+        $resource = $command->getResource();
+        if ($resource->hasParent()) {
+            $parentId = $resource->getParentId();
             $parentResource = $this->resourceRepository->findOne($parentId);
-            $allowedReproductors = $parentResource->getContents()->getValuesWithoutSubmetadata(SystemMetadata::REPRODUCTOR);
-            if (!$executor->belongsToAnyOfGivenUserGroupsIds($allowedReproductors)) {
+            $reproductors = $parentResource->getContents()->getValuesWithoutSubmetadata(SystemMetadata::REPRODUCTOR);
+            if (!$executor->belongsToAnyOfGivenUserGroupsIds($reproductors)) {
                 throw new InsufficientPrivilegesException(
-                    'The executor is not a reproductor of the parent resource. Allowed: ' . implode(', ', $allowedReproductors)
+                    'Cannot clone. The executor is not a reproductor of the parent resource. Allowed: ' . implode(', ', $reproductors)
                 );
             }
         }

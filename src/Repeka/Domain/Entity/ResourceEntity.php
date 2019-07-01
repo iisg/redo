@@ -88,6 +88,10 @@ class ResourceEntity implements Identifiable, HasResourceClass {
         return current($this->getContents()->getValuesWithoutSubmetadata(SystemMetadata::PARENT));
     }
 
+    public function getLabel(): string {
+        return current($this->getContents()->getValuesWithoutSubmetadata(SystemMetadata::RESOURCE_LABEL));
+    }
+
     public function updateContents(ResourceContents $contents) {
         $this->contents = $contents->filterOutEmptyMetadata()->toArray();
     }

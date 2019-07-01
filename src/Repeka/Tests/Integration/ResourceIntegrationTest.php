@@ -425,9 +425,6 @@ class ResourceIntegrationTest extends IntegrationTestCase {
             self::ENDPOINT,
             [
                 'id' => $this->resource->getId(),
-                'kindId' => $this->resource->getKind()->getId(),
-                'contents' => $this->resource->getContents()->toArray(),
-                'resourceClass' => 'books',
                 'cloneTimes' => 23,
             ]
         );
@@ -441,9 +438,6 @@ class ResourceIntegrationTest extends IntegrationTestCase {
             self::ENDPOINT,
             [
                 'id' => $this->resource->getId(),
-                'kindId' => $this->resource->getKind()->getId(),
-                'contents' => $this->resource->getContents()->toArray(),
-                'resourceClass' => 'books',
                 'cloneTimes' => 1,
             ]
         );
@@ -457,9 +451,6 @@ class ResourceIntegrationTest extends IntegrationTestCase {
             self::ENDPOINT,
             [
                 'id' => $this->resourceWithWorkflow->getId(),
-                'kindId' => $this->resourceWithWorkflow->getKind()->getId(),
-                'contents' => $this->resourceWithWorkflow->getContents()->toArray(),
-                'resourceClass' => 'books',
                 'cloneTimes' => 1,
             ]
         );
@@ -475,9 +466,6 @@ class ResourceIntegrationTest extends IntegrationTestCase {
             self::ENDPOINT,
             [
                 'id' => $this->resource->getId(),
-                'kindId' => $this->resource->getKind()->getId(),
-                'contents' => $newContents,
-                'resourceClass' => 'books',
                 'cloneTimes' => 1,
             ]
         );
@@ -486,15 +474,11 @@ class ResourceIntegrationTest extends IntegrationTestCase {
 
     public function testCloningResourceWithParent() {
         $client = self::createAdminClient();
-        $newContents = $this->childResource->getContents()->toArray();
         $client->apiRequest(
             'POST',
             self::ENDPOINT,
             [
                 'id' => $this->resource->getId(),
-                'kindId' => $this->resource->getKind()->getId(),
-                'contents' => $newContents,
-                'resourceClass' => 'books',
                 'cloneTimes' => 1,
             ]
         );
