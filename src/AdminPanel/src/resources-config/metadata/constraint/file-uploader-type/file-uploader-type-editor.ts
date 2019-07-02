@@ -1,19 +1,13 @@
-import {bindable, ComponentAttached} from "aurelia-templating";
+import {bindable} from "aurelia-templating";
 import {computedFrom} from "aurelia-binding";
 import {twoWay} from "common/components/binding-mode";
 import {values} from "lodash";
 
-export class FileUploaderTypeEditor implements ComponentAttached {
+export class FileUploaderTypeEditor {
   @bindable(twoWay) value: string;
   @bindable originalValue: string;
   @bindable hasBase: boolean;
   values: string[] = values(FileUploaderType);
-
-  attached() {
-    if (!this.value) {
-      this.value = FileUploaderType.SIMPLE;
-    }
-  }
 
   @computedFrom('value', 'originalValue')
   get wasModified(): boolean {

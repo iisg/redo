@@ -9,6 +9,7 @@ import {MinMaxValue} from "./metadata-min-max-value";
 import {MetadataControl} from "./metadata-control";
 import {FrontendConfig} from "../../config/FrontendConfig";
 import {AutoMapperWithCustomProperties} from "../../common/dto/auto-mapper";
+import {FileUploaderType} from "./constraint/file-uploader-type/file-uploader-type-editor";
 
 export interface MultilingualText extends StringStringMap {
 }
@@ -31,7 +32,7 @@ export class MetadataConstraints {
   @map doublePrecision?: number;
   @map fileUploaderType?: string;
   @map simpleFileUploadTargetDir?: string;
-  @map relationshipSelectorType?: string;
+  @map relationshipSelectorType?: string = FileUploaderType.SIMPLE;
   @map('string[]') allowedFileExtensions?: string[];
 
   constructor(initialValues?: MetadataConstraints) {
