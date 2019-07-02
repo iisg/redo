@@ -50,7 +50,7 @@
     "test:backend:unit": "sh -c \"vendor/bin/phpunit -c scripts --testsuite unit --fail-on-warning\"",
     "test:backend:integration": "sh -c \"vendor/bin/phpunit -c scripts --testsuite integration --fail-on-warning\"",
     "test:backend:junit": "sh -c \"vendor/bin/phpunit -c scripts --testsuite unit --fail-on-warning --testdox --log-junit var/reports/tests/phpunit.xml --coverage-clover var/reports/coverage/phpunit.xml && vendor/bin/phpunit -c scripts --testsuite integration --fail-on-warning --testdox --log-junit var/reports/tests/phpunit_integration.xml && vendor/bin/phpunit -c scripts --testsuite migrations --fail-on-warning --testdox --log-junit var/reports/tests/phpunit_migrations.xml && vendor/bin/phpunit -c scripts --testsuite integration-repositories --fail-on-warning --testdox --log-junit var/reports/tests/phpunit_integration_repositories.xml && vendor/bin/phpunit -c scripts --testsuite integration-plugins --fail-on-warning --testdox --log-junit var/reports/tests/phpunit_integration_plugins.xml && vendor/bin/phpunit -c scripts --testsuite integration-fts --fail-on-warning --testdox --log-junit var/reports/tests/phpunit_integration_fts.xml\"",
-    "test:junit": "rm -f var/reports/tests/*.xml var/reports/coverage/*.xml && npm run -s test:backend:junit && cd src/AdminPanel && npm run -s test:junit",
+    "test:junit": "rm -f var/reports/tests/*.xml var/reports/coverage/*.xml && npm run -s test:backend:junit",
     "watch": "cd src/AdminPanel && npm run -s watch"
   }
 }
