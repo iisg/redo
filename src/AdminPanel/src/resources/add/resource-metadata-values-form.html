@@ -62,6 +62,7 @@
             <td if.one-time="metadata.control != 'relationship' || skipValidation || disabled || metadata.constraints.relationshipSelectorType == 'tree'">
                 <div>
                     <resource-metadata-value-input metadata.bind="metadata"
+                        class="${metadata.control === 'file' ? 'file-metadata-input' : ''}"
                         resource.bind="resource"
                         validation-controller.bind="validationController"
                         value.bind="item"
