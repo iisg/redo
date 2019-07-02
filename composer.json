@@ -1,5 +1,5 @@
 {
-  "name": "repeka",
+  "name": "iisg/repeka",
   "license": "proprietary",
   "type": "project",
   "autoload": {
@@ -73,5 +73,10 @@
     "symfony-var-dir": "var",
     "symfony-web-dir": "web",
     "symfony-tests-dir": "tests"
+  },
+  "config": {
+    "platform": {
+      "php": "7.1.27"
+    }
   }
 }
