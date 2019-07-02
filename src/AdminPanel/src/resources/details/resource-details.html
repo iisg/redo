@@ -41,7 +41,7 @@
                         disabled.bind="resource.pendingRequest"
                         click.delegate="showGodForm()"></manage-button>
                 </template>
-                <template if.bind="isCloneAllowed">
+                <template if.bind="isCloneAllowed && !isFormOpened">
                     <clone-resource containerless
                         parent-resource.bind="parentResource"
                         resource.bind="resource"
