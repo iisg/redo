@@ -51,6 +51,7 @@ class ResourceNormalizer extends AbstractNormalizer implements NormalizerAwareIn
             'hasChildren' => $this->resourceRepository->hasChildren($resource),
             'isTeaser' => $returnTeaser,
             'canView' => !$returnTeaser || $this->securityOracle->hasMetadataPermission($resource, SystemMetadata::VISIBILITY()),
+            'hasPendingUpdates' => !empty($resource->getPendingUpdates()->toArray()),
         ];
         $user = $this->getCurrentUser();
         if (!$returnTeaser && $user) {

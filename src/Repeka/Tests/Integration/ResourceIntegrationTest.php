@@ -310,6 +310,7 @@ class ResourceIntegrationTest extends IntegrationTestCase {
                 'availableTransitions' => [SystemTransition::UPDATE()->toTransition($this->resourceKind, $this->resource)->toArray()],
                 'isTeaser' => false,
                 'canView' => true,
+                'hasPendingUpdates' => false,
             ],
             $client->getResponse()->getContent()
         );

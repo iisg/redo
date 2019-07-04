@@ -86,6 +86,13 @@ resources-list {
     grid-area: form;
   }
 
+  .bulk-update-form {
+    margin-top: 40px;
+    margin-bottom: $default-gap-size;
+    grid-area: bottom-pagination-page-numbers;
+    z-index: 100;
+  }
+
   loading-bar {
     grid-area: loading-bar;
   }
@@ -96,6 +103,12 @@ resources-list {
 
   .alert {
     grid-area: alert;
+  }
+
+  .bulk-update-link {
+    margin: $default-gap-size;
+    grid-area: bottom-pagination-page-numbers;
+    z-index: 100;
   }
 }
 

@@ -122,4 +122,10 @@ class ArrayUtilsTest extends \PHPUnit_Framework_TestCase {
     public function testKeyPathExistsCorrectOrder() {
         $this->assertFalse(ArrayUtils::keyPathExists(['key1', 'key2'], ['key2' => ['key1' => 'value']]));
     }
+
+    public function testKeyBy() {
+        $array = [['id' => 'a', 'name' => 'Unicorn'], ['id' => 'b', 'name' => 'Rainbow']];
+        $result = ArrayUtils::keyBy($array, 'id');
+        $this->assertEquals(['a' => ['id' => 'a', 'name' => 'Unicorn'], 'b' => ['id' => 'b', 'name' => 'Rainbow']], $result);
+    }
 }

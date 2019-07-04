@@ -15,3 +15,8 @@ tasks:
     own: No current tasks!
     possible: No tasks.
     all: No tasks!
+override: Override metadata values
+append: Append metadata values
+move_to_place: Move resource to another workflow place (without plugins and validations)
+execute_transition: Execute resource workflow transition
+rerender_dynamic_metadata: Recalculate dynamic metadata / reindex

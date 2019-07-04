@@ -1,0 +1,95 @@
+<template>
+    <require from="resources-config/metadata/metadata-chooser"></require>
+    <require from="resources-config/resource-kind/workflow-chooser"></require>
+    <require from="common/components/entity-chooser/entity-chooser"></require>
+    <require from="common/components/buttons/submit-button.html"></require>
+    <require from="common/components/buttons/cancel-button.html"></require>
+    <require from="resources/controls/input/autosize"></require>
+
+    <div if.bind="loaded"
+        class="container above-form">
+        <span if.bind="validationFailed"
+            class="error-label">${'All values are required' | t}</span>
+        <form submit.delegate="validateAndSubmit()">
+            <div class="row">
+                <div class="col-sm-8">
+                    <p>
+                        <span class="main-label">${'Number of resources to be changed' | t}:</span>
+                        <span>${totalCount}</span>
+                    </p>
+                    <p class="main-label">${'Select action' | t}:</p>
+                    <div repeat.for="updateType of updateTypes">
+                        <label>
+                            <input type="radio"
+                                name="update-types"
+                                checked.bind="selectedUpdateType"
+                                model.one-time="updateType">
+                            ${updateType | t}
+                        </label>
+                    </div>
+                    <div if.bind="isContentsUpdateSelected">
+                        <div class="update-config-input">
+                            <span class="main-label">${'Select metadata' | t}:</span>
+                            <metadata-chooser value.bind="metadata"
+                                filter.one-time="filterOutDynamicMetadata"
+                                resource-class.bind="resourceClass"
+                                change.delegate="onChange()"
+                                use-computed-width.bind="true"
+                                hide-clear-button></metadata-chooser>
+                        </div>
+                        <div class="update-config-input">
+                            <label>
+                                <span class="main-label">${'Display strategy' | t}:</span>
+                                <textarea class="form-control"
+                                    value.bind="displayStrategy"
+                                    placeholder="{{r|mTytul}}"
+                                    change.delegate="onChange()"
+                                    autosize></textarea>
+                            </label>
+                        </div>
+                        <label if.bind="selectedUpdateType === 'append'"
+                            class="order-checkbox">
+                            <input type="checkbox"
+                                checked.bind="addValuesAtBeginning">
+                            ${'Add values at beginning' | t}
+                        </label>
+                        <div>
+                            <a click.delegate="showHelp = !showHelp">Co tu mogę wpisać?</a>
+                            <div class="form-group resource-list-contents-filter-help"
+                                if.bind="showHelp"
+                                innerhtml.one-time="'bulkResourceUpdateHelp' | t:{interpolation:{prefix:'${{'}}">
+                            </div>
+                        </div>
+                    </div>
+                    <div if.bind="isWorkflowUpdateSelected">
+                        <div class="update-config-input">
+                            <span class="main-label">${'Select workflow' | t}:</span>
+                            <workflow-chooser resource-class.bind="resourceClass"
+                                value.bind="workflow"
+                                use-computed-width></workflow-chooser>
+                        </div>
+                        <div if.bind="workflow"
+                            class="update-config-input">
+                            <span class="main-label">${entityChooserLabel}:</span>
+                            <entity-chooser entities.bind="selectedUpdateType === 'move_to_place' ? workflow.places : workflow.transitions"
+                                change.delegate="onChange()"
+                                value.bind="placeOrTransition"
+                                hide-clear-button
+                                use-computed-width></entity-chooser>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="pull-right">
+                        <submit-button
+                            label.one-time="'Next'"
+                            editing="true"></submit-button>
+                        <cancel-button class="orange"
+                            label="Close"
+                            click.delegate="cancelForm()"></cancel-button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</template>

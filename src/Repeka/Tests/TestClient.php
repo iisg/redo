@@ -13,6 +13,7 @@ class TestClient extends Client {
         $token = $csrfTokenManager->getToken(CsrfRequestListener::class)->getValue();
         $server['HTTP_' . CsrfRequestListener::TOKEN_HEADER] = $token;
         $server['HTTP_X-Requested-With'] = 'XMLHttpRequest';
+        $server['HTTP_ACCEPT'] = 'application/json';
         $server['ACCEPT'] = 'application/json';
         $server['CONTENT_TYPE'] = 'application/json';
         return $this->request($method, $uri, $params, $files, $server, $content);

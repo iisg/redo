@@ -30,7 +30,10 @@ class SystemRoleVoter extends Voter {
         if (!$user || !($user instanceof UserEntity)) {
             $user = $this->unauthenticatedUserPermissionHelper->getUnauthenticatedUser();
         }
-        $roleName = $role->roleName($subject instanceof HasResourceClass ? $subject->getResourceClass() : null);
+        if ($subject instanceof HasResourceClass) {
+            $subject = $subject->getResourceClass();
+        }
+        $roleName = $role->roleName(is_string($subject) ? $subject : null);
         return $user->hasRole($roleName);
     }
 }

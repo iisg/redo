@@ -295,6 +295,7 @@ class VisibilityIntegrationTest extends IntegrationTestCase {
                     'hasChildren' => true,
                     'isTeaser' => true,
                     'canView' => true,
+                    'hasPendingUpdates' => false,
                     'contents' => ResourceContents::fromArray(
                         [
                             SystemMetadata::RESOURCE_LABEL => ['#' . $this->parentResource->getId()],
@@ -327,6 +328,7 @@ class VisibilityIntegrationTest extends IntegrationTestCase {
                     'hasChildren' => true,
                     'isTeaser' => true,
                     'canView' => false,
+                    'hasPendingUpdates' => false,
                     'contents' => ResourceContents::fromArray(
                         [
                             SystemMetadata::RESOURCE_LABEL => ['#' . $this->parentResource->getId()],

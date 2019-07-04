@@ -1,0 +1,36 @@
+@import "../../common/styles";
+
+bulk-update-form {
+  .above-form {
+    width: 100%;
+    padding: $default-gap-size;
+    background-color: $light-grey;
+    .main-label {
+      font-weight: bold;
+      margin-top: $default-gap-size;
+      margin-bottom: $default-gap-size;
+    }
+    .error-label {
+      color: $red;
+    }
+    .update-config-input {
+      margin-top: 10px;
+    }
+    .order-checkbox {
+      margin-top: 10px;
+    }
+    textarea {
+      display: inherit;
+      min-width: 60%;
+    }
+    metadata-chooser {
+      max-width: 35%;
+    }
+    workflow-chooser, entity-chooser {
+      max-width: 50%
+    }
+    submit-button {
+      margin-bottom: 5px;
+    }
+  }
+}

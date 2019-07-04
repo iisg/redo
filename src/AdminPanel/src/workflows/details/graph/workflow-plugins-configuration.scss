@@ -16,4 +16,8 @@ workflow-plugins-configuration {
   .selected-plugins .list-group-item {
     padding: $default-gap-size / 4;
   }
+
+  .textarea-characters-number {
+    display: none;
+  }
 }

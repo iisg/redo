@@ -6,6 +6,8 @@ commands:
   resource_update_contents: "Zasób: Edycja"
   resource_god_update: "Zasób: Edycja - bez walidacji"
   user_authenticate: "Użytkownik: autentykacja"
+  resources_bulk_update: "Zasób: masowa edycja zasobów"
+  resource_add_pending_update: "Zasób: zleć masową edycję"
 
 date-range-config:
   no_date: brak daty

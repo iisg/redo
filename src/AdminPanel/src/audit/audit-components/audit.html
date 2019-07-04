@@ -110,8 +110,7 @@
                 </td>
                 <td class="audit-entry-details">
                     <compose view-model="./entry-details/audit-entry-details"
-                        view="./entry-details/audit-entry-details-${entry.data.workflowPluginName ? 'resource-workflow-plugin'
-                            : entry.commandName | underscoresToHyphens}.html"
+                        view="./entry-details/audit-entry-details-${entry.data.workflowPluginName ? 'resource-workflow-plugin' : entry.commandName | underscoresToHyphens}.html"
                         model.bind="{entry: entry}"></compose>
                 </td>
                 <td repeat.for="column of filters.customColumns">

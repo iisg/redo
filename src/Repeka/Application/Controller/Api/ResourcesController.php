@@ -4,10 +4,13 @@ namespace Repeka\Application\Controller\Api;
 use Assert\Assertion;
 use Repeka\Application\Serialization\ResourceNormalizer;
 use Repeka\Domain\Constants\SystemMetadata;
+use Repeka\Domain\Constants\SystemRole;
 use Repeka\Domain\Entity\ResourceContents;
 use Repeka\Domain\Entity\ResourceEntity;
+use Repeka\Domain\Factory\BulkChanges\BulkChangeFactory;
 use Repeka\Domain\Service\ResourceDisplayStrategyEvaluator;
 use Repeka\Domain\UseCase\PageResult;
+use Repeka\Domain\UseCase\Resource\ResourceAddPendingUpdateCommand;
 use Repeka\Domain\UseCase\Resource\ResourceCloneManyTimesCommand;
 use Repeka\Domain\UseCase\Resource\ResourceCreateCommand;
 use Repeka\Domain\UseCase\Resource\ResourceDeleteCommand;
@@ -33,11 +36,15 @@ use Symfony\Component\HttpFoundation\Response;
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class ResourcesController extends ApiController {
+
     /** @var ResourceDisplayStrategyEvaluator */
     private $displayStrategyEvaluator;
+    /** @var BulkChangeFactory */
+    private $pendingUpdateCreator;
 
-    public function __construct(ResourceDisplayStrategyEvaluator $evaluator) {
+    public function __construct(ResourceDisplayStrategyEvaluator $evaluator, BulkChangeFactory $creator) {
         $this->displayStrategyEvaluator = $evaluator;
+        $this->pendingUpdateCreator = $creator;
     }
 
     /**
@@ -129,6 +136,60 @@ class ResourcesController extends ApiController {
         $resources = $this->handleCommand($resourceTreeQuery);
         $json = $this->createJsonResponse($resources, Response::HTTP_OK, [ResourceNormalizer::ALWAYS_RETURN_TEASER]);
         return $json;
+    }
+
+    /**
+     * @Route
+     * @Method("PUT")
+     * @Security("has_role('ROLE_ADMIN_SOME_CLASS')")
+     */
+    public function bulkUpdateAction(Request $request) {
+        $params = $request->request->all();
+        Assertion::keyExists($params, 'action', 'Action not set');
+        Assertion::keyExists($params, 'change', 'Change not set');
+        Assertion::keyExists($params, 'resourceClass', 'Resource class not set');
+        Assertion::keyExists($params, 'totalCount');
+        $this->denyAccessUnlessGranted(SystemRole::ADMIN(), $params['resourceClass']);
+        $params['change']['executorId'] = $this->getUser()->getId();
+        $resourcesQuery = $this->getResourceListQueryBuilder($request)->build();
+        $resourcesQueryChecker = $this->getResourceListQueryBuilder($request)->setPage(1)->setResultsPerPage(1)->build();
+        $resources = $this->handleCommand($resourcesQueryChecker);
+        Assertion::eq(
+            $params['totalCount'],
+            $resources->getTotalCount(),
+            "Something has changed in the meanwhile because the action would update {$resources->getTotalCount()} resources instead of " .
+            "$params[totalCount]. Please refresh the page."
+        );
+        $updateCommand = new ResourceAddPendingUpdateCommand($resourcesQuery, $this->pendingUpdateCreator->create($params));
+        $this->handleCommand($updateCommand);
+        return new Response('', Response::HTTP_ACCEPTED);
+    }
+
+    /**
+     * @Route("/bulk-update-preview")
+     * @Method("GET")
+     * @Security("has_role('ROLE_ADMIN_SOME_CLASS')")
+     */
+    public function bulkUpdatePreviewAction(Request $request) {
+        $params = $request->query->all();
+        Assertion::keyExists($params, 'resourceClass');
+        $this->denyAccessUnlessGranted(SystemRole::ADMIN(), $params['resourceClass']);
+        $params['change']['executorId'] = $this->getUser()->getId();
+        $query = ResourceListQuery::builder()
+            ->filterByIds($request->get('resourceIds'))
+            ->setResultsPerPage(10)
+            ->build();
+        /** @var PageResult $result */
+        $result = $this->handleCommand($query);
+        $update = $this->pendingUpdateCreator->create($params);
+        $resourceUpdateMapper = function (ResourceEntity $resource) use ($update) {
+            try {
+                return $update->applyForPreview($resource);
+            } catch (\Exception $e) {
+                return $resource;
+            }
+        };
+        return $this->createJsonResponse(array_map($resourceUpdateMapper, $result->getResults()));
     }
 
     /**

@@ -32,6 +32,7 @@
             <exclude>../src/Repeka/Tests/Integration/Repository</exclude>
             <exclude>../src/Repeka/Tests/Integration/Migrations</exclude>
             <exclude>../src/Repeka/Tests/Integration/FullTextSearch</exclude>
+            <exclude>../src/Repeka/Tests/Integration/UseCase</exclude>
         </testsuite>
         <testsuite name="integration-repositories">
             <directory>../src/Repeka/Tests/Integration/Repository</directory>
@@ -44,6 +45,9 @@
         </testsuite>
         <testsuite name="integration-plugins">
             <directory>../src/Repeka/Plugins/*/Tests/Integration</directory>
+        </testsuite>
+        <testsuite name="integration-usecase">
+            <directory>../src/Repeka/Tests/Integration/UseCase</directory>
         </testsuite>
     </testsuites>
 

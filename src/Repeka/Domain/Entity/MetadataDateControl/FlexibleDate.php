@@ -1,7 +1,6 @@
 <?php
 namespace Repeka\Domain\Entity\MetadataDateControl;
 
-use Assert\Assertion;
 use DateTime;
 use Exception;
 use Repeka\Domain\Validation\Exceptions\FlexibleDateControlMetadataCorrectStructureRuleException;
@@ -29,10 +28,9 @@ class FlexibleDate {
     public function __construct($from, $to, $mode, $rangeMode = null) {
         $this->from = $from;
         $this->to = $to;
-        $this->mode = $mode ?? MetadataDateControlMode::DATE_TIME;
-        $this->rangeMode = $rangeMode;
-        if ($mode == MetadataDateControlMode::RANGE) {
-            Assertion::notNull($rangeMode);
+        $this->mode = $mode ?? ($to ? MetadataDateControlMode::RANGE : MetadataDateControlMode::DATE_TIME);
+        if ($this->mode == MetadataDateControlMode::RANGE) {
+            $this->rangeMode = $rangeMode ?? MetadataDateControlMode::DATE_TIME;
         }
         $this->buildDisplayValue();
     }
@@ -72,6 +70,9 @@ class FlexibleDate {
     }
 
     private function getDate($date, $mode): string {
+        if ($mode instanceof MetadataDateControlMode) {
+            $mode = $mode->getValue();
+        }
         return !is_null($date) ? (new DateTime($date))->format(self::$dateFormats[$mode]) : '';
     }
 

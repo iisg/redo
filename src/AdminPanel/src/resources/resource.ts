@@ -22,6 +22,7 @@ export class Resource extends Entity {
   @map hasChildren: boolean;
   @map isTeaser: boolean;
   @map canView: boolean;
+  @map hasPendingUpdates: boolean;
 
   public canApplyTransition(transition: WorkflowTransition): boolean {
     const blockedTransitionReason = this.blockedTransitions[transition.id];

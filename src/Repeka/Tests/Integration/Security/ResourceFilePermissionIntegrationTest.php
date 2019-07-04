@@ -129,7 +129,7 @@ class ResourceFilePermissionIntegrationTest extends IntegrationTestCase {
         $client = self::createClient();
         $endpoint = 'api/resources/' . $this->phpBook->getId() . '/file/' . self::FILE_PATH;
         $client->apiRequest('GET', $endpoint, [], ['resourceClasses' => ['books']]);
-        $this->assertStatusCode(403, $client->getResponse());
+        $this->assertStatusCode(401, $client->getResponse());
     }
 
     public function testAdminCanAccessFileWhenIncorrectIp() {
@@ -173,7 +173,7 @@ class ResourceFilePermissionIntegrationTest extends IntegrationTestCase {
         $client = self::createClient();
         $endpoint = 'api/resources/' . $this->kissResource->getId() . '/file/' . self::FILE_PATH;
         $client->apiRequest('GET', $endpoint, [], ['resourceClasses' => ['books']]);
-        $this->assertStatusCode(403, $client->getResponse());
+        $this->assertStatusCode(401, $client->getResponse());
     }
 
     protected function tearDown() {

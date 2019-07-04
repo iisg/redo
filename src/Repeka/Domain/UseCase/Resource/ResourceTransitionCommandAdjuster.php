@@ -1,6 +1,7 @@
 <?php
 namespace Repeka\Domain\UseCase\Resource;
 
+use Assert\Assertion;
 use Repeka\Domain\Cqrs\Command;
 use Repeka\Domain\Cqrs\CommandAdjuster;
 use Repeka\Domain\Entity\Workflow\ResourceWorkflowTransition;
@@ -28,6 +29,8 @@ class ResourceTransitionCommandAdjuster implements CommandAdjuster {
         if (!$transition instanceof ResourceWorkflowTransition && $workflow !== null) {
             $resource = $command->getResource();
             $transition = $resource->getWorkflow()->getTransition($transition);
+        } else {
+            Assertion::isInstanceOf($transition, ResourceWorkflowTransition::class, 'Invalid transiton given.');
         }
         return new ResourceTransitionCommand($command->getResource(), $newContents, $transition, $command->getExecutor());
     }

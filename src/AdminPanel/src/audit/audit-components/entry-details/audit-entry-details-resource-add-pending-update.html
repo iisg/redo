@@ -1,0 +1,23 @@
+<template bindable="entry">
+    <span>${'Number of resources to be changed' | t}: ${entry.data.totalCount}</span>
+    <icon name="workflow-2"></icon>
+    ${'Selected change type' | t}: ${entry.data.update.action | t}
+    <icon name="workflow-2"></icon>
+    <span if.bind="entry.data.update.action === 'override' || entry.data.update.action === 'append'">
+        ${'Selected metadata' | t} (id): ${entry.data.update.change.metadataId}
+        <icon name="workflow-2"></icon>
+        ${'Selected template' | t}: ${entry.data.update.change.displayStrategy}
+    </span>
+    <span else>
+        <span if.bind="entry.data.update.action === 'move_to_place'">
+            ${'Selected place' | t}: ${entry.data.update.change.placeId}
+        </span>
+        <span else>
+            ${'Selected transition' | t}: ${entry.data.update.change.transitionId}
+        </span>
+    </span>
+    <span if.bind="entry.data.errorMessage">
+        <icon name="workflow-2"></icon>
+        ${'Error' | t}: ${entry.data.errorMessage}
+    </span>
+</template>

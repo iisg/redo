@@ -9,6 +9,7 @@ import {cachedResponse, forOneMinute, forSeconds} from "../common/repository/cac
 import {suppressError as suppressErrorHeader} from "../common/http-client/headers";
 import {debouncePromise} from "../common/utils/function-utils";
 import {keyBy} from "lodash";
+import {UpdateType} from "./bulk-update/update-type";
 
 @autoinject
 export class ResourceRepository extends ApiRepository<Resource> {
@@ -93,5 +94,31 @@ export class ResourceRepository extends ApiRepository<Resource> {
     return request.send()
       .then(response => response.content.result)
       .catch(() => 'ERROR');
+  }
+
+  public getBulkUpdatePreview(resourceClass: string, resourceIds: number[], action: UpdateType, change: object): Promise<Resource[]> {
+    const params = {resourceClass, resourceIds, action, change};
+    const request = this.httpClient.createRequest(this.endpoint + '/bulk-update-preview')
+      .asGet()
+      .withParams(params);
+    request.withHeader(suppressErrorHeader.name, suppressErrorHeader.value);
+    return request.send()
+      .then(response => this.responseToEntities(response))
+      .catch(() => []);
+  }
+
+  public bulkUpdate(
+    resourceClass: string,
+    filters: ResourceListQuery,
+    action: UpdateType,
+    change: object,
+    totalCount: number): Promise<any> {
+    const params = {resourceClass, ...(filters.getParams())};
+    const content = {resourceClass, action, change, totalCount};
+    return this.httpClient.createRequest(this.endpoint)
+      .asPut()
+      .withParams(params)
+      .withContent(content)
+      .send();
   }
 }

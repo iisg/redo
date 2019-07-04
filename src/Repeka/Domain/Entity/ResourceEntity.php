@@ -7,6 +7,7 @@ use Repeka\Domain\Constants\SystemMetadata;
 use Repeka\Domain\Constants\SystemResourceKind;
 use Repeka\Domain\Constants\SystemTransition;
 use Repeka\Domain\Entity\Workflow\ResourceWorkflowPlace;
+use Repeka\Domain\Factory\BulkChanges\PendingUpdates;
 use Repeka\Domain\Service\ResourceDisplayStrategyDependencyMap;
 use Repeka\Domain\Service\ResourceDisplayStrategyUsedMetadataCollector;
 use Repeka\Domain\Utils\EntityUtils;
@@ -24,6 +25,7 @@ class ResourceEntity implements Identifiable, HasResourceClass {
     private $resourceClass;
     private $displayStrategyDependencies = [];
     private $displayStrategiesDirty = true;
+    private $pendingUpdates = [];
 
     public function __construct(ResourceKind $kind, ResourceContents $contents) {
         $this->kind = $kind;
@@ -49,6 +51,15 @@ class ResourceEntity implements Identifiable, HasResourceClass {
 
     public function getContents(): ResourceContents {
         return new ResourceContents($this->contents);
+    }
+
+    public function getPendingUpdates(): PendingUpdates {
+        return new PendingUpdates($this->pendingUpdates);
+    }
+
+    /** @param $updates PendingUpdates|array */
+    public function setPendingUpdates($updates) {
+        $this->pendingUpdates = is_object($updates) ? $updates->toArray() : $updates;
     }
 
     public function getTeaser(): ResourceContents {

@@ -157,13 +157,16 @@ class ResourceContents extends ImmutableIteratorAggregate implements \JsonSerial
     /**
      * @param int|Metadata $metadata
      * @param mixed $values
+     * @param bool $addAtBeginning
      * @return ResourceContents
      */
-    public function withMergedValues($metadata, $values): ResourceContents {
+    public function withMergedValues($metadata, $values, bool $addAtBeginning = false): ResourceContents {
         $metadataId = $metadata instanceof Metadata ? $metadata->getId() : $metadata;
         $newValues = self::fromArray([$metadataId => $values])->toArray();
         $contents = $this->contents;
-        $contents[$metadataId] = array_merge($contents[$metadataId] ?? [], $newValues[$metadataId]);
+        $contents[$metadataId] = $addAtBeginning
+            ? array_merge($newValues[$metadataId], $contents[$metadataId] ?? [])
+            : array_merge($contents[$metadataId] ?? [], $newValues[$metadataId]);
         return new self($contents);
     }
 

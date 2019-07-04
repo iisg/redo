@@ -22,7 +22,7 @@ final class MetadataDateControlConverterUtil {
      */
     public static function convertDateToFlexibleDate($from, $to, $mode, $rangeMode): FlexibleDate {
         $from = !is_null($from) ? self::toFlexibleDateFormat($from) : $from;
-        $to = !is_null($to) ? self::toFlexibleDateFormat($to) : $to;
+        $to = !is_null($to) && $rangeMode ? self::toFlexibleDateFormat($to) : $to;
         return ($mode == MetadataDateControlMode::RANGE)
             ? self::getFlexibleRangeDateMode($from, $to, $mode, $rangeMode, self::FLEXIBLE_DATE_FORMAT)
             : self::getFlexibleDateMode($from, $mode, self::FLEXIBLE_DATE_FORMAT);

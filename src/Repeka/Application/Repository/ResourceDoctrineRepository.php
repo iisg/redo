@@ -232,4 +232,12 @@ SQL
         $query->setParameter('parentId', '[{"value":' . $resource->getId() . '}]');
         return $query->useResultCache(true, 60)->getSingleScalarResult();
     }
+
+    public function getResourcesWithPendingUpdates(int $limit): array {
+        $entityManager = $this->getEntityManager();
+        $resultSetMapping = ResultSetMappings::resourceEntity($entityManager);
+        $sql = "SELECT * FROM resource WHERE pending_updates != '[]' LIMIT $limit";
+        $query = $entityManager->createNativeQuery($sql, $resultSetMapping);
+        return $query->getResult();
+    }
 }

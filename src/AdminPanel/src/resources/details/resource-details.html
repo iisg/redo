@@ -15,13 +15,16 @@
     <require from="common/components/buttons/toggle-button"></require>
     <require from="./resource-display-strategy-playground"></require>
     <require from="common/components/entity-chooser/entity-chooser"></require>
+    <require from="../list/resource-with-pending-updates-icon.html"></require>
 
     <loading-bar if.bind="!resource"></loading-bar>
     <div else
         class="view-with-tabs resource-details au-animate fade-inup-outup">
         <div class="name-with-buttons-and-tabs">
-            <span class="page-title"
-                innerhtml.bind="resource | resourceLabel"></span>
+            <span class="page-title">
+                <span innerhtml.bind="resource | resourceLabel"></span>
+                <resource-with-pending-updates-icon if.bind="resource.hasPendingUpdates"></resource-with-pending-updates-icon>
+            </span>
             <throbber if.bind="resource.pendingRequest"></throbber>
             <div class="buttons">
                 <template if.bind="!isFormOpened">

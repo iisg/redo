@@ -1,0 +1,101 @@
+<template>
+    <require from="common/components/buttons/toggle-button"></require>
+    <require from="resources/details/resource-metadata-table/resource-metadata-values"></require>
+    <require from="resources/workflow/resource-place-display.html"></require>
+
+    <div class="container bulk-update-summary">
+        <div class="row">
+            <div class="col-sm-8">
+                <span class="page-title">${'Summary' | t}</span>
+            </div>
+            <div class="col-sm-4">
+                <div class="pull-right">
+                    <toggle-button disabled.bind="!loaded"
+                        primary-icon-name="back"
+                        primary-label="Back to list"
+                        click.delegate="goBack()"></toggle-button>
+                    <toggle-button disabled.bind="!loaded"
+                        primary-icon-name="edit"
+                        primary-label="Apply"
+                        click.delegate="executeUpdate()"></toggle-button>
+                </div>
+            </div>
+        </div>
+        <template if.bind="loaded">
+            <p>
+                <span class="main-label">${'Number of resources to be changed' | t}:</span>
+                <span>${totalCount}</span>
+            </p>
+            <p>
+                <span class="main-label">${'Predicted execution time' | t}:</span>
+                <span>${predictedTime} min</span>
+            </p>
+            <p>
+                <span class="main-label">${'Selected change type' | t}:</span>
+                <span>${action | t}</span>
+            </p>
+            <div if.bind="isContentsUpdateSelected && metadata">
+                <p>
+                    <span class="main-label">${'Selected metadata' | t}:</span>
+                    <span>${metadata.label | inCurrentLanguage} (${metadata.name}, ID: ${metadata.id})</span>
+                </p>
+                <p>
+                    <span class="main-label">${'Selected template' | t}:</span>
+                    <span><code>${change.displayStrategy}</code></span>
+                </p>
+                <p class="main-label">${'Metadata value change preview' | t}:</p>
+                <table class="preview-table">
+                    <tr>
+                        <th>Id</th>
+                        <th>${'Label' | t}</th>
+                        <th>${metadata.label | inCurrentLanguage} ${'before the change' | t}</th>
+                        <th>${metadata.label | inCurrentLanguage} ${'after the change' | t}</th>
+                    </tr>
+                    <tr repeat.for="resource of resourcesBefore">
+                        <td>${resource.id}</td>
+                        <td>${resource | resourceLabel}</td>
+                        <td>
+                            <resource-metadata-values
+                                resource.one-time="resource"
+                                metadata.one-time="metadata"></resource-metadata-values>
+                        </td>
+                        <td>
+                            <resource-metadata-values
+                                resource.one-time="resourceAfter(resource)"
+                                metadata.one-time="metadata"></resource-metadata-values>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div if.bind="isWorkflowUpdateSelected && workflow">
+                <p>
+                    <span class="main-label"
+                        if.bind="action == 'move_to_place'">${'Target place' | t}:</span>
+                    <span class="main-label"
+                        else>${'Selected transition' | t}:</span>
+                    <span>${ transitionOrPlaceLabel | inCurrentLanguage }</span>
+                </p>
+                <p class="main-label">${'Current place change preview' | t}:</p>
+                <table class="preview-table">
+                    <tr>
+                        <th>Id</th>
+                        <th>${'Label' | t}</th>
+                        <th>${'Current place before change' | t}</th>
+                        <th>${'Current place after change' | t}</th>
+                    </tr>
+                    <tr repeat.for="resource of resourcesBefore">
+                        <td>${resource.id}</td>
+                        <td>${resource | resourceLabel}</td>
+                        <td>
+                            <resource-place-display resource.bind="resource"></resource-place-display>
+                        </td>
+                        <td>
+                            <resource-place-display resource.bind="resourceAfter(resource)"></resource-place-display>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </template>
+        <throbber else></throbber>
+    </div>
+</template>

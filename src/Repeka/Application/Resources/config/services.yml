@@ -149,6 +149,9 @@ services:
   Repeka\Application\Resources\FrontendLocaleProvider:
     $defaultUiLanguage: '%repeka.default_ui_language%'
 
+  Repeka\Domain\Factory\BulkChanges\BulkChangeFactory:
+    - !tagged repeka.bulk_change
+
   Repeka\Domain\Validation\MetadataConstraintManager:
     - !tagged repeka.metadata_constraint
 

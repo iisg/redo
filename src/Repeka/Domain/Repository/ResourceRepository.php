@@ -45,4 +45,7 @@ interface ResourceRepository {
     public function markDisplayStrategiesDirty($resources): void;
 
     public function hasChildren(ResourceEntity $resource): bool;
+
+    /** @return ResourceEntity[] */
+    public function getResourcesWithPendingUpdates(int $limit): array;
 }

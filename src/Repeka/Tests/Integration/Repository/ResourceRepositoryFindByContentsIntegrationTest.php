@@ -263,7 +263,7 @@ class ResourceRepositoryFindByContentsIntegrationTest extends IntegrationTestCas
                 ->filterByContents([$excludedMetadata->getId() => null])
                 ->build()
         )->getResults();
-        /** * @var ResourceEntity $resource */
+        /** @var ResourceEntity $resource */
         foreach ($resources as $resource) {
             $metadataIds = array_keys($resource->getContents()->toArray());
             $this->assertNotContains($excludedMetadata->getId(), $metadataIds);
@@ -278,7 +278,7 @@ class ResourceRepositoryFindByContentsIntegrationTest extends IntegrationTestCas
                 ->filterByContents([$excludedMetadata->getId() => 'null'])
                 ->build()
         )->getResults();
-        /** * @var ResourceEntity $resource */
+        /** @var ResourceEntity $resource */
         foreach ($resources as $resource) {
             $metadataIds = array_keys($resource->getContents()->toArray());
             $this->assertNotContains($excludedMetadata->getId(), $metadataIds);

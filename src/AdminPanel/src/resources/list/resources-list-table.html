@@ -7,6 +7,7 @@
     <require from="./resource-list-filters/resource-list-place-filter/resource-list-place-filter"></require>
     <require from="./resource-list-filters/resource-list-kind-filter/resource-list-kind-filter"></require>
     <require from="./display-strategies-dirty-icon.html"></require>
+    <require from="./resource-with-pending-updates-icon.html"></require>
 
     <table class="resources-list-table">
         <thead>
@@ -63,6 +64,7 @@
                 <a route-href="route: resources/details; params.bind: {id: resource.id}"
                     disabled-link.bind="resource.pendingRequest">${resource.id & oneTime}</a>
                 <display-strategies-dirty-icon if.bind="resource.displayStrategiesDirty"></display-strategies-dirty-icon>
+                <resource-with-pending-updates-icon if.bind="resource.hasPendingUpdates"></resource-with-pending-updates-icon>
             </td>
             <td>
                 ${resource.kind.label | inCurrentLanguage}

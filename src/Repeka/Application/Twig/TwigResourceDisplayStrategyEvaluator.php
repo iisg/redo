@@ -98,7 +98,7 @@ class TwigResourceDisplayStrategyEvaluator implements ResourceDisplayStrategyEva
     }
 
     /**
-     * Lazy initialization of Twig avoids strage problems during integration tests, like:
+     * Lazy initialization of Twig avoids strange problems during integration tests, like:
      *   > The "kernel" service is synthetic, it needs to be set at boot time before it can be used.
      */
     private function getTwig(): Environment {

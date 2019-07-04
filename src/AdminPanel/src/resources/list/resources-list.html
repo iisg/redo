@@ -1,4 +1,4 @@
-<template class="${addFormOpened ? 'add-form-opened' : ''}">
+<template class="${isFormOpened ? 'add-form-opened' : ''}">
     <require from="common/components/buttons/add-button.html"></require>
     <require from="common/components/pagination/pagination"></require>
     <require from="./resources-list-table"></require>
@@ -8,6 +8,7 @@
     <require from="common/components/buttons/cancel-button.html"></require>
     <require from="common/components/loading-bar/loading-cover"></require>
     <require from="./resource-list-filters/resource-list-contents-filter/resource-list-contents-filter"></require>
+    <require from="../bulk-update/bulk-update-form"></require>
 
     <div if.bind="!metadata && !resourceKind && !parentResource"
         class="resources-list-title">
@@ -25,7 +26,7 @@
         elements-per-page.bind="resultsPerPage"
         current-page-number.bind="currentPageNumber"
         hide-elements-per-page-dropdown="true"></pagination>
-    <add-button if.bind="!hideAddButton && !addFormOpened"
+    <add-button if.bind="!hideAddButton && !isFormOpened"
         entity-name="resource"
         toggled.two-way="addFormOpened"
         disabled.bind="addingResourcesDisabled"
@@ -52,6 +53,14 @@
             submit.call="addNewResource(savedResource)"
             cancel.call="addFormOpened = !addFormOpened"></resource-form>
     </div>
+    <div if.bind="bulkUpdateFormOpened"
+        class="bulk-update-form">
+        <bulk-update-form resource-class.one-time="resourceClass"
+            list-query.bind="query"
+            update.one-time="update"
+            cancel.call="bulkUpdateFormOpened = false"
+            total-count.bind="totalNumberOfResources"></bulk-update-form>
+    </div>
     <loading-cover loading.bind="displayProgressBar"
         class="resource-list-table-container">
         <resource-list-contents-filter if.one-time="'ADMIN' | hasRole:resource.resourceClass"
@@ -66,6 +75,13 @@
             kind-filter.bind="kindFilter"
             resource-kinds.bind="resourceKinds"></resources-list-table>
     </loading-cover>
+    <div if.bind="!isFormOpened"
+        class="bulk-update-link">
+        <a if.bind="'ADMIN' | hasRole:resourceClass"
+            click.delegate="bulkUpdateFormOpened = !bulkUpdateFormOpened">
+            ${'Mass resource update' | t}
+        </a>
+    </div>
     <div class="alert alert-info"
         if.bind="resources.length === 0 && !displayProgressBar">
         <icon name="information"></icon>

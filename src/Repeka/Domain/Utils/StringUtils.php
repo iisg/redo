@@ -38,4 +38,9 @@ final class StringUtils {
     public static function fixUtf8(string $string): string {
         return mb_convert_encoding($string, 'UTF-8', 'UTF-8');
     }
+
+    /** @see http://stackoverflow.com/a/19533226/878514 */
+    public static function toSnakeCase($camelCase) {
+        return strtolower(preg_replace('/(?<!^)[A-Z]+/', '_$0', $camelCase));
+    }
 }

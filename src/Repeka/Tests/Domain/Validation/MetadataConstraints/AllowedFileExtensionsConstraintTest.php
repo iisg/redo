@@ -4,18 +4,17 @@ namespace Repeka\Tests\Domain\Validation\MetadataConstraints;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Entity\ResourceEntity;
-use Repeka\Domain\Exception\DomainException;
 use Repeka\Domain\Validation\MetadataConstraints\AllowedFileExtensionsConstraint;
 use Repeka\Tests\Traits\StubsTrait;
 
 class AllowedFileExtensionsConstraintTest extends \PHPUnit_Framework_TestCase {
     use StubsTrait;
 
-    /** * @var AllowedFileExtensionsConstraint */
+    /** @var AllowedFileExtensionsConstraint */
     private $constraint;
-    /** * @var Metadata|\Framework_MockObjectTest */
+    /** @var Metadata|\Framework_MockObjectTest */
     private $metadata;
-    /** * @var ResourceEntity|\Framework_MockObjectTest */
+    /** @var ResourceEntity|\Framework_MockObjectTest */
     private $resource;
 
     public function setUp() {

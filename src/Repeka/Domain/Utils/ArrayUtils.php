@@ -110,4 +110,24 @@ final class ArrayUtils {
         }
         return true;
     }
+
+    /**
+     * @param array|iterable $array
+     * @param string|callable $keySpec
+     * @return array
+     */
+    public static function keyBy($array, $keySpec): array {
+        if (is_string($keySpec)) {
+            $key = $keySpec;
+            $keySpec = function ($elem) use ($key) {
+                return $elem[$key];
+            };
+        }
+        $result = [];
+        foreach ($array as $item) {
+            $newKey = $keySpec($item);
+            $result[$newKey] = $item;
+        }
+        return $result;
+    }
 }

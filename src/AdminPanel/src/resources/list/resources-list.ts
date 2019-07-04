@@ -27,6 +27,8 @@ import {FilterChangedEvent} from "resources/list/resources-list-filters";
 import {MetadataFilterChange} from "resources/list/resource-list-filters/resource-list-metadata-filter/resource-list-metadata-filter";
 import {PlacesFilterChange} from "resources/list/resource-list-filters/resource-list-place-filter/resource-list-place-filter";
 import {KindsFilterChange} from "./resource-list-filters/resource-list-kind-filter/resource-list-kind-filter";
+import {ResourceListQuery} from "../resource-list-query";
+import {pick} from 'lodash';
 
 @autoinject()
 export class ResourcesList {
@@ -48,12 +50,15 @@ export class ResourcesList {
   @bindable @booleanAttribute hideAddButton = false;
   @observable resources: PageResult<Resource>;
   @observable newResourceKindThrottled: ResourceKind;
+  query: ResourceListQuery;
   contentsFilter: NumberMap<string>;
   idsFilter: string;
   placesFilter: string[];
   sortBy: ResourceSort[];
   totalNumberOfResources: number;
   addFormOpened: boolean;
+  bulkUpdateFormOpened: boolean;
+  update: object;
   resourceKinds: ResourceKind[] = [];
   displayProgressBar: boolean;
   activated: boolean;
@@ -199,6 +204,10 @@ export class ResourcesList {
     let sortBy = safeJsonParse(parameters['sortBy']);
     this.sortBy = sortBy ? sortBy : this.getSorting();
     this.displayAllLevels = !!parameters['allLevels'] || !!this.resourceKind;
+    if (parameters['action']) {
+      this.update =  pick(parameters, ['action', 'displayStrategy', 'metadataId', 'workflow', 'placeId', 'transitionId']);
+      this.bulkUpdateFormOpened = true;
+    }
     if (this.metadata) {
       this.updateContentsFilter(this.metadata);
     } else {
@@ -254,34 +263,34 @@ export class ResourcesList {
     let contentsFilter = this.contentsFilter;
     let resourceClass = this.resourceClass;
     let resultsPerPage = this.resultsPerPage;
-    let query = this.resourceRepository.getListQuery();
+    this.query = this.resourceRepository.getListQuery();
     this.displayProgressBar = true;
     if (this.parentResource) {
-      query = query.filterByParentId(this.parentResource.id);
+      this.query = this.query.filterByParentId(this.parentResource.id);
     } else if (this.resourceClass && !this.resource) {
-      query = query.filterByResourceClasses(this.resourceClass);
+      this.query = this.query.filterByResourceClasses(this.resourceClass);
       if (!this.displayAllLevels) {
-        query = query.onlyTopLevel();
+        this.query = this.query.onlyTopLevel();
       }
     }
     if (this.resourceKind) {
-      query = query.filterByResourceKindIds(this.resourceKind.id);
+      this.query = this.query.filterByResourceKindIds(this.resourceKind.id);
     } else if (!this.resourceKind && this.kindFilter && this.kindFilter.length) {
-      query = query.filterByResourceKindIds(this.kindFilter);
+      this.query = this.query.filterByResourceKindIds(this.kindFilter);
     }
     if (this.contentsFilter && Object.values(this.contentsFilter).find(value => value !== undefined)) {
-      query = query.filterByContents(this.contentsFilter).suppressError();
+      this.query = this.query.filterByContents(this.contentsFilter).suppressError();
     }
     if (this.idsFilter) {
-      query = query.filterByIds(this.idsFilter);
+      this.query = this.query.filterByIds(this.idsFilter);
     }
     if (this.placesFilter && this.placesFilter.length) {
-      query = query.filterByWorkflowPlacesIds(this.placesFilter);
+      this.query = this.query.filterByWorkflowPlacesIds(this.placesFilter);
     }
-    query = query.sortByMetadataIds(this.sortBy)
+    this.query = this.query.sortByMetadataIds(this.sortBy)
       .setResultsPerPage(this.resultsPerPage)
       .setCurrentPageNumber(this.currentPageNumber);
-    query.get().then(resources => {
+    this.query.get().then(resources => {
       if (resources.total === 1 && this.idsFilter) {
         const id = resources[0].id;
         this.router.navigateToRoute('resources/details', {id}, {trigger: true, replace: false});
@@ -293,8 +302,7 @@ export class ResourcesList {
           } else {
             this.resources = resources;
             this.addFormOpened = this.addFormOpened
-              ? this.addFormOpened
-              : (this.resources.length == 0) && (this.parentResource == undefined) && !this.contentsFilter;
+              ||  (this.resources.length == 0 && this.parentResource == undefined && !this.contentsFilter);
           }
         }
         if (this.parentResource || this.resourceKind) {
@@ -472,5 +480,10 @@ export class ResourcesList {
   switchToTopResourcesView() {
     this.displayAllLevels = false;
     this.fetchList();
+  }
+
+  @computedFrom('addFormOpened', 'bulkUpdateFormOpened')
+  get isFormOpened() {
+    return this.addFormOpened || this.bulkUpdateFormOpened;
   }
 }

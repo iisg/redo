@@ -32,3 +32,7 @@ Repeka\Domain\Entity\ResourceEntity:
       type: boolean
       column: display_strategies_dirty
       options: {default: true}
+    pendingUpdates:
+      type: jsonb
+      column: pending_updates
+      options: {default: '[]'}

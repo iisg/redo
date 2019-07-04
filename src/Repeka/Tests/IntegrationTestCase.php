@@ -37,6 +37,7 @@ use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  * @SuppressWarnings(PHPMD.NumberOfChildren)
+ * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
  */
 abstract class IntegrationTestCase extends FunctionalTestCase {
     private static $dataForTests = [];
@@ -56,13 +57,9 @@ abstract class IntegrationTestCase extends FunctionalTestCase {
      * It's better than setUp() because we don't have to remember to call this when overriding setUp().
      */
     final public function prepareIntegrationTest() {
-        $this->container = self::createClient()->getContainer();
-        $kernel = $this->container->get('kernel');
-        $this->application = new Application($kernel);
-        $this->application->setAutoExit(false);
-        $this->application->setCatchExceptions(false);
+        ini_set('memory_limit', '2G');
+        $this->setTestContainer(self::createClient());
         if (!defined('INTEGRATION_TESTS_BOOTSTRAPPED')) {
-            ini_set('memory_limit', '1024M');
             define('INTEGRATION_TESTS_BOOTSTRAPPED', true);
             $this->executeCommand('doctrine:database:drop --force --if-exists');
             $this->executeCommand('doctrine:database:create');
@@ -150,6 +147,14 @@ abstract class IntegrationTestCase extends FunctionalTestCase {
         return self::createAuthenticatedClient(AdminAccountFixture::USERNAME, AdminAccountFixture::PASSWORD, $options, $server);
     }
 
+    protected function setTestContainer(TestClient $client) {
+        $this->container = $client->getContainer();
+        $kernel = $this->container->get('kernel');
+        $this->application = new Application($kernel);
+        $this->application->setAutoExit(false);
+        $this->application->setCatchExceptions(false);
+    }
+
     /** @param string[] $parts */
     protected static function joinUrl(...$parts): string {
         $url = array_shift($parts);
@@ -225,7 +230,7 @@ abstract class IntegrationTestCase extends FunctionalTestCase {
 
     protected function createMetadata(
         string $name,
-        array $label,
+        array $label = [],
         array $description = [],
         array $placeholder = [],
         string $control = 'text',
@@ -234,6 +239,9 @@ abstract class IntegrationTestCase extends FunctionalTestCase {
         string $groupId = '',
         Metadata $parent = null
     ): Metadata {
+        if (empty($label)) {
+            $label = ['PL' => $name, 'EN' => $name];
+        }
         return $this->handleCommandBypassingFirewall(
             new MetadataCreateCommand(
                 $name,

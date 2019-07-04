@@ -7,6 +7,37 @@ month: miesiąc
 year: rok
 date_time: czas
 flexible: elastyczny
+Number of resources to be changed: Liczba zasobów do zmiany
+Resource is waiting for state or contents update: Zasób oczekuje na zmianę stanu lub wartości metadatnych
+Add values at beginning: Dodaj wartości na początku
+Next: Dalej
+All values are required: Wszystkie pola są wymagane
+Select action: Wybierz akcję do wykoniania
+Select metadata: Wybierz metadaną
+Select workflow: Wybierz proces
+Choose place to which you want to move resources: 'Wybierz stan w procesie, do którego chcesz przenieść zasoby'
+Choose transition to execute: Wybierz przejście w procesie do wykonania
+Predicted execution time: Przewidywany czas wykoniania
+Selected change type: Wybrany rodzaj zmiany
+Selected metadata: Wybrana metadana
+Selected template: Wybrany szablon
+Selected place: Wybrany stan w procesie
+Selected transition: Wybrane przejście
+Current place change preview: Podgląd stanów wybranych zasobów po zmianie
+Metadata value change preview: Podgląd wartości metadanych po zmianie
+Current place before change: Stan zasobu przed zmianą
+Current place after change: Stan zasobu po zmianie
+before the change: przed zmianą
+after the change: po zmianie
+Success: Udało się
+Target place: Docelowy stan
+Resource transformations have been queued.: Przekształcenia zasobów zostały dodane do kolejki.
+Summary: Podsumowanie
+override: Nadpisz wartości metadanej
+append: Dodaj wartość metadanej
+move_to_place: Przenieś do innego stanu w procesie (bez walidacji i pluginów)
+execute_transition: Wykonaj przejście w procesie
+rerender_dynamic_metadata: Przelicz dynamiczne metadane / zaindeksuj ponownie
 Range: Zakres
 Upload max file size: Maksymalna wielkość pliku
 Administration Panel: Panel administracyjny
@@ -25,6 +56,7 @@ Description: Opis
 Hint: Podpowiedź
 Add: Dodaj
 Edit: Edytuj
+Mass resource update: Masowa edycja zasobów
 Save: Zapisz
 Save as a copy: Zapisz jako kopię
 Create: Utwórz
@@ -295,3 +327,61 @@ advancedResourceContentsFilterHelp: >
   <p>Do filtrowania można użyć wszystkich metadanych poza elastyczną datą. Pamiętaj, że filtrując po relacjach musisz używać identyfikatorów zasobów
   w relacji, a nie ich etykiet.</p>
   <p>Nie zapomnij, że możesz filtrować listę z użyciem <code>Ctrl+Enter</code>!</p>
+
+bulkResourceUpdateHelp: >
+  <p>W polu strategii wyświetlania - jak zawsze - możesz podać wyrażenie stałe (wtedy wpisz je po prostu) lub wartość dynamiczną
+  za pomocą wyrażenia w podwójnych klamrach <code>{{ ... }}</code>. Język wyrażeń, którego tu używamy to <a href="https://twig.symfony.com/" target="_blank">Twig</a>.</p>
+  <p>W strategiach wyświetlania poza standardowymi funkcjami oferowanymi przez język, masz dostęp także do zmiennej <code>resource</code> lub <code>r</code>
+  która przechowuje aktualnie przetwarzany zasób. Metadane z niego możesz wyciągać po nazwie, np. <code>{{ r|m('Tytul') }}</code> wyświetli wszystkie
+  wartości metadanej Tytul.</p>
+  <ul>
+    <li><strong>Tekst, długi tekst, WYSIWYG</strong> generujemy "normalnie", np. <code>ala</code>, <code>{{'a' ~ 'la'}}</code></li>
+    <li><strong>Liczby całkowite i rzeczywiste</strong> tak samo jak tekst, np. <code>4</code>, <code>{{ 2 + 2 }}</code></li>
+    <li><strong>Datę elastyczną oraz zakres dat</strong> należy wyrenderować jako obiekt <a href="https://www.elated.com/json-basics/" target="_blank">JSON</a>.
+    Ponieważ elastyczna data jest elastyczna, możesz tutaj wyprodukować zarówno datę jak i zakres dat. Oczywiście możesz także
+    ustalić jaki zakres ma być brany pod uwagę. Dostępne zakresy to: <code>date_time</code>, <code>day</code>, <code>month</code>, <code>year</code>.
+    Co ważne, data elastyczna nie bierze pod uwagę strefy czasowej w odróżnieniu od znacznika czasu.
+    Przykłady:
+      <ul>
+        <li><code>2018-09-13T16:39:49+02:00</code> &rarr; 13.09.2018, 16:39:49</li>
+        <li><code>2018-09-13T16:39:49</code> &rarr; 13.09.2018, 16:39:49</li>
+        <li><code>2018-09-13</code> &rarr; 13.09.2018, 00:00:00</li>
+        <li><code>{"date": "2018-09-13T16:39:49+02:00", "mode": "day"}</code> &rarr; 13.09.2018</li>
+        <li><code>{"date": "2018-09-13", "mode": "day"}</code> &rarr; 13.09.2018</li>
+        <li><code>{"date": "2018-09-13", "mode": "month"}</code> &rarr; 09.2018</li>
+        <li><code>{"date": "2018-09-13", "mode": "year"}</code> &rarr; 2018</li>
+        <li><code>{"from": "2018-09-13", "to": "2019-04-28"}</code> &rarr; 13.09.2018, 00:00:00 - 28.04.2019, 00:00:00</li>
+        <li><code>{"from": "2018-09-13", "to": "2019-04-28", "rangeMode": "month"}</code> &rarr; 09.2018 - 04.2019</li>
+        <li><code>{"from": "{{ 'now' | date('Y-m-d') }}", "to": "2087-04-28", "rangeMode": "month"}</code></li>
+      </ul>
+    </li>
+    <li><strong>Znacznik czasu</strong> najlepiej wygenerować w formacie ATOM - wtedy nie będzie wątpliwości co zostanie ustawione (tutaj brana pod uwagę jest strefa czasowa).
+        Przykłady:
+        <ul>
+          <li><code>2019-07-26T10:57:07+02:00</code></li>
+          <li><code>{{ "+14 day" | date("Y-m-d\\TH:i:sP") }}</code></li>
+          <li><code>{{ r | m('data_utworzenia') | first.value | date_modify("+14 day") | date("Y-m-d\\TH:i:sP") }}</code></li>
+          </ul></li>
+    <li><strong>Wartość logiczną</strong> należy wygenerować jako <code>1</code> dla prawdy i <code>0</code> dla fałszu. Przykłady:
+    <code>1</code>, <code>{{r|m('tytul')|length > 1 ? 1 : 0}}</code></li>
+    <li><strong>Relacje</strong> powinny być identyfikatorami zasobów, które powinny zostać pokazane w relacji, np. <code>32</code></li>
+    <li><strong>Pliki i katalogi</strong> powinny zawierać ścieżki rozpoczynające się od identyfikatora katalogu zasobu i powinny wskazywać
+    na plik, który się powinien znajdować w katalogu zasobu. Przykłady: <code>resourceFiles/a.pdf</code>, <code>scans/{{r|m('barkod')}}-v60.pdf</code></li>
+    <li><strong>Język systemowy</strong> powinien być kodem języka wspieranego przez aplikację, np. <code>pl</code>, <code>en</code>, <code>de</code></li>
+  </ul>
+  <p>Ponadto, jedną strategią wyświetlania możesz wygenerować wiele wartości metadanej! Wystarczy, że wyrenderujesz listę wartości w formacie
+  tablicy <a href="https://www.elated.com/json-basics/" target="_blank">JSON</a> (inaczej mówiąc, wartości oddzielone przecinkami pomiędzy nawiasami kwadratowymi).
+  Elementami tablicy powinny być wartości poprawne dla danej kontrolki metadanej wg reguł opisanych wyżej. Przykłady:</p>
+  <ul>
+    <li><code>[1, 2]</code></li>
+    <li><code>["ala", "ola"]</code></li>
+    <li><code>["2019-01-01", {"date": "2018-09-13", "mode": "month"}]</code></li>
+  </ul>
+  <p>Warto zwrócić uwagę, że dzięki tej funkcjonalności możesz także masowo usunąć wszystkie wartości metadanej w trybie nadpisywania wartości -
+  wystarczy że ustawisz pustą listę wartości strategią <code>[]</code>.</p>
+  <p>Nie bój się eksperymentować - kolejnym widokiem jest podsumowanie wykonywanej operacji wraz z podglądem wygenerowanych wartości
+  na początkowych zasobach z Twojej przefiltrowanej listy. Jeśli w kolmnie z podglądem nowej wartości nie ma zmian, oznacza to że
+  Twoja strategia produkuje niepoprawne wartości dla danej kontrolki (np. podano zły format daty czy tryb zakresu). <strong>To jednak nie oznacza,
+  że tym narzędziem nie da się nic zepsuć!</strong> Da się i to sporo. Możesz przenieść zasób do stanu, w którym nie spełnia on reguł walidacyjnych.
+  Możesz wstawić referencję na nieistniejacy zasób lub plik. Powodzenia!</p>
+  <blockquote>With great power comes great responsibility.</blockquote>
