@@ -19,4 +19,6 @@ interface FileSystemDriver {
     public function delete(string $path): void;
 
     public function getImageDimensions(string $path): array;
+
+    public function getFileSize(string $systemPath): int;
 }

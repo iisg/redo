@@ -37,4 +37,8 @@ class ImmutableIteratorAggregate implements \IteratorAggregate, \ArrayAccess, \C
     public function count() {
         return count($this->contents);
     }
+
+    public function toArray(): array {
+        return $this->contents;
+    }
 }

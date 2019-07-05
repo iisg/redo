@@ -2,6 +2,9 @@
 namespace Repeka\Application\Service;
 
 use Assert\Assertion;
+use FilesystemIterator;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
 use Repeka\Domain\Service\FileSystemDriver;
 use Repeka\Domain\Utils\StringUtils;
 
@@ -54,8 +57,8 @@ class RealFileSystemDriver implements FileSystemDriver {
 
     /** @see https://stackoverflow.com/a/3349792/878514 */
     public function deleteDirectoryContents(string $path): void {
-        $it = new \RecursiveDirectoryIterator($path, \RecursiveDirectoryIterator::SKIP_DOTS);
-        $files = new \RecursiveIteratorIterator($it, \RecursiveIteratorIterator::CHILD_FIRST);
+        $it = new RecursiveDirectoryIterator($path, RecursiveDirectoryIterator::SKIP_DOTS);
+        $files = new RecursiveIteratorIterator($it, RecursiveIteratorIterator::CHILD_FIRST);
         foreach ($files as $file) {
             $this->delete($file->getRealPath());
         }
@@ -70,5 +73,18 @@ class RealFileSystemDriver implements FileSystemDriver {
             [$width, $height,] = getimagesize($path);
         }
         return ['width' => $width, 'height' => $height];
+    }
+
+    public function getFileSize(string $path): int {
+        if (is_dir($path)) {
+            $size = 0;
+            foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path, FilesystemIterator::SKIP_DOTS)) as $object) {
+                $size += $object->getSize();
+            }
+            return $size;
+        } else {
+            Assertion::integer($size = filesize($path), 'Could not read the filesize of: ' . $path);
+            return $size;
+        }
     }
 }

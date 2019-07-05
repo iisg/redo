@@ -143,10 +143,6 @@ class ResourceContents extends ImmutableIteratorAggregate implements \JsonSerial
         );
     }
 
-    public function toArray(): array {
-        return $this->contents;
-    }
-
     /**
      * @param int|Metadata $metadata
      * @param mixed $values
