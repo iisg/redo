@@ -9,8 +9,9 @@
             <template repeat.for="option of workflowPlugin.configurationOptions">
                 <span>
                     ${'plugins::' + workflowPlacePluginConfiguration.name + '//options//' + option.name + '//label' | t & oneTime}
-                    <span class="help-block">${'plugins::' + workflowPlacePluginConfiguration.name + '//options//'
-                        + option.name + '//description' | t & oneTime}</span>
+                    <span class="help-block">
+                        ${'plugins::' + workflowPlacePluginConfiguration.name + '//options//' + option.name + '//description' | t & oneTime}
+                    </span>
                 </span>
                 <workflow-plugin-configuration-option-input option.bind="option"
                     value.bind="workflowPlacePluginConfiguration.config[option.name]"
