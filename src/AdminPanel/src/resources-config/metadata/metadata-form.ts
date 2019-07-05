@@ -1,7 +1,7 @@
 import {computedFrom} from "aurelia-binding";
 import {autoinject} from "aurelia-dependency-injection";
 import {bindable, ComponentAttached} from "aurelia-templating";
-import {ValidationController, ValidationControllerFactory, ValidationRules} from "aurelia-validation";
+import {ValidationController, ValidationControllerFactory} from "aurelia-validation";
 import {ChangeLossPreventer} from "common/change-loss-preventer/change-loss-preventer";
 import {EntitySerializer} from "common/dto/entity-serializer";
 import {ChangeLossPreventerForm} from "common/form/change-loss-preventer-form";
@@ -72,7 +72,6 @@ export class MetadataForm extends ChangeLossPreventerForm implements ComponentAt
     if (this.metadata.id) {
       this.shouldBeDynamic = this.metadata.isDynamic;
     }
-    ValidationRules.ensure('displayStrategy').required().when(() => this.shouldBeDynamic).on(this.metadata);
   }
 
   validateAndSubmit() {
