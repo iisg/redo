@@ -12,14 +12,10 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 /** @SuppressWarnings(PHPMD.UnusedFormalParameter) */
 class ClearUnknownGroupsCommand extends ContainerAwareCommand {
-
     private $metadataRepository;
     private $commandBus;
 
-    public function __construct(
-        MetadataRepository $metadataRepository,
-        CommandBus $commandBus
-    ) {
+    public function __construct(MetadataRepository $metadataRepository, CommandBus $commandBus) {
         parent::__construct();
         $this->metadataRepository = $metadataRepository;
         $this->commandBus = $commandBus;
@@ -38,8 +34,8 @@ class ClearUnknownGroupsCommand extends ContainerAwareCommand {
         foreach ($this->metadataRepository->findAll() as $metadata) {
             $groupId = $metadata->getGroupId();
             if ($groupId != Metadata::DEFAULT_GROUP && !in_array($groupId, $groupIds)) {
-                $this->setDefaultGroupId($metadata);
                 $output->writeln("-> found unknown group id '" . $groupId . "' in " . $metadata->getName());
+                $this->setDefaultGroupId($metadata);
                 $allKnown = false;
             }
         }

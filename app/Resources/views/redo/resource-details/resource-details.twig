@@ -124,7 +124,7 @@
                                             <span id="archive-tiff-scans">
                                                 {{ 'Full resolution scans' | trans }}
                                                 {% if r | mkatalog_plikow_master_rozmiar | length %}
-                                                    (&plusmn;{{ r | mkatalog_plikow_master_rozmiar | formatBytes }})
+                                                    ({{ r | mkatalog_plikow_master_rozmiar | formatBytes }})
                                                 {% endif %}
                                             </span>
                                         </button>

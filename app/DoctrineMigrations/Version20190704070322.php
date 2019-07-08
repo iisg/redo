@@ -1,10 +1,7 @@
 <?php declare(strict_types=1);
 namespace Repeka\Migrations;
 
-use Doctrine\DBAL\Migrations\AbstractMigration;
-use Doctrine\DBAL\Schema\Schema;
-
-/** * Adds default flexible mode constraint value to metadata with flexible date or date range control */
+/** Adds default flexible mode constraint value to metadata with flexible date or date range control. */
 class Version20190704070322 extends RepekaMigration {
 
     public function migrate() {

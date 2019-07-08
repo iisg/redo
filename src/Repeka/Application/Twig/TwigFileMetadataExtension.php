@@ -6,6 +6,7 @@ use Repeka\Application\Cqrs\CommandBusAware;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\MetadataControl;
 use Repeka\Domain\Entity\ResourceEntity;
+use Repeka\Domain\Exception\EntityNotFoundException;
 use Repeka\Domain\Repository\MetadataRepository;
 use Repeka\Domain\Service\FileSystemDriver;
 use Repeka\Domain\Service\ResourceFileStorage;
@@ -13,6 +14,9 @@ use Repeka\Domain\Utils\ArrayUtils;
 use Repeka\Domain\Utils\ImmutableIteratorAggregate;
 use Repeka\Domain\Utils\PrintableArray;
 
+/**
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class TwigFileMetadataExtension extends \Twig_Extension {
     use CommandBusAware;
 
@@ -41,6 +45,7 @@ class TwigFileMetadataExtension extends \Twig_Extension {
         return [
             new \Twig_Filter('metadataFiles', [$this, 'metadataFiles']),
             new \Twig_Filter('metadataImageFiles', [$this, 'metadataImageFiles']),
+            new \Twig_Filter('compactMetadataImageSizes', [$this, 'compactMetadataImageSizes']),
             new \Twig_Filter('metadataFileSize', [$this, 'metadataFileSize'], ['needs_context' => true]),
             new \Twig_Filter('formatBytes', [$this, 'formatBytes']),
         ];
@@ -84,12 +89,26 @@ class TwigFileMetadataExtension extends \Twig_Extension {
     }
 
     /** @throws \Twig_Error */
-    public function metadataImageFiles(ResourceEntity $resource, string $metadata) {
+    public function metadataImageFiles(ResourceEntity $resource, string $metadata, string $compactImageSizesMetadataName = '') {
         $filenames = $this->metadataFiles($resource, $metadata, ['jpg', 'png', 'jpeg']);
+        $sizes = $this->getImageSizesFromCompactMetadata($resource, $compactImageSizesMetadataName);
+        $fileCounter = 0;
+        $sizeIndex = 0;
         $arr = array_map(
-            function ($filename) use ($resource) {
+            function ($filename) use ($sizes, $resource, &$fileCounter, &$sizeIndex) {
                 $systemPath = $this->resourceFileStorage->getFileSystemPath($resource, $filename);
-                $dimensions = $this->fileSystemDriver->getImageDimensions($systemPath);
+                if ($sizes && isset($sizes[$sizeIndex])) {
+                    if ($sizes[$sizeIndex]['untilPage'] < $fileCounter) {
+                        ++$sizeIndex;
+                    }
+                    if (isset($sizes[$sizeIndex])) {
+                        $dimensions = $sizes[$sizeIndex];
+                    }
+                }
+                if (!isset($dimensions)) {
+                    $dimensions = $this->fileSystemDriver->getImageDimensions($systemPath);
+                }
+                ++$fileCounter;
                 return [
                     'path' => $filename,
                     'w' => $dimensions['width'],
@@ -99,6 +118,52 @@ class TwigFileMetadataExtension extends \Twig_Extension {
             $filenames
         );
         return $arr;
+    }
+
+    /**
+     * Reads cached image sizes from the compactMetadataImageSizes function not to read the filesystem again.
+     */
+    private function getImageSizesFromCompactMetadata(ResourceEntity $resource, string $compactImageSizesMetadataName = ''): array {
+        $sizes = [];
+        if ($compactImageSizesMetadataName) {
+            try {
+                $metadata = $this->metadataRepository->findByNameOrId($compactImageSizesMetadataName);
+                $map = $resource->getValuesWithoutSubmetadata($metadata)[0];
+                $sizes = array_map(
+                    function (string $sizeSpec) {
+                        list($size, $untilPage) = explode(':', $sizeSpec);
+                        list($w, $h) = explode('x', $size);
+                        return ['untilPage' => $untilPage, 'width' => $w, 'height' => $h];
+                    },
+                    array_map('trim', explode(',', $map))
+                );
+            } catch (EntityNotFoundException $e) {
+            }
+        }
+        return $sizes;
+    }
+
+    /**
+     * Creates compact version of image sizes from metadata in the following form:
+     * WxH:L,WxH:L
+     * Where W: width, H: height, L: last in this part of files with this size.
+     * @example 2x3:5,3x2:10 means that pages 0-5 have 2x3 and pages 6-10 have 3x2.
+     */
+    public function compactMetadataImageSizes(array $metadataImageFiles): string {
+        $sizes = [];
+        $page = 0;
+        $currentSize = null;
+        $tolerance = 5; // how many pixels can be different to assume the same size
+        foreach ($metadataImageFiles as $file) {
+            $size = [$file['w'], $file['h']];
+            if ($page && (abs($currentSize[0] - $size[0]) > $tolerance || abs($currentSize[1] - $size[1]) > $tolerance)) {
+                $sizes[] = "$currentSize[0]x$currentSize[1]:" . ($page - 1);
+            }
+            $currentSize = $size;
+            ++$page;
+        }
+        $sizes[] = "$currentSize[0]x$currentSize[1]:" . ($page - 1);
+        return implode(', ', $sizes);
     }
 
     public function metadataFileSize(array $context, $filename, ResourceEntity $resource = null) {
