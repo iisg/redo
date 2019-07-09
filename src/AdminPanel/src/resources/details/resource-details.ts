@@ -149,7 +149,7 @@ export class ResourceDetails implements RoutableComponentActivate {
     if (this.resource.resourceClass == SystemResourceClass.USERS) {
       const isUserResourceKind = this.resource.kind.metadataList.filter(m => m.id == SystemMetadata.GROUP_MEMBER.id).length > 0;
       if (isUserResourceKind) {
-        if (this.hasRole.toView('ADMIN', SystemResourceClass.USERS)) {
+        if (this.hasRole.toView('ADMIN', SystemResourceClass.USERS) && this.resource.id > 0) {
           this.resourceDetailsTabs.addTab('user-roles', this.i18n.tr('Roles'));
         }
       }
