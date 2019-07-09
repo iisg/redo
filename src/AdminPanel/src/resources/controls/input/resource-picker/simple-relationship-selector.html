@@ -1,6 +1,11 @@
 <template>
-    <template if.bind="ready">
+    <template if.bind="ready && resources.length > 0">
         <compose view="./${multipleChoice ? 'multiple' : 'single'}-choice-resource-picker.html"></compose>
     </template>
-    <throbber else></throbber>
+    <template else>
+        <div if.bind="resources">
+            ${ 'No options to choose' | t & oneTime }
+        </div>
+        <throbber else></throbber>
+    </template>
 </template>

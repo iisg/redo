@@ -1,28 +1,37 @@
 <template>
     <require from="common/components/dropdown-select/dropdown-select"></require>
+    <require from="common/components/buttons/icon-button"></require>
 
-    <div if.bind="useDropdown"
-        class="dropdown-container">
-        <dropdown-select
-            values.bind="resources"
-            value.bind="selectedResource"
-            multiple.bind="multipleChoice"
-            formatter.call="formatter(item)"
-            search-function.call="searchFunction(term, page)"
-            disabled.bind="!resources">
-            <template replace-part="option-template">
-                ${option | resourceLabel | inCurrentLanguage}
-            </template>
-        </dropdown-select>
-    </div>
-    <div else>
-        <label class="radio-label"
-            repeat.for="resource of resources">
-            <input type="radio"
-                change.delegate="selectedResourceChanged()"
-                model.bind="resource"
-                checked.bind="selectedResource">
-            ${resource | resourceLabel | inCurrentLanguage}
-        </label>
+    <div class="single-choice-resource-picker">
+        <div if.bind="useDropdown"
+            class="dropdown-container">
+            <dropdown-select
+                values.bind="resources"
+                value.bind="selectedResource"
+                multiple.bind="multipleChoice"
+                formatter.call="formatter(item)"
+                search-function.call="searchFunction(term, page)"
+                disabled.bind="!resources">
+                <template replace-part="option-template">
+                    ${option | resourceLabel | inCurrentLanguage}
+                </template>
+            </dropdown-select>
+        </div>
+        <div else>
+            <icon-button if.bind="selectedResource"
+                class="remove-metadata-value-button pull-right"
+                icon-name="remove-2"
+                tooltip-text-when-enabled.one-time="'Remove value' | t"
+                click.delegate="clearSelectedResource()"
+                tab-index="-1"></icon-button>
+            <label class="radio-label"
+                repeat.for="resource of resources">
+                <input type="radio"
+                    change.delegate="selectedResourceChanged()"
+                    model.bind="resource"
+                    checked.bind="selectedResource">
+                ${resource | resourceLabel | inCurrentLanguage}
+            </label>
+        </div>
     </div>
 </template>

@@ -263,6 +263,7 @@ Download as CSV: Pobierz plik CSV
 Download as CSV, grouped by resources: Pobierz plik CSV z grupoawniem po zasobach
 No statistics for given filters.: Brak statystyk dla zadanych filtrów.
 Advanced resource contents filter: Zaawansowany filtr po metadanych zasobu
+No options to choose: Brak możliwych opcji do wyboru
 
 advancedResourceContentsFilterHelp: >
   <p>W zaawansowanym wyszukiwaniu zasobów możesz podać wartości metadanych, które mają wystąpić w zasobie. <string>Wszystkie</strong>

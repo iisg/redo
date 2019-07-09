@@ -13,7 +13,7 @@ export class ResourceLabelValueConverter implements ToViewValueConverter {
 
   toView(resource: Resource): any {
     if (resource.contents) {
-      let labelMetadata = resource.contents[SystemMetadata.RESOURCE_LABEL.id];
+      let labelMetadata = resource.contents[SystemMetadata.RESOURCE_LABEL.id] || [];
       labelMetadata = this.filterValuesInCurrentLanguage(labelMetadata);
       return labelMetadata && labelMetadata[0] && this.htmlSanitizer.sanitize(labelMetadata[0].value)
         || this.i18n.tr('Resource') + ` #${resource.id}`;

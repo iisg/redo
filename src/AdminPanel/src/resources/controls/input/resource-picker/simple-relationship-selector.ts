@@ -21,7 +21,7 @@ export class SimpleRelationshipSelector implements ComponentAttached {
   @bindable disabled: boolean = false;
   @bindable multipleChoice: boolean = false;
   @bindable filters: Object = {};
-  resources: Resource[] = [];
+  resources: Resource[];
   ready: boolean = false;
   useDropdown: boolean = false;
 
@@ -38,20 +38,20 @@ export class SimpleRelationshipSelector implements ComponentAttached {
   }
 
   selectedResourcesChanged() {
-    if (this.resourceIds && this.selectedResources && this.selectedResources.length !== this.resourceIds.length) {
+    if (this.selectedResources && this.selectedResources.length !== this.resourceIds.length) {
       this.updateResourceIds(this.selectedResources);
     }
   }
 
   selectedResourceChanged() {
-    if (this.resourceIds) {
-      this.updateResourceIds(this.selectedResource ? [this.selectedResource] : []);
-    }
+    this.updateResourceIds(this.selectedResource ? [this.selectedResource] : []);
   }
 
   private updateResourceIds(newValues: Resource[]) {
-    this.resourceIds.splice(0, this.resourceIds.length);
-    newValues.forEach(resource => this.resourceIds.push(new MetadataValue(resource.id)));
+    if (this.resourceIds) {
+      this.resourceIds.splice(0, this.resourceIds.length);
+      newValues.forEach(resource => this.resourceIds.push(new MetadataValue(resource.id)));
+    }
   }
 
   private async initializeSelectedResources() {
@@ -61,7 +61,17 @@ export class SimpleRelationshipSelector implements ComponentAttached {
       if (resource) {
         return Promise.resolve(resource);
       } else {
-        return this.resourceRepository.getTeaser(this.resourceIds[0].value);
+        return this.resourceRepository.getTeaser(resourceId)
+          .then(teaser => {
+            if (teaser) {
+              return teaser;
+            } else {
+              resource = new Resource();
+              resource.id = resourceId;
+              this.resources.push(resource);
+              return resource;
+            }
+          });
       }
     });
     Promise.all(selectedResources).then(resources => {
@@ -114,5 +124,10 @@ export class SimpleRelationshipSelector implements ComponentAttached {
 
   formatter(item): { text: string } {
     return ({text: this.resourceLabel.toView(item)});
+  }
+
+  clearSelectedResource() {
+    this.selectedResource = undefined;
+    this.selectedResourceChanged();
   }
 }
