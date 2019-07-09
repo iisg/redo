@@ -2,7 +2,7 @@ import {bindable} from "aurelia-templating";
 
 export class LoadingCover {
   @bindable loading: boolean;
-  @bindable debounce: Number = 300;
+  @bindable debounce: number = 300;
 
   private timeout;
   private isLoading: boolean = false;

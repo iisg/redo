@@ -65,7 +65,7 @@ export class ImportDialog implements DialogComponentActivate<ImportDialogModel> 
       if (supportedExtensions.indexOf(fileExtension) !== -1) {
         this.importConfig = {
           fileName: this.configFile.name,
-          fileContents: reader.result,
+          fileContents: reader.result as string,
         };
         LocalStorage.set(this.MOST_RECENT_CONFIG_KEY, this.importConfig);
       } else {
