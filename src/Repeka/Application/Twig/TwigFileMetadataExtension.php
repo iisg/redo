@@ -13,6 +13,7 @@ use Repeka\Domain\Service\ResourceFileStorage;
 use Repeka\Domain\Utils\ArrayUtils;
 use Repeka\Domain\Utils\ImmutableIteratorAggregate;
 use Repeka\Domain\Utils\PrintableArray;
+use Repeka\Domain\Utils\UploadSizeHelper;
 
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
@@ -186,28 +187,8 @@ class TwigFileMetadataExtension extends \Twig_Extension {
         }
     }
 
-    /** @see https://stackoverflow.com/a/37523842/878514 */
     public function formatBytes($bytes, int $precision = 1): string {
-        if ($bytes instanceof ImmutableIteratorAggregate) {
-            $bytes = $bytes->toArray();
-        }
-        if (is_array($bytes)) {
-            return new PrintableArray(
-                array_map(
-                    function ($bytes) use ($precision) {
-                        return $this->formatBytes($bytes, $precision);
-                    },
-                    $bytes
-                )
-            );
-        } else {
-            $units = ['B', 'kB', 'MB', 'GB', 'TB'];
-            $bytes = max((string)$bytes, 0);
-            $pow = floor(($bytes ? log($bytes) : 0) / log(1024));
-            $pow = min($pow, count($units) - 1);
-            $bytes /= pow(1024, $pow);
-            return round($bytes, $precision) . ' ' . $units[$pow];
-        }
+        return UploadSizeHelper::formatBytes($bytes, $precision);
     }
 
     private function getResourceFromContext(array $context, ResourceEntity $useThisIfGiven = null): ResourceEntity {

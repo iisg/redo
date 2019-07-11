@@ -35,6 +35,7 @@ use Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowListQuery;
 use Repeka\Domain\UseCase\ResourceWorkflow\ResourceWorkflowUpdateCommand;
 use Repeka\Domain\Utils\EntityUtils;
 use Repeka\Domain\Utils\StringUtils;
+use Repeka\Domain\Utils\UploadSizeHelper;
 
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
@@ -226,7 +227,8 @@ class ResourcesSchemaLoader {
             );
         }
         if (($metadataConfig['control'] ?? null) == MetadataControl::FILE && !isset($metadataConfig['description'])) {
-            $description = "Maksymalny rozmiar pliku to " . ini_get("upload_max_filesize");
+            $maxUploadSize = UploadSizeHelper::formatBytes(UploadSizeHelper::getMaxUploadSizePerFile());
+            $description = "Maksymalny rozmiar pliku to $maxUploadSize";
             if (isset($metadataConfig['constraints']['allowedFileExtensions'])) {
                 $allowedExtensions = implode(', ', $metadataConfig['constraints']['allowedFileExtensions']);
                 $description .= ", a dozwolone rozszerzenia - $allowedExtensions";
