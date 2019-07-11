@@ -16,6 +16,7 @@ mustBeTrue_failed: Zgoda jest wymagana
 email_failed: Niepoprawny adres e-mail
 polishIban_failed: Niepoprawny numer konta bankowego
 doublePrecision_failed: Niepoprawna liczba rzeczywista
+maxCountForEdition_failed: W obecnej edycji złożono już maksymalną liczbę wniosków na tę osobę
 
 labels:
   maxCount: Maksymalna liczba wartości
