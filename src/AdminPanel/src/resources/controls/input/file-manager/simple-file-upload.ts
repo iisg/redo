@@ -36,10 +36,18 @@ export class SimpleFileUpload {
           this.alert.show({type: "error"}, this.i18n.tr("Forbidden file extension"));
         }
       }
-      Promise.all(promises).finally(() => {
-        this.inputValue = undefined;
-        this.uploading = false;
-      });
+      Promise.all(promises)
+        .catch(() => {
+          this.alert.show(
+            {type: "error"},
+            this.i18n.tr("Could not upload the file"),
+            this.i18n.tr("Ensure that the file is not too big and that it has the required format.")
+          );
+        })
+        .finally(() => {
+          this.inputValue = undefined;
+          this.uploading = false;
+        });
     }
   }
 
@@ -65,8 +73,12 @@ export class SimpleFileUpload {
       .send()
       .then((message: HttpResponseMessage) => {
         const response = JSON.parse(message.response);
-        const url = response.added[0].url.substr('file/'.length);
-        this.resource.contents[this.metadata.id].push(new MetadataValue(url));
+        if (response.added && response.added.length > 0) {
+          const url = response.added[0].url.substr('file/'.length);
+          this.resource.contents[this.metadata.id].push(new MetadataValue(url));
+        } else {
+          throw new Error('Upload file error');
+        }
       });
   }
 

@@ -257,6 +257,8 @@ Rerender all dynamic metadata in this resource: Przerenderuj wszystkie dynamiczn
 Search results: Wyniki wyszukiwania
 Number of characters: Liczba znaków
 Forbidden file extension: Niedozwolone rozszerzenie pliku
+Could not upload the file: Nie udało się wgrać pliku
+Ensure that the file is not too big and that it has the required format.: Upewnij się, że plik nie jest zbyt duży oraz że posiada wymagany format.
 Aggregation: Grupowanie
 Total: Suma
 Download as CSV: Pobierz plik CSV
