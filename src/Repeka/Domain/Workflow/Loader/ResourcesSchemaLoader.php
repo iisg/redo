@@ -204,6 +204,9 @@ class ResourcesSchemaLoader {
         $this->updateReferences($references);
     }
 
+    /**
+     * @SuppressWarnings("PHPMD.NPathComplexity")
+     */
     private function createOrUpdateMetadata(string $resourceClass, array $metadataConfig): Metadata {
         if (!isset($metadataConfig['groupId'])) {
             $metadataConfig['groupId'] = 'basic';
@@ -221,6 +224,14 @@ class ResourcesSchemaLoader {
                 },
                 $metadataConfig['constraints']['resourceKind']
             );
+        }
+        if (($metadataConfig['control'] ?? null) == MetadataControl::FILE && !isset($metadataConfig['description'])) {
+            $description = "Maksymalny rozmiar pliku to " . ini_get("upload_max_filesize");
+            if (isset($metadataConfig['constraints']['allowedFileExtensions'])) {
+                $allowedExtensions = implode(', ', $metadataConfig['constraints']['allowedFileExtensions']);
+                $description .= ", a dozwolone rozszerzenia - $allowedExtensions";
+            }
+            $metadataConfig['description'] = ['PL' => $description];
         }
         $metadataToReturn = null;
         try {
