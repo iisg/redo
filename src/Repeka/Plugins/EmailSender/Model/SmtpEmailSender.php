@@ -1,6 +1,7 @@
 <?php
 namespace Repeka\Plugins\EmailSender\Model;
 
+use Assert\Assertion;
 use Psr\Log\LoggerInterface;
 use Repeka\Domain\Factory\Audit;
 use Repeka\Domain\Service\ResourceDisplayStrategyEvaluator;
@@ -62,6 +63,7 @@ class SmtpEmailSender implements EmailSender {
         $message = $emailMessage->toSwiftMessage();
         try {
             $sent = $this->getMailer()->send($message);
+            Assertion::greaterThan($sent, 0, 'E-mail could not been sent.');
             $this->auditEmailSentSuccess($message, $sent);
             return $sent;
         } catch (\Exception $e) {
@@ -84,7 +86,7 @@ class SmtpEmailSender implements EmailSender {
     }
 
     private function auditEmailSentSuccess(\Swift_Message $message, int $sentCount) {
-        $this->auditEmailSent($message, 'success', ['sentCount' => $sentCount], $sentCount > 0);
+        $this->auditEmailSent($message, 'success', ['sentCount' => $sentCount]);
     }
 
     private function auditEmailSentFailure(\Swift_Message $message, \Exception $e) {
