@@ -17,7 +17,7 @@
     "watch": "gulp watch",
     "webdriver-update": "webdriver-manager update",
     "webdriver-start": "webdriver-manager start",
-	"webdriver-clean": "webdriver-manager clean"
+    "webdriver-clean": "webdriver-manager clean"
   },
   "devDependencies": {
     "access-sniff": "^2.4.7",

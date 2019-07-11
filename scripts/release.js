@@ -150,6 +150,7 @@ function removeUnwantedExtensions() {
       'release/src/Repeka/Plugins/**',
       '!release/src/Repeka/Plugins',
       'release/docker/docker-compose.*.yml',
+      'release/docker/repeka/php.*.ini',
       '!release/docker/docker-compose.persistent.yml',
       '!release/docker/docker-compose.standalone.yml',
       '!release/docker/docker-compose.webproxy.yml',
@@ -170,6 +171,15 @@ function removeUnwantedExtensions() {
       directoriesToRemove.push(`!release/var/config/sample-configs/config_local.${extensionName.toLowerCase()}.yml`);
       directoriesToRemove.push(`!release/web/files/${extensionName.toLowerCase()}/**`);
       directoriesToRemove.push(`!release/web/themes/${extensionName.toLowerCase()}.*`);
+    }
+    for (let extensionName of extensionsNames) {
+      const possibleExtensionPhpIni = `release/docker/repeka/php.${extensionName.toLowerCase()}.ini`;
+      if (fs.existsSync(possibleExtensionPhpIni)) {
+        const targetPhpIni = 'release/docker/repeka/php.ini';
+        fs.unlinkSync(targetPhpIni);
+        fs.renameSync(possibleExtensionPhpIni, targetPhpIni);
+        break;
+      }
     }
     del.sync(directoriesToRemove);
   }
