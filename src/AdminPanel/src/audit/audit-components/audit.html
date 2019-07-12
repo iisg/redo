@@ -35,6 +35,11 @@
             <audit-transition-chooser selected-transitions-ids.bind="filters.transitions"></audit-transition-chooser>
             <span>${'Resource contents' | t}</span>
             <resource-contents-yaml-filter value.bind="filters.resourceContents"></resource-contents-yaml-filter>
+            <span>${'Log content' | t}</span>
+            <input type="text"
+                value.bind="filters.regex"
+                placeholder.one-time="'Give regex to match the whole log details' | t"
+                class="form-control">
         </div>
         <div class="sticky-button audit">
             <toggle-button primary-icon-name="filter-2"
@@ -46,7 +51,8 @@
                 disabled.bind="exporting"
                 click.delegate="exportToCSV()"></toggle-button>
             <div if.bind="exportSuccessText"
-                class="export-to-csv-success">${'Audit has been exported.' | t}</div>
+                class="export-to-csv-success">${'Audit has been exported.' | t}
+            </div>
         </div>
     </div>
     <div if.bind="error"

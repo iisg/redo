@@ -17,6 +17,7 @@ export class AuditListFilters {
   resourceContents: NumberMap<string>;
   customColumns: { displayStrategy: string }[] = [];
   resourceId: number;
+  regex: string;
   onChange: VoidFunction = () => undefined;
 
   toParams(): StringMap<any> {
@@ -54,6 +55,9 @@ export class AuditListFilters {
     if (this.resourceId) {
       params['id'] = this.resourceId;
     }
+    if (this.regex) {
+      params['regex'] = this.regex;
+    }
     params['tab'] = 'audit';
     return params;
   }
@@ -61,6 +65,9 @@ export class AuditListFilters {
   buildQuery(query: AuditEntryListQuery): AuditEntryListQuery {
     if (this.resourceId) {
       query = query.filterByResourceId(this.resourceId);
+    }
+    if (this.regex) {
+      query = query.filterByRegex(this.regex);
     }
     if (this.dateFrom) {
       query = query.filterByDateFrom(this.dateFrom);
@@ -94,6 +101,7 @@ export class AuditListFilters {
     filters.resourceContents = safeJsonParse(params['resourceContents']);
     filters.setCustomColumns(params['customColumns']);
     filters.resourceId = +params['id'];
+    filters.regex = params['regex'] || '';
     return filters;
   }
 

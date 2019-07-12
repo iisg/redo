@@ -69,4 +69,10 @@ class AuditEntryListQueryIntegrationTest extends IntegrationTestCase {
         $entries = $this->handleCommandBypassingFirewall($query);
         $this->assertCount(4, $entries);
     }
+
+    public function testFilterByRegex() {
+        $query = AuditEntryListQuery::builder()->filterByRegex('PH[PM]')->build();
+        $entries = $this->handleCommandBypassingFirewall($query);
+        $this->assertCount(4, $entries);
+    }
 }

@@ -207,6 +207,8 @@ Users: Użytkownicy
 No users: Brak użytkowników
 Resource contents: Zawartość zasobu
 Filter_verb: Filtruj
+Log content: Zawartość logu
+Give regex to match the whole log details: Podaj wyrażenie regularne, do którego mają pasować szczegóły logu
 Export to CSV: Eksportuj do CSV
 Audit has been exported.: Audyt został wyeksportowany.
 Invalid audit filters.: Niepoprawne warunki filtrowania.

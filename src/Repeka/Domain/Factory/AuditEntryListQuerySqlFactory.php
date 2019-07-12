@@ -27,6 +27,7 @@ class AuditEntryListQuerySqlFactory extends ResourceListQuerySqlFactory {
         $this->filterByAuditResourceKinds();
         $this->filterByTransitions();
         $this->filterByResourceId();
+        $this->filterByRegex();
         $this->orderBy[] = 'ae.created_at DESC, id DESC';
         $this->paginate();
     }
@@ -81,6 +82,13 @@ class AuditEntryListQuerySqlFactory extends ResourceListQuerySqlFactory {
             $this->whereAlternatives[] = "ae.data->'resource'->'id' = :id";
             $this->whereAlternatives[] = "ae.data->'resourceId' = :id";
             $this->params['id'] = $this->query->getResourceId();
+        }
+    }
+
+    private function filterByRegex() {
+        if ($regexFilter = $this->query->getRegexFilter()) {
+            $this->wheres[] = "CAST(ae.data as TEXT) ~* :textFilter";
+            $this->params['textFilter'] = $regexFilter;
         }
     }
 }

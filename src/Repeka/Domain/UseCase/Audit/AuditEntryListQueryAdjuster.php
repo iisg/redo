@@ -25,7 +25,8 @@ class AuditEntryListQueryAdjuster implements CommandAdjuster {
             $command->getResourceContentsFilter()->withMetadataNamesMappedToIds($this->metadataRepository),
             $command->getPage(),
             $command->getResultsPerPage(),
-            $command->getResourceId()
+            $command->getResourceId(),
+            $command->getRegexFilter()
         );
         return $adjustedQuery;
     }

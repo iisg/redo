@@ -71,6 +71,7 @@ class AuditController extends ApiController {
         Assertion::isArray($commandNames);
         $queryBuilder->filterByCommandNames($commandNames)
             ->filterByResourceContents(is_array($contentsFilter) ? $contentsFilter : []);
+        $queryBuilder->filterByRegex($request->get('regex', ''));
         if ($request->query->has('page')) {
             $page = $request->query->get('page', 1);
             $resultsPerPage = $request->query->get('resultsPerPage', 10);

@@ -20,6 +20,7 @@ class AuditEntryListQuery extends AbstractListQuery implements NonValidatedComma
     /** @var ResourceContents */
     private $resourceContentsFilter;
     private $resourceId;
+    private $regexFilter;
 
     public function __construct(
         array $commandNames,
@@ -31,7 +32,8 @@ class AuditEntryListQuery extends AbstractListQuery implements NonValidatedComma
         ResourceContents $resourceContentsFilter,
         int $page,
         int $resultsPerPage,
-        int $resourceId
+        int $resourceId,
+        string $regexFilter
     ) {
         parent::__construct($page, $resultsPerPage);
         $this->commandNames = $commandNames;
@@ -42,6 +44,7 @@ class AuditEntryListQuery extends AbstractListQuery implements NonValidatedComma
         $this->transitions = $transitions;
         $this->resourceContentsFilter = $resourceContentsFilter;
         $this->resourceId = $resourceId;
+        $this->regexFilter = $regexFilter;
     }
 
     public static function builder(): AuditEntryListQueryBuilder {
@@ -78,5 +81,9 @@ class AuditEntryListQuery extends AbstractListQuery implements NonValidatedComma
 
     public function getResourceId(): int {
         return $this->resourceId;
+    }
+
+    public function getRegexFilter(): string {
+        return $this->regexFilter;
     }
 }

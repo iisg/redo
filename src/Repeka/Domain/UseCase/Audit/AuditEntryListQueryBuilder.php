@@ -3,6 +3,9 @@ namespace Repeka\Domain\UseCase\Audit;
 
 use Repeka\Domain\Entity\ResourceContents;
 
+/**
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ */
 class AuditEntryListQueryBuilder extends AbstractListQueryBuilder {
     private $commandNames = [];
     private $dateFrom = "";
@@ -12,6 +15,7 @@ class AuditEntryListQueryBuilder extends AbstractListQueryBuilder {
     private $transitions = [];
     private $resourceContents = [];
     private $resourceId = 0;
+    private $regexFilter = '';
 
     public function __construct() {
         $this->dateFrom = new \DateTime('2000-01-01');
@@ -31,7 +35,8 @@ class AuditEntryListQueryBuilder extends AbstractListQueryBuilder {
                 : ResourceContents::fromArray($this->resourceContents),
             $this->page,
             $this->resultsPerPage,
-            $this->resourceId
+            $this->resourceId,
+            $this->regexFilter
         );
     }
 
@@ -73,6 +78,11 @@ class AuditEntryListQueryBuilder extends AbstractListQueryBuilder {
 
     public function filterByResourceId(int $resourceId): self {
         $this->resourceId = $resourceId;
+        return $this;
+    }
+
+    public function filterByRegex(string $regex): self {
+        $this->regexFilter = $regex;
         return $this;
     }
 }

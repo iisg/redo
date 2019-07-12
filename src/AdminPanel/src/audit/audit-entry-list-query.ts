@@ -23,6 +23,11 @@ export class AuditEntryListQuery extends AbstractListQuery<AuditEntry> {
     return this;
   }
 
+  public filterByRegex(regex: string): this {
+    this.params.regex = regex;
+    return this;
+  }
+
   public filterByDateFrom(dateFrom: string): this {
     this.params.dateFrom = dateFrom;
     return this;
