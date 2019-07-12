@@ -17,6 +17,7 @@ Repeka\Domain\Entity\EventLogEntry:
   fields:
     url:
       type: string
+      length: 2048
       nullable: true
     clientIp:
       type: string
