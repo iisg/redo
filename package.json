@@ -12,7 +12,7 @@
     "del": "2.2.2",
     "fs-extra": "2.0.0",
     "git-describe": "3.0.2",
-    "node-composer-runner": "0.3.0",
+    "node-composer-runner": "0.4.0",
     "ora": "1.1.0",
     "preprocess": "3.1.0"
   },
