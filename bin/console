@@ -11,6 +11,7 @@ defined('REPEKA_ENV') || define('REPEKA_ENV', $input->getParameterOption(['--env
 $debug = getenv('SYMFONY_DEBUG') !== '0' && !$input->hasParameterOption(['--no-debug', '']) && REPEKA_ENV !== 'prod';
 if ($debug) {
     Debug::enable();
+    umask(0000);
 }
 $kernel = new AppKernel(REPEKA_ENV, $debug);
 $application = new Application($kernel);
