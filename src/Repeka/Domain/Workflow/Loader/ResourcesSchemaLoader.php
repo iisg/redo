@@ -5,7 +5,6 @@ use Assert\Assertion;
 use Repeka\Application\Cqrs\Middleware\FirewallMiddleware;
 use Repeka\Application\Repository\Transactional;
 use Repeka\Domain\Constants\SystemMetadata;
-use Repeka\Domain\Constants\SystemResourceKind;
 use Repeka\Domain\Cqrs\CommandBus;
 use Repeka\Domain\Entity\Metadata;
 use Repeka\Domain\Entity\MetadataControl;
@@ -83,19 +82,20 @@ class ResourcesSchemaLoader {
     }
 
     private function loadSchema(array $schema) {
-        $systemMetadata = $this->getObligatorySystemMetadata();
         foreach ($schema['resourceKinds'] as $schemaConfiguration) {
             Assertion::keyExists($schemaConfiguration, 'resourceClass');
             Assertion::keyExists($schemaConfiguration, 'metadata');
             Assertion::keyExists($schemaConfiguration, 'resourceKind');
             $resourceClass = $schemaConfiguration['resourceClass'];
-            $metadataList = $this->loadTopLevelMetadata($resourceClass, $systemMetadata, $schemaConfiguration['metadata']);
+            $metadataList = $this->loadTopLevelMetadata($resourceClass, $schemaConfiguration['metadata']);
             $workflow = isset($schemaConfiguration['workflow'])
                 ? $this->loadWorkflow($resourceClass, $schemaConfiguration['workflow'], $metadataList)
                 : null;
             $this->createOrUpdateResourceKind($schemaConfiguration['resourceKind'], $metadataList, $workflow);
         }
-        $this->addConstraintsToUserRelatedMetadata($systemMetadata);
+        if (isset($schema['systemMetadataKinds'])) {
+            $this->overrideSystemMetadata($schema['systemMetadataKinds']);
+        }
         if (isset($schema['resources'])) {
             $this->loadResources($schema['resources']);
         }
@@ -113,58 +113,36 @@ class ResourcesSchemaLoader {
         return $this->createOrUpdateWorkflow($resourceClass, $workflowSchema['label'], $places, $transitions);
     }
 
-    private function loadTopLevelMetadata(string $resourceClass, array $systemMetadataList, array $metadataSchema): array {
+    private function loadTopLevelMetadata(string $resourceClass, array $metadataSchema): array {
         $metadataList = [];
         foreach ($metadataSchema as $metadataConfig) {
             Assertion::keyExists($metadataConfig, 'name');
             $metadataList[StringUtils::normalizeEntityName($metadataConfig['name'])] =
                 $this->createOrUpdateMetadata($resourceClass, $metadataConfig);
         }
-        foreach ($systemMetadataList as $systemMetadata) {
-            if (!isset($metadataList[$systemMetadata->getName()])) {
-                $metadataList[$systemMetadata->getName()] = $systemMetadata;
-            }
-        }
         return $metadataList;
     }
 
-    private function getObligatorySystemMetadata(): array {
-        return $this->metadataRepository->findByQuery(
-            MetadataListQuery::builder()->filterByIds(
-                [
-                    SystemMetadata::TEASER_VISIBILITY,
-                    SystemMetadata::VISIBILITY,
-                    SystemMetadata::REPRODUCTOR,
-                ]
-            )->build()
-        );
-    }
-
-    private function addConstraintsToUserRelatedMetadata($userRelatedMetadata) {
-        $groupResourceKind = $this->resourceKindRepository->findByName('grupa');
-        $groupMetadata = $this->metadataRepository->findByName('group_member');
-        $this->addSupportForResourceKindToMetadata($groupMetadata, [$groupResourceKind->getId()]);
-        foreach ($userRelatedMetadata as $metadata) {
-            $this->addSupportForResourceKindToMetadata($metadata, [SystemResourceKind::USER, $groupResourceKind->getId()]);
+    private function overrideSystemMetadata($systemMetadataSchema) {
+        foreach ($systemMetadataSchema as $schema) {
+            $metadata = $this->metadataRepository->findByName($schema['name']);
+            if (isset($schema['constraints']['resourceKind'])) {
+                $schema['constraints']['resourceKind'] = $this->mapResourceKindNamesToIds($schema['constraints']['resourceKind']);
+            }
+            $updateCommand = new MetadataUpdateCommand(
+                $metadata,
+                $schema['label'] ?? $metadata->getLabel(),
+                $schema['placeholder'] ?? $metadata->getPlaceholder(),
+                $schema['description'] ?? $metadata->getDescription(),
+                $schema['constraints'] ?? $metadata->getConstraints(),
+                $schema['groupId'] ?? $metadata->getGroupId(),
+                $schema['displayStrategy'] ?? $metadata->getDisplayStrategy(),
+                $metadata->isShownInBrief(),
+                $metadata->isCopiedToChildResource()
+            );
+            $updateHandler = new MetadataUpdateCommandHandler($this->metadataRepository);
+            $updateHandler->handle($updateCommand);
         }
-    }
-
-    private function addSupportForResourceKindToMetadata(Metadata $metadata, array $resourceKindIds) {
-        $constraints = $metadata->getConstraints();
-        $supportedResourceKinds = array_merge($constraints['resourceKind'] ?? [], $resourceKindIds);
-        $constraints['resourceKind'] = $supportedResourceKinds;
-        $query = new MetadataUpdateCommand(
-            $metadata,
-            $metadata->getLabel(),
-            $metadata->getDescription(),
-            $metadata->getPlaceholder(),
-            $constraints,
-            $metadata->getGroupId(),
-            $metadata->getDisplayStrategy(),
-            $metadata->isShownInBrief(),
-            $metadata->isCopiedToChildResource()
-        );
-        $this->commandBus->handle($query);
     }
 
     private function loadResources(array $resourceScheme) {
@@ -216,13 +194,7 @@ class ResourcesSchemaLoader {
             $metadataConfig = array_merge_recursive(['constraints' => ['maxCount' => 1]], $metadataConfig);
         }
         if (isset($metadataConfig['constraints']['resourceKind'])) {
-            $metadataConfig['constraints']['resourceKind'] = array_map(
-                function ($rkIdOrName) {
-                    if (!is_numeric($rkIdOrName)) {
-                        $rkIdOrName = $this->resourceKindRepository->findByName($rkIdOrName)->getId();
-                    }
-                    return $rkIdOrName;
-                },
+            $metadataConfig['constraints']['resourceKind'] = $this->mapResourceKindNamesToIds(
                 $metadataConfig['constraints']['resourceKind']
             );
         }
@@ -258,6 +230,18 @@ class ResourcesSchemaLoader {
             $this->metadataRepository->save($submetadata);
         }
         return $metadataToReturn;
+    }
+
+    private function mapResourceKindNamesToIds(array $namesOrIds): array {
+        return array_map(
+            function ($rkIdOrName) {
+                if (!is_numeric($rkIdOrName)) {
+                    $rkIdOrName = $this->resourceKindRepository->findByName($rkIdOrName)->getId();
+                }
+                return $rkIdOrName;
+            },
+            $namesOrIds
+        );
     }
 
     private function createOrUpdateWorkflow(string $resourceClass, array $label, array $places, array $transitions): ResourceWorkflow {
