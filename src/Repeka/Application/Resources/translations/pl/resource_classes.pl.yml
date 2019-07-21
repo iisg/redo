@@ -106,3 +106,7 @@ features:
   resources: Inne funkcje
   resources/details: Inne funkcje
   settings: Ustawienia funkcji
+research:
+  resources: Badania
+  resources/details: Badania
+  settings: Ustawienia badań
